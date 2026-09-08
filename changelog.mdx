@@ -9,6 +9,24 @@ WorkwrK ships continuously. There are no numbered releases to install or upgrade
   Not everything named here is finished. [Status](/reference/status) is the honest per-area record of what is built, what is partial, and what is not there yet.
 </Callout>
 
+<Update label="2026-09" description="Canvas becomes a system-design studio, Goals learn to measure effort and call their own status, and the company mission and values run through the whole app" tags={["canvas", "goals", "culture", "kudos", "ai"]}>
+
+## Added
+
+- **Canvas is a system-design studio.** The new **Design with AI** panel turns a plain-language description into a laid out diagram, and picks the right type for your words: architecture, flowchart, sequence, or an ER database schema. Keep chatting to refine the diagram in place ("add a cache", "split the service"), start from a template, or drop preset nodes by hand. Sequence diagrams show activation bars, and every relationship uses proper notation.
+- **Design a database, get runnable schema.** ER tables carry typed columns and primary and foreign keys, related with crow's foot cardinality. **Export** the board as Postgres DDL or a Prisma schema, or **import** existing SQL or Prisma and Canvas draws it for you.
+- **Explain and critique a diagram.** The AI can walk through how a board works, or review it like a staff architect and flag single points of failure, scaling gaps and fixes, reasoning only about what is actually drawn.
+- **Goals measure the effort behind them.** A goal's **Effort** card shows the real work moving it, hours logged, tasks done versus open, and who is contributing, derived from the tasks under its linked KRAs and the items in its linked Boards and Spaces. Nothing is self-reported.
+- **Goals assess themselves.** An **On track?** card gives an automated verdict, On track, At risk or Off track, with a reason and a next step, computed from progress, pace against the deadline, check-in freshness and effort. The verdict is deterministic; AI writes the explanation on top.
+- **Mission and values greet the team.** Set one mission and as many values as you like at Settings, Identity. A brief welcome screen shows the mission when someone opens WorkwrK, and every loading screen across the app shows a mission or value instead of a bare spinner, taking turns so the team absorbs them over time.
+- **Recognition runs on your real values.** Giving Kudos now offers your configured company values to tag, and the Kudos page rolls up which values are recognised most and who lives them.
+
+## Fixed
+
+- **AI stopped hard-failing on a retired model.** When the model a feature asked for became unavailable, requests were failing outright. Features now fall back automatically to an available model, so a single retired model id can no longer take an AI feature down.
+
+</Update>
+
 <Update label="2026-08" description="SOPs get a real editor and a real acknowledge loop; notifications and reminders finally fire" tags={["sops", "notifications", "reminders", "settings", "goals"]}>
 
 ## Added

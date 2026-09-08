@@ -55,9 +55,19 @@
                 "icon": "file-text"
               },
               {
+                "title": "Canvas and diagrams",
+                "path": "using/canvas",
+                "icon": "shapes"
+              },
+              {
                 "title": "Goals",
                 "path": "using/goals",
                 "icon": "target"
+              },
+              {
+                "title": "Mission and values",
+                "path": "using/mission-and-values",
+                "icon": "sparkles"
               },
               {
                 "title": "My profile",

@@ -1,0 +1,71 @@
+---
+title: Canvas and diagrams
+description: A freeform canvas that is also a system-design studio. Describe a system in plain language and the AI draws it, refine it by chatting, start from a template, design a database and export the schema, or draw by hand.
+---
+
+A Canvas is an infinite board for diagramming, planning and system design. You can draw on it by hand, but its real power is the **Design with AI** panel: describe what you want in plain language and it produces a laid out diagram you can keep talking to.
+
+Canvases live at `/canvas`, reached from **Canvas** in the left rail. Open one and the AI panel sits in the top right.
+
+<Callout kind="tip">
+  The AI never draws pixels. It emits a structured description of the diagram (the components and how they connect), and WorkwrK lays it out. That is why the results are clean, editable shapes rather than a flat image.
+</Callout>
+
+---
+
+## Design with AI
+
+Type what you want to design and press Generate. The AI picks the diagram **type** that fits your words and draws it:
+
+| Type | When it is used | What you get |
+| --- | --- | --- |
+| **Architecture** | "Design a URL shortener with a cache", systems and services | Boxes for services, databases, caches, queues, gateways and third parties, connected by labelled arrows, grouped into frames |
+| **Flowchart** | "Flowchart for a refund approval", steps and decisions | A top to bottom flow with start and end terminators, process steps, and decision diamonds whose branches are labelled yes and no |
+| **Sequence** | "Sequence diagram for OAuth login", who calls whom over time | Participants across the top, dashed lifelines, time ordered messages, dashed return messages, and activation bars showing when each participant is busy |
+| **ER schema** | "Design the database schema for a booking app" | Real entity tables with typed columns, primary and foreign key markers, and crow's foot relationships |
+
+Every generated diagram lands to the right of whatever is already on the board and is selected, so you can drag it where you want.
+
+### Refine by chatting
+
+After the first diagram, keep typing. The panel becomes a conversation: "add a Redis cache", "split the orders service", "make the database a cluster". Each message edits the **current** diagram in place rather than starting over, and anything you drew by hand is left untouched. A short summary tells you what changed. Press **New** to start a fresh design.
+
+### Templates
+
+Below the input are one click starters: **Microservices**, **3-tier web app**, **Event-driven**, **ER schema**, **Flowchart** and **Sequence**. They drop in instantly (no AI call needed) and can then be refined by chatting like anything else.
+
+### System kit
+
+A row of preset nodes (Service, Gateway, Database, Cache, Queue, Cloud, User, External, and an ER Table) drops a pre-labelled, pre-styled shape so hand building a system is as fast as generating one.
+
+---
+
+## Databases
+
+Canvas designs data models as well as architectures.
+
+- **ER tables.** Ask for a schema, or use the **Database table** tool, to place an entity with typed columns. Primary keys show an amber badge, foreign keys a blue one. Double-click a table to edit its name and fields (one field per line as `name: type`, a trailing `*` marks a primary key and `^` a foreign key).
+- **Relationships** between tables render with crow's foot notation read from the cardinality label (`N:1`, `1:1`).
+- **Export schema.** In the panel's *This board* row, **Schema** turns the tables into runnable output: Postgres `CREATE TABLE` DDL (typed columns, primary keys, foreign key constraints inferred from the relationships you drew) or a **Prisma** schema (models with relations). Copy either with one click.
+- **Import schema.** Paste existing SQL DDL or a Prisma schema and Canvas lays it out as ER tables with their relationships, so you can visualise a database you already have and then refine it by chatting.
+
+---
+
+## Explain and critique
+
+On any board, the *This board* row offers two AI reads of what you have drawn:
+
+- **Explain** walks through how the system works, tracing the main flow.
+- **Critique** reviews it like a staff architect: single points of failure, missing redundancy, scaling and security gaps, with a concrete fix for each, and what is done well.
+
+Both reason only about the components on the board. They never invent parts that are not there.
+
+---
+
+## Drawing by hand
+
+Everything the AI produces is a normal shape you can move, resize, restyle, group, connect and delete. The toolbar carries shapes, connectors that bind to a shape's real border and re-route when you move it, text (double-click a shape to type inside it), frames, images, task and doc cards from the work graph, and more. Connectors, arrowheads (including the ER crow's foot), dashes, colours and rounded edges are all adjustable from the contextual style panel.
+
+<Callout kind="info">
+  A Canvas is a first-class primitive. It can be embedded in a Doc, dropped as a card inside another Canvas, linked to a Goal or a task in the work graph, and it autosaves with version history so work is never lost.
+</Callout>

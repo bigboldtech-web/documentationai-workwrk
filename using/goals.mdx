@@ -1,6 +1,6 @@
 ---
 title: Goals
-description: Creating a goal, the difference between the owner and contributors, adding targets, checking in, and where the single progress number comes from.
+description: Creating a goal, the difference between the owner and contributors, adding targets, checking in, where the single progress number comes from, and the automated Effort and On track signals.
 ---
 
 A goal in WorkwrK is one record with **one accountable owner**, **many contributors**, and **one progress number**. There are no per-person copies of a shared goal, so there is never a question about whose number is the real one.
@@ -67,16 +67,18 @@ Below the hero:
 - **Timeline**: the check-in history, newest first, with the target name, the new value, any note, and who logged it
 - **Cascades from**: the parent goal, shown only if you are allowed to see it
 - **Cascades to**: child goals, each showing its own rolled-up number
-- **Linked work**: Spaces, Lists and KRAs attached to this goal
+- **On track?**: an automated assessment (see below)
+- **Effort**: the real work moving the goal (see below)
+- **Linked work**: Spaces, Boards and KRAs attached to this goal
 - **Custom fields**
 
 If the goal has not been checked in within its cadence, an amber banner appears at the top of the cards saying how long it has been.
 
 The same staleness also drives reminders, unless the cadence is None. A scheduled job (`/api/cron/okr-reminders`) checks every goal that has an owner and is not complete: when a goal has gone past its cadence window without a check-in, it drops a notification in the owner's bell and escalates by email to the owner. The email honours the owner's notification preferences, so someone who has turned off reminder emails is nudged in the bell only. A goal set to the None cadence is skipped entirely, no bell and no email. In production that job runs on weekday mornings; if you are running WorkwrK on your own infrastructure the schedule does not travel with the code, so check it before relying on the nudge.
 
-### Linked work does not drive progress
+### Linked work drives effort, not the progress number
 
-Attaching a Space or a List to a goal is a navigation aid: it records the connection so you can jump from the objective to the projects moving it. It does **not** feed the progress number. Only targets do.
+Attaching a KRA, a Board or a Space to a goal records the connection so you can jump from the objective to the projects moving it. It does **not** feed the progress number: only targets do. It does, however, feed the **Effort** and **On track?** signals below, which read the real work under those links.
 
 ---
 
@@ -125,3 +127,27 @@ That last rule is deliberate. A brand-new goal with no targets is not "0% done a
 Status follows the same source. While a goal is measured, On track / At risk / Behind / Completed is derived from the rolled-up progress rather than read from a stale column.
 
 Because it is derived in one place, the same number appears on the Goals list, on the goal detail ring, in the "Cascades to" rows on the parent, and in the Goals section of your profile. If they ever disagreed, one of them would be lying, so they do not disagree.
+
+---
+
+## Effort behind the goal
+
+The **Effort** card answers a different question from progress: how much real work is actually moving this goal, and who is doing it. It is never self-reported. Every number is derived from the work linked to the goal:
+
+- Tasks under the goal's linked **KRAs** (their logged hours and done-versus-open counts).
+- Items in the goal's linked **Boards** and **Spaces**, with time read from the unified time-tracking entries on those cards.
+
+The card shows hours logged, tasks done, tasks in progress, when it last moved, and a short list of who is contributing. If nothing is linked yet, it says so and nudges you to link a KRA, Board or Space. Link a busy board to a goal and its hours, tasks and contributors flow in automatically.
+
+---
+
+## On track? (automated assessment)
+
+The **On track?** card gives a plain verdict, **On track**, **At risk** or **Off track**, with a one line reason and one recommended next step. The verdict is computed from the goal's real signals, not guessed:
+
+- The rolled-up progress and status.
+- **Pace**: how far along the goal is versus how much of its time window has elapsed, and how many days are left.
+- Whether check-ins have gone stale against the cadence.
+- The effort above (hours and tasks from linked work).
+
+The verdict itself is deterministic and consistent with the same thresholds used everywhere else, so it never contradicts the number on the ring. When AI is available it writes the human explanation on top of that verdict; when it is not, a plain auto-generated summary stands in. Either way the card degrades gracefully and never blocks the page.

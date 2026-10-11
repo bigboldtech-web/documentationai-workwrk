@@ -1,6 +1,6 @@
 ---
 title: Notifications and reminders
-description: What actually creates a notification, where they land, how reminders fire whether or not the app is open, and which emails WorkwrK really sends.
+description: What creates a notification, where it lands, how reminders fire whether or not the app is open, and which emails WorkwrK really sends.
 ---
 
 WorkwrK has two separate systems that people often confuse. **Notifications** are things the product tells you about because someone else acted. **Reminders** are alarms you set for yourself.
@@ -11,25 +11,27 @@ These are the events that write a notification today:
 
 | Event | Who gets it |
 | --- | --- |
-| A task is created for you, or reassigned to you | The new assignee |
-| A task you are assigned changes status | The assignee, plus everyone who has commented on it |
+| A task is created for you, or handed to you | The new owner |
+| A task you are assigned to changes status | The owner, plus everyone who watches the task or commented on it |
+| Someone comments on a task | The assignees, and everyone who watches the task |
 | Someone mentions you in a task comment or a doc | The person mentioned |
-| Someone comments on a task assigned to you | The assignee |
-| An SOP is assigned to you | Each assignee. The notification links to `My SOPs` |
+| A task assigned to you is due today | The assignee, once a day in the morning |
+| An SOP is assigned to you | Each assignee. The notification links to **My SOPs** |
 | A goal is created with you as its owner | The owner, when someone else created it |
 | A teammate gives you kudos | The recipient |
+| An AI teammate is waiting for your approval | You, when the request came from a routine, Talk or an automation |
 | One of your reminders fires | You |
 
-Two rules apply to all of them: you are never notified about your own action, and your own preferences are checked before the notification is written.
+Two rules apply to all of them: you are never notified about your own action, and your own settings are checked before the notification is written.
 
 <Callout kind="alert">
-  A task's **due date does not notify you on its own**. There is no automatic "due today" notification for tasks in Lists. If you need a nudge, set a reminder on the task, which is a separate thing described below.
+  The **Overdue** switch is in your settings, but the daily overdue notification is not sent yet. If you need a nudge after a due date passes, set a reminder on the task, which is a separate thing described below.
 </Callout>
 
 ## Where notifications land
 
-- **The bell** in the top right shows recent notifications with an unread badge. Notifications can also be mirrored as desktop notifications, which you enable from the footer of the bell popover because a browser only grants that permission from a real click.
-- **The Inbox** at `Inbox` in the Home sidebar is the full list. It has four tabs: `Primary` for mentions, task assignments and approvals; `Other` for kudos, due dates, surveys and SOPs; `Later` for anything you snoozed; and `Cleared` for what you have already read.
+- **The bell** in the top right shows recent notifications with an unread badge. Notifications can also be mirrored as desktop alerts for this browser, which you allow from the **Desktop** tab in My settings, **Notifications**.
+- **The Inbox** in the Work sidebar is the full list, with tabs for **Primary**, **Other**, **Mentions**, **Snoozed** and **Cleared**. Open a row and its task, doc or approval card opens beside the list.
 
 ## Reminders
 
@@ -37,45 +39,55 @@ A reminder is an alarm with a time. There are two ways to set one.
 
 <Steps>
   <Step title="A standalone reminder" icon="alarm-clock">
-    Use the `Reminder` quick tool in the top bar. Give it a title, then either pick a time or use the chips `In 1 hour`, `This evening` or `Tomorrow 9am`. Tick `Also email me` if you want an email as well as the in-app alert. Press `Set reminder`.
+    Use the **Reminder** quick tool in the top bar, or **Reminder** in the Planner sidebar's **+** menu. Give it a title, then pick a time or use the quick chips. Tick **Also email me** if you want an email as well as the in-app alert. Press **Set reminder**.
   </Step>
   <Step title="A reminder on a task" icon="calendar-clock">
-    Open the task and use its scheduling popover. Alongside `Date` and `Repeat` there is a `Reminder` tab, where reminders can be set relative to the due date or at a custom time. These are real reminders attached to the task, so firing one deep-links straight back to it.
+    Open the task and use its date planner. Alongside **Date** and **Repeat** there is a **Reminder** tab, where reminders can be set relative to the due date or at a custom time. These are real reminders attached to the task, so firing one links straight back to it.
   </Step>
 </Steps>
 
-If the `Reminder` tool is not in your top bar, open your profile menu and pin it from the personal tools list.
+If the **Reminder** tool is not in your top bar, open your avatar menu and pin it under **Personal tools**.
 
 ### How a reminder fires
 
 Two mechanisms cover the two cases, and they cannot double-fire because each due reminder is claimed exactly once:
 
-- **While the app is open**, the browser checks for due reminders on load and then every 60 seconds.
-- **While the app is closed**, a scheduled job on the server fires anything due, so the reminder is waiting in the bell when you come back.
+- **While the app is open**, the browser checks for due reminders on load and then every minute.
+- **While the app is closed**, a job on the server fires anything due every few minutes, so the reminder is waiting in the bell when you come back.
 
-A fired reminder appears as a persistent card in the bottom right. It stays until you act on it. Each card offers `Snooze` with `10 minutes`, `1 hour` and `Tomorrow 9am`, plus `Dismiss`, and `Open` when the reminder belongs to a task. With more than one card you also get `Dismiss all`.
+A fired reminder appears as a persistent card in the bottom right. It stays until you act on it. Each card offers **Snooze** with 10 minutes, 1 hour and tomorrow morning, plus **Dismiss**, and **Open** when the reminder belongs to a task.
 
-The bell keeps the whole lifecycle: reminders that already fired and have not been acted on, then Overdue, Today and Upcoming, then a read-only history of recently dismissed ones from the last 14 days.
+The reminders bell keeps the whole lifecycle: reminders that already fired and have not been acted on, then Overdue, Today and Upcoming, then a read-only history of recently dismissed ones.
 
 Opening a task from its reminder counts as acting on it, so the card disappears. If you want to look at the task but keep the alarm, snooze it first.
 
 ## Controlling what you get
 
-Everything is per person, under `Settings`, then `Notifications`. Changes save automatically. There are three groups.
+Everything is per person, in My settings, **Notifications**, on three tabs. Changes save automatically.
 
-**Inbox** decides what lands in your Inbox and bell: `Task assigned to me`, `@Mentions`, `Comments on my tasks`, `Status changes on my tasks`, `Due-date reminders` and `Kudos & recognition`. Switching a row off stops that notification being created at all.
+**Inbox** decides what lands in your Inbox and the bell. A **Notification preset** picks a starting point: **Default**, **Focused** (only what is aimed at you: tasks assigned to you, mentions and your overdue tasks) or **Custom**. The rows are:
 
-**Email, Task & activity** has a master switch called `Email notifications` that governs the rows under it. Today only two of those rows actually send: `Task assigned to me` and `Kudos & recognition`. The rest are marked `Soon`.
+- **Tell me about my work**: Tasks assigned to me, Status changes on my tasks, Status changes on tasks I follow, Due soon, Overdue.
+- **Tell me about people**: Mentions of me, Comments on my work, Comments on tasks I follow, Kudos I receive.
+- **Talk and announcements**.
+- **How the Inbox behaves**: which tab the Inbox opens on.
+- **Muted items**: Spaces, Folders or Lists you muted. Tasks assigned to you and mentions still reach you.
 
-**Email, Workflow & HR** is independent of that master switch. `KRA & KPI updates`, `Review reminders` and `SOP updates` are live. `Daily digest` is marked `Soon`.
+Switching a row off stops that notification being created at all. "Follow" means the task's **Watch** button, or having commented on it.
+
+**Email** has a master switch, **Send me email**, that governs **Tasks assigned to me by email** and **Kudos by email**. **Work updates by email** (**KRA and KPI updates**, **Review reminders** and **SOP updates**) send whether or not Send me email is on. Mentions, comments, status changes, due reminders and a daily digest by email are listed under **Coming soon**.
+
+**Desktop** allows alerts for this browser. Each browser and device asks for permission separately.
 
 <Callout kind="alert">
-  A row marked `Soon` is not a toggle you forgot to switch on. It means WorkwrK does not send that email yet, so it is shown honestly instead of as a control that would do nothing. There is no daily or weekly digest email today.
+  A row under **Coming soon** is not a toggle you forgot to switch on. It means WorkwrK does not send that email yet, so it is shown honestly instead of as a control that would do nothing.
 </Callout>
+
+The avatar menu has the quick versions: **Do not disturb**, and **Mute notifications** for an hour, until tomorrow, or until you turn it back on.
 
 ## When you expected a notification and got nothing
 
-1. Check the matching row under `Settings`, then `Notifications`. A switched-off Inbox row stops the notification being created at all.
+1. Check the matching row in My settings, **Notifications**, **Inbox**. A switched-off row stops the notification being created at all, and a muted Space, Folder or List stops status, comment and due date updates from it.
 2. Confirm you were not the one who acted. Your own changes never notify you.
-3. For emails, check whether that row is marked `Soon`, and whether the `Email notifications` master switch is on. Workflow and HR emails ignore the master switch.
-4. For a reminder, check the bell. A reminder that fired while you were away is not lost: it re-surfaces as a card the next time you open the app, and until you act on it the bell keeps it in its fired list.
+3. For emails, check whether that row is under **Coming soon**, and whether **Send me email** is on. Work updates by email ignore the master switch.
+4. For a reminder, check the reminders bell. A reminder that fired while you were away is not lost: it comes back as a card the next time you open the app, and until you act on it the bell keeps it in its fired list.

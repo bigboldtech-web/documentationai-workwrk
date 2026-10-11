@@ -1,0 +1,109 @@
+---
+title: Approvals and Don't ask
+description: What an AI teammate asks you first, how to approve, change or deny a request, and how to let it act without asking.
+---
+
+An AI teammate works as you. So before it does something other people will see, it stops and asks you. Its request waits on an **approval card** until you approve it, change it or deny it.
+
+## What asks first
+
+The **Tools** list, in the new teammate form and on the **Tools and approvals** tab, sorts every tool into four groups. The group sets what happens by default.
+
+| Group | By default | Examples |
+| --- | --- | --- |
+| **Look things up** | Never asks. Reading changes nothing. | Find tasks, Find people, Find goals, Read your Inbox, Read your Talk messages |
+| **Make and change your own work** | Runs at once. You can choose **Ask me first**. | Create tasks, Change tasks, Comment on tasks, Draft SOPs, Schedule meetings, Create goals, Remember things, Set up routines |
+| **Things other people will see** | Asks first. You can choose **Don't ask**. | Create docs, Create forms, Create tables, Move tasks between Lists, Post in Talk, Send kudos, Create KRAs, Create KPIs |
+| **Always asks first** | Always asks. **Don't ask** is never offered. | Invite people |
+
+A tool in the second group still asks first when one particular use of it reaches other people:
+
+- a task it creates for someone else (it goes on their Personal list),
+- a change to a task, or a comment on it, unless the task is on your own Personal list and nobody else is on it,
+- text it adds to a doc other people can open (anything but your own notepad),
+- a meeting with anyone else invited,
+- a goal owned by someone else, or a Department or Company goal.
+
+A new doc, form or table asks first because everyone in the workspace can open and edit it.
+
+## The approval card
+
+A card shows **Waiting for you**, then what the teammate wants to do, in its own words: for example, **Post in #general** or **Create task "Call Acme" for Max Chen**. Under the title you see:
+
+- the exact text that will be posted, commented or added (long text shows **Show all**),
+- facts about who it reaches, such as **34 people can read it.** or **The task's assignees and watchers are told.**,
+- how to undo it, where that is possible, such as **Earlier versions are kept in the doc's history.**,
+- **Waits until** followed by the date it expires.
+
+What runs is exactly what the card shows. The card is built from the request itself, not from the teammate's description of it.
+
+Choose one of:
+
+- **Approve**: it runs now.
+- **Edit**: change the one field the card lets you change (the title of a task, meeting or goal, a comment, a Talk message, the text added to a doc, or a kudos message), then choose **Approve with changes**, or **Cancel**. Not every card has **Edit**.
+- **Deny**: nothing happens. The chat records **You said no:** followed by the title.
+- **Approve and don't ask again**: approves it and stops the teammate asking you for this kind of action again. It is shown only where that choice is allowed. For a post in Talk it names the conversation, for example **Approve and don't ask again in #general**, and covers that one conversation only.
+
+### Several requests at once
+
+When one answer asks for several things, one card lists them all: **3 things are waiting for your approval**. Each has a tick box, all ticked to start. Untick any you want to hold back, or use **Select all**, then choose **Approve 3** or **Deny 3**. Open a title to see its text and facts, and use **Edit** on any one of them.
+
+An invitation never joins the batch. It always has its own card, so you approve it on its own.
+
+### After you decide
+
+The card changes to **Approved**, **Denied**, **Expired**, **Didn't work** or **Cancelled**, with a line saying when, and an **Open** link to what was made or changed.
+
+When you approve in the chat and something ran, the teammate carries on from where it stopped. Carrying on uses one AI question. Denying never does: the teammate hears what you decided the next time you message it.
+
+## Where requests wait
+
+- **In the chat** where the teammate asked.
+- **Waiting for you**, the tab on the AI teammates page that lists only teammates with something waiting.
+- **The AI sidebar**: the **AI teammates** row counts what waits for you.
+- **Your Inbox**, for requests made while you weren't in the chat: a routine's run, an answer in Talk and an automation step each write one row, for example **Chief of Staff is waiting for your approval**. Open the row and the approval card opens right there, so you can approve, change or deny it without leaving the Inbox. **Open chat** takes you to the chat. Deciding from the Inbox does not make the teammate carry on.
+
+A request asked by one teammate on another teammate's behalf waits in the chat of the teammate that will do it. See [Group chats and asking other teammates](/using/ai-teammates/group-chats).
+
+## When a request ends without you
+
+- **Expired**: a request nobody answers expires after 7 days. The card tells you to ask the teammate again if you still want it.
+- **Cancelled**: the teammate was removed, can no longer use that tool, or you left the group chat it was asked in.
+- **Didn't work**: you approved it but it failed, for example because you no longer have access. The card says why.
+- **Couldn't confirm it finished**: rarely, a request that started may not have finished. It never runs again by itself. Check the task, doc or conversation before asking again.
+
+If a teammate is paused, its waiting requests can't be approved until it is turned on again. They still expire after 7 days.
+
+## Choose Don't ask
+
+**Don't ask** lets a teammate do one kind of thing without stopping for you. You can choose it:
+
+- in the new teammate form, beside each tool,
+- on the **Tools and approvals** tab of the teammate's settings,
+- from an approval card, with **Approve and don't ask again**.
+
+Some limits always apply:
+
+- **Invite people** always asks.
+- **Post in Talk** has no tool-wide Don't ask. You can only choose it for one conversation at a time, from the card of a post there.
+- A tool-wide **Don't ask** covers only your own work. The uses listed under [What asks first](#what-asks-first) that reach other people keep asking until you choose **Approve and don't ask again** on one of their own cards. The tab then shows **Doesn't ask, even when other people will see it** for that tool.
+- When a teammate answers in Talk, runs in an automation, or is asked by another of your teammates, it asks you first for everything other people would see, whatever you chose.
+- On a workspace teammate, an Owner or Admin can turn on **Ask everyone first** for a tool. That holds the tool at **Ask me first** for everyone, and the tab says **Whoever manages it set this to ask everyone first.**
+
+Your choices are yours alone. On a workspace teammate, nobody else's **Don't ask** applies to you, and yours applies to nobody else.
+
+### Change your mind
+
+Open the teammate's settings, then **Tools and approvals**. Change any tool back to **Ask me first**. Choices stored from approval cards are listed under the tool, such as **Doesn't ask in #general**, each with **Remove**.
+
+The footer of the tab sums it up: **Reading never asks. Anything other people will see asks first unless you choose Don't ask. Inviting people always asks.**
+
+## Ask AI asks first too
+
+Ask AI uses the same approval card. Before anything other people would see, such as kudos, an invitation, a new doc, form or table, or a task for someone else, it shows a card and waits. Your own work, like a task for yourself, still happens at once. Ask AI never offers **Approve and don't ask again**, and its requests also expire after 7 days.
+
+## Limits
+
+- One answer can ask for up to 50 things.
+- Up to 100 requests can wait for one person at once. Past that, the teammate tells you too many things are waiting for your approval, and you need to decide some first.
+- One answer can take up to 30 actions. Past that the teammate says **That's the most actions one turn can take. Send another message to carry on.**

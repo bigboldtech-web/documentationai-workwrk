@@ -1,147 +1,96 @@
 ---
 title: Review cycles and cadences
-description: Create a review cycle, launch it (which is what actually generates everyone's review), run self assessment and manager review, and configure cadences and scoring.
+description: Create a review cycle for everyone, a department or chosen people, launch it, run self, manager and peer reviews, calibrate and finalize, and configure cadences and scoring.
 ---
 
-A **review cycle** is a company wide performance round: a name, a type, and a period. It is not the same thing as the weekly check in queue at Teams → Reviews, which is a per person weekly review and a separate flow.
+A **review cycle** is a performance round: a name, a type, a period, and the people it covers. It is not the same thing as a weekly review, which is a per person weekly check-in under **Teams**, **Weekly reviews**, and a separate flow.
 
-Review cycles live at `/reviews`, listed in the app switcher as **Review cycles**.
+Review cycles live under **Teams**, **Review cycles**.
 
 ## Who can open this
 
-Review cycle administration is the HR admin door: HR, Company Admin and Super Admin. Managers who open `/reviews` are redirected to Teams → Reviews. Everyone else is redirected to their own career home.
-
-Be aware of the consequence, because it bites: when a cycle launches, every employee gets a notification saying "please complete your self assessment" that links to the cycle page. Only HR and admins can open that page. Everyone else is bounced. **Today the self assessment form is only reachable by people who can already open the review cycle page.** Until that door is widened, plan on collecting self assessments another way, or run cycles where the participants hold HR or admin access.
+- **The People team**, **Owners** and **Admins** run every cycle in the workspace.
+- **A manager** can start and run a cycle for their own reporting chain. A manager's cycle only ever reaches the people in that chain.
+- **Everyone else** reaches their own review through the link they are sent when a cycle launches.
 
 ## Create a cycle
 
-1. Go to Review cycles.
-2. Click **New cycle**.
-3. Pick a type. The dialog auto fills the name and the period from it, and both stay editable:
-   - **Monthly pulse**: lightweight monthly KPI and SOP check. Defaults to the current calendar month.
-   - **Quarterly**: OKR scoring plus KRA and KPI rollup plus a rating. Defaults to the current quarter.
-   - **Annual appraisal**: self, peer, calibration and 9 box. Defaults to the current calendar year.
-   - **Probation**: defaults to a 30 day window from today.
-   - **PIP**: same 30 day default.
-4. Adjust the name and dates if you want, then create.
+1. Go to **Review cycles**.
+2. Choose **New cycle**.
+3. Pick a type: **Monthly pulse**, **Quarterly**, **Annual appraisal**, **Probation** or **Performance plan**. The dialog fills in a name and a period from it, and both stay editable.
+4. Choose **Who the cycle covers**. The People team, Owners and Admins pick **Everyone**, **Departments** or **Specific people**. A manager picks **Everyone who reports to me** or **Specific people who report to me**.
+5. Choose **Create cycle**.
 
-The cycle is created in **Draft**. Nothing has happened yet.
+The cycle is created as a **draft**: **It starts as a draft. Nobody is asked for anything until you launch it.** A draft can be deleted with **Delete draft**, and nothing else is lost.
 
 ## Launch: this is the step that matters
 
-A Draft cycle has no reviews in it. Creating a cycle does not create anyone's review. **Launch does.**
+A draft cycle has no reviews in it. Creating a cycle does not create anyone's review. **Launch cycle** does.
 
-Click **Launch cycle** on the featured cycle at the top of the page, or **Launch** on any Draft row in the list. Launching:
+Before it launches, WorkwrK counts who the cycle covers and asks you to confirm that number. Launching then:
 
-1. Creates one Review row for every Active employee in the organization. The reviewer is that person's manager. Anyone with no manager gets the person who launched the cycle as reviewer.
-2. Flips the cycle from Draft to Active. Both happen in one transaction, so a crash cannot strand a cycle half launched.
-3. Creates an in app notification for every employee.
-4. Emails every employee with the cycle name, the due date and a link.
+1. Creates a review for every active person the cycle covers, with their manager as the reviewer.
+2. Moves the cycle from draft to active.
+3. Tells each of them, in their Inbox and by email, with a link to their own review.
 
 Things to know before you press it:
 
-- Launch covers **every Active employee in the org**, not a selected group. There is no scoping or exclusion. If you need a narrower audience, this is not the tool: a cycle is company wide by construction.
-- You can only launch once. If reviews already exist for the cycle, launch is refused with "Reviews already generated for this cycle. Delete existing reviews first." There is no delete-reviews control anywhere in the product, so in practice a launched cycle cannot be relaunched. Get the name, type and dates right before you press Launch.
-- You cannot launch a cycle that is in calibration, completed or cancelled.
-- A cycle cannot skip Draft by editing its status. The status change is rejected with "This cycle has no reviews yet. Launch it first." Launch is the only door out of Draft. Cancelling an unlaunched draft is still allowed.
-- Both launching and editing a cycle are manager tier on the API. Because the page itself is HR admin gated, in practice only HR and admins ever press these buttons.
+- A launch cannot be undone, because it has already asked people. If who the cycle covers changed between the count and your click, the launch is refused, so nobody is emailed a number you did not agree to.
+- Removed people are never reviewed.
+- **Cancel cycle** stops a launched cycle: **Nothing is deleted. The cycle stops and nobody is asked for anything more.**
 
 ## Running the cycle
 
-Open a cycle to get five tabs.
+A cycle has up to four tabs, each shown to the people it is for.
 
-### My Review (self assessment)
+### My review
 
-Shows the person's own review in this cycle. At the top, three read only auto populated metrics: average KPI score, SOP compliance, and OKR progress. Any of them reads N/A rather than zero when there is no data behind it.
+The person's own self review in this cycle, reached from the link they were sent. It shows their numbers for the period as proof points, then asks for a rating and a note per KRA and a reflection. It saves as you type.
 
-Underneath, the goals they owned this period, pulled from their own check ins, with each key result's current and target value and how many check ins it received. These are there as proof points, so the reflection does not have to be written from memory.
+### Team
 
-Then the actual input: a rating and an achievements note per assigned KRA, each showing that KRA's weightage, plus a free text reflection.
+The reviews you are the reviewer on, or, for the people running the cycle, everyone in it. **Open next review** jumps to the next one still waiting. For each person you record a rating and comments per KRA, the behavioural ratings, overall comments and a recommended outcome. A completed review can't be edited.
 
-The draft autosaves about 1.5 seconds after you stop typing, and the header shows Saving, Saved, Unsaved changes or a retry state. **Save Draft** does an explicit save. Submitting moves the review forward.
+### Peer feedback
 
-### Team Reviews (manager review)
-
-Lists the reviews where you are the reviewer, with each subject's department and job title, and any submitted peer feedback.
-
-For each person you record a rating and comments per KRA, a five point behavioral block (quality, reliability, collaboration, initiative, growth), overall comments, and a recommended outcome. This autosaves too, and the outcome is only written when you press Submit.
-
-A review that has already been completed cannot be edited.
-
-### Peer Feedback
-
-Assign peers to a review, and fill in peer feedback you have been asked for: strengths, improvements, a collaboration rating and comments. Peer requests are created anonymous by default.
-
-Be precise about what anonymous means here. On the cycle endpoint the giver's identity is stripped server side for everyone except HR admins and the giver themselves, so even the person being reviewed does not see who wrote it. The Team Reviews endpoint does not apply that stripping. Since the whole review cycle page is HR admin gated today, HR and admins can see who wrote anonymous feedback either way. Tell your team that before you promise them anonymity.
+Ask peers to give feedback on a review, and answer the requests you were asked for.
 
 ### Calibration
 
-Ranks everyone in the cycle by composite score and lets you set a calibrated score and calibration notes per review. The calibrated score, when set, is what later reads as the person's manager rating.
+Shown to the people running the cycle once it is in calibration. **Start calibration** moves the cycle there, and says first what is still outstanding.
 
-The view warns you when every rating sits in the top band and there are more than three people, which is the usual sign that calibration has not really happened.
-
-Be aware: calibration writes the calibrated score onto the review. It does not currently write a talent assessment, so the 9 box and the calibration step are not yet connected.
-
-### Dashboard
-
-Cycle level progress: total reviews, self assessments done, manager reviews done, calibrated, completed, and the percentage complete. The same numbers appear in the ring on the cycle hero.
+The table lists each person with their **KPI**, **Self**, **Manager**, **Peers** and **Composite** scores, their **Band**, a **Calibrated** score you can set, their **Potential** and their **Outcome**. The calibrated score, when set, is what later reads as the person's manager rating.
 
 ## Finishing a cycle
 
-There are two different controls, and they do different things.
+**Finalize outcomes**, on the Calibration tab, is the only way to complete a cycle. It finalizes every review in your reach that carries an outcome, with its score: the calibrated score when set, otherwise the composite.
 
-**Move to In calibration / Move to Completed** on the cycle hero just changes the cycle's status. It does not touch anyone's review.
+- **Also place these people on the talent grid** is on by default. It places each finalized person on **Talent (9-box)** for this cycle, from their score through the performance bands and their potential (Medium when unset). A placement someone made by hand for the same period is never overwritten.
+- Only the people finalized are told, and only then.
+- The cycle is marked complete only when every review in it is complete. If some still lack an outcome, or are outside your reach, the cycle stays in calibration and you are told how many remain.
 
-**Finalize All Outcomes**, at the bottom of the Calibration tab, is the real close out. It writes each review's outcome and overall score (the calibrated score when set, otherwise the composite), sets those reviews to Completed, sets the cycle to Completed, notifies and emails every employee in the cycle, and triggers a performance score recalculation for each of them.
+Once a review is complete you can produce its appraisal letter: a printable letter with the company header, scores, band, a hike recommendation and the assessment details. Only the person reviewed, their reviewer, and the people who manage them can open it.
 
-One sharp edge: Finalize only submits reviews that already have an outcome recorded, but it completes the whole cycle either way. Reviews with no outcome are left behind in whatever state they were in, on a cycle that now reads Completed. Check the Dashboard tab counts before you finalize.
+## Cadences and scoring
 
-Once a review is finalized you can produce its appraisal letter. A **Generate appraisal letter** button appears on any COMPLETED review: on the person's own My Review card, and on each row of the manager's Team Reviews list. It opens a printable letter (company header, scores, band, a hike recommendation and the assessment details) that you can download. The endpoint behind it is org-scoped and authz-gated, so only the subject, the reviewer, or someone with manage rights over the subject can generate it.
+Workspace settings, **Scoring & reviews** holds four cards, each with **Reset to defaults**. One **Save** bar saves the cards you changed. Owners and Admins change them; managers and the People team can read them.
 
-## Cadences and scoring configuration
+### Review cadence
 
-Settings → Scoring & reviews (`/settings/scoring`) holds four sections. Each saves independently, so a bad value in one does not block the others. Saving requires Company Admin, Super Admin or C-Level.
+One row per cadence: weekly check-in, monthly pulse, quarterly review and annual appraisal. Each says whether it is on, whether a draft cycle opens automatically when its day comes, which day that is, and how many days ahead reminders start. By default weekly, monthly and quarterly are on and annual is off.
 
-### Review cadences
-
-One row per cadence: weekly check in, monthly pulse, quarterly review, annual appraisal. Each carries:
-
-- **Enabled**.
-- **Auto open**, meaning a Draft cycle is created automatically when the anchor lands.
-- **Anchor**, whose meaning depends on the cadence: weekday 1 to 7 for weekly, day of month 1 to 28 for monthly, day offset within the quarter for quarterly, month 1 to 12 for annual.
-- **Reminder lead days**, how many days before the period closes to start nudging.
-
-Defaults are weekly, monthly and quarterly enabled with auto open on, and annual disabled.
-
-What auto open actually does: a daily job (`/api/cron/review-cycles`) scans every organization, and for each enabled cadence with auto open on whose anchor has landed in the current period, it makes sure a **Draft** ReviewCycle exists for that period and notifies the manager tier. It stops there. **A human still has to press Launch.** Auto open never generates anyone's review.
-
-The weekly cadence is not handled by that job. Weekly check ins are per person and created on demand.
-
-That job is registered in production and runs once a day at 08:00. Two caveats worth keeping in mind: the schedule lives on the server, not in the code, so if you run WorkwrK on your own infrastructure it does not travel with a deploy, and the `vercel.json` in the repository is reference-only rather than the live schedule.
+What opening automatically does: when a cadence's day comes, a **draft** cycle for that period is created and the people who run cycles are told. It stops there. **Someone still has to launch it.** Weekly check-ins are per person and created as they are needed.
 
 ### Score weights
 
-Four sliders: KPI attainment, SOP compliance, Behavioral rating, Peer feedback. They must sum to 100 or the save is rejected with the actual total in the error.
+**How each part weighs into a person's review score.** Four parts: **KPI attainment**, **SOP compliance**, **Behavioral rating** and **Peer feedback**, 40, 20, 30 and 10 by default. They must add up to 100; the card shows the total and refuses to save otherwise.
 
-Read this next part before you tune them, because the page and the engine do not line up:
-
-- The composite score engine reads five weights: `kpi`, `manager`, `peer`, `self` and `sopCompliance`.
-- The page edits four: `kpi`, `sopCompliance`, `behavioral` and `peer`.
-- **`behavioral` is written but never read.** Weight you put there has no effect on any score.
-- **`manager` and `self` are not editable here.** They stay at their built in defaults, 25 and 5.
-
-So of the four numbers on that page, three reach the engine and one does nothing, and two of the engine's five inputs cannot be changed from the product at all.
-
-For completeness, the composite also includes fixed contributions the page does not expose: goal progress at weight 10, task completion at weight 5, and a kudos bonus of up to 5 points added on top. The engine renormalizes across whichever components actually have data, so a person with no peer feedback is not penalised for the missing axis.
-
-Scores recalculate whenever a KPI record, kudos, goal check in, SOP progress update or review finalization lands.
+The monthly performance score on profiles is a separate number: it also weighs the manager and self parts, which stay as they are, plus goal progress, task delivery and a small kudos bonus. It skips any part with no data, so a person with no peer feedback is not penalised for the missing part.
 
 ### Performance bands
 
-The ranges that map a composite score to a label. Defaults are Exceptional 90 to 100, Strong 75 to 89, On track 60 to 74, Needs focus 40 to 59, At risk 0 to 39.
+**Score ranges that name a composite score.** Defaults are Exceptional 90 to 100, Strong 75 to 89, On track 60 to 74, Needs focus 40 to 59, and At risk 0 to 39. Add and remove rows as you need. Every band must sit inside 0 to 100, and ranges can't overlap. The bands name scores on reviews, in calibration and on the talent grid.
 
-Validation is strict: every band must sit inside 0 to 100, each needs min less than or equal to max, and ranges cannot overlap.
+### Behavioural anchors
 
-### Behavioral anchors
-
-The five Likert labels used in the manager review, in order from 1 to 5. Defaults are "Needs significant improvement", "Below expectations", "Meets expectations", "Exceeds expectations", "Role model". Exactly five labels are required.
+The five words of the rating scale the manager review shows, from 1 to 5. Defaults are "Needs significant improvement", "Below expectations", "Meets expectations", "Exceeds expectations" and "Role model". Exactly five are required.

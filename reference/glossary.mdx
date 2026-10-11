@@ -1,203 +1,249 @@
 ---
 title: Glossary
-description: The words WorkwrK uses, what each one actually maps to in the product, and the ones people confuse.
+description: The words WorkwrK uses, what each one means in the product, and the ones people confuse.
 ---
 
 Read this once. Several of these words mean something specific in WorkwrK and something different in other tools.
 
 ## People and structure
 
-### Function
-A department. "Function" and "Department" are the same thing, and the database calls it `Department`. You manage them at **People → Departments** (`/people/departments`).
+### Workspace
+Your company's WorkwrK. Everyone in it holds one of four roles. One person can belong to more than one workspace; their account is anchored in one and reaches the others through a membership.
 
-A Function is a container for people. It is not a permission boundary on its own: what you can see is decided by your Level and your reporting line, not by which Function you sit in. The one exception is goals, where a DEPARTMENT level goal is visible to everyone in that department.
+### Owner, Admin, Member, Guest
+The four workspace roles. An **Owner** runs the company account: billing, ownership and security. An **Admin** runs the workspace day to day. A **Member** is an employee, who works in the Spaces they are added to and sees what is open to the whole company. A **Guest** is outside the company and sees only what is shared. See [Visibility and permissions](/reference/visibility-and-permissions).
 
-The Departments page does full CRUD: create, rename, edit description and colour, assign a head, re-parent into a nested tree, and delete. The server refuses to delete a department that still has members. Merge and archive are the two operations still missing.
+### Tier
+A Member's seniority, set on their row in Workspace settings, **Members**: Member, Team lead, Manager, Director, VP, Executive, People team or Agent. It decides which manager pages they open. It does not change what they can open in Spaces and Lists; sharing does that.
 
-### Level
-Your position on a fixed access ladder, stored on your user record. The full ladder, top down: Super Admin, Company Admin, C-Level, VP, Director, Manager, Team Lead, HR, Employee, Agent.
+### Agent account
+A Member tier for an account that works as a Member, can edit what it is given, never has Full access, and never exports or invites. It is not an AI teammate.
 
-Levels are an enum in the code. You cannot invent a new one, and you cannot edit what a Level can do beyond the permission matrix (which only 11 API route files actually consult, covering five modules). Super Admin and Company Admin are absent from the **Role** level picker so nobody can promote themselves through a job title, but Company Admin is offered in the invite modal and both are offered on Settings → Members.
+### People team
+The tier for the people who look after everyone's people information. They can edit placement and reporting lines and read Members, Access and Scoring & reviews.
 
-Level drives the three-door visibility model. See [Visibility and permissions](/reference/visibility-and-permissions).
+### Department
+Where a job title and its people sit in the business. Managed under Teams, **Departments**, and in Workspace settings, **Structure**. A department is a container, not a permission.
 
-### Role
-Your job title. "Head of Customer Success", "Backend Engineer". Roles live at **People → Roles** (`/people/roles`).
+### Job title
+"Head of Customer Success", "Backend Engineer". A job title is where KRAs are defined. When somebody holds a job title, they inherit its KRAs and the published SOPs attached to those KRAs. Managed under Teams, **Job titles**.
 
-A Role is where KRAs are defined. When somebody is hired into a Role, or moved to one, they inherit that Role's KRAs and the published SOPs attached to those KRAs.
-
-**Role is not Level.** Two people can both be "Backend Engineer" (Role) while one is a Team Lead and the other an Employee (Level). Roles decide what you are accountable for. Levels decide what you can see.
+### Reporting line and chain
+Your manager, set on your record. Your chain is you plus everyone below you, all the way down. A manager's pages, such as My team, show their chain. A dotted line is a second manager relationship, used on the org chart and in KPI reviews.
 
 ### Tag
-A label from one shared org-wide taxonomy, minted at **Settings → Tags**. The same tag can be stuck on a board task, a SOP, or a **person**.
-
-Person tags are the segmentation primitive. You attach them from the tag control under someone's name on their profile (a manager edits them; you can read your own). Once a person carries a tag, four things can use it:
-
-- The **Directory** shows a Tags filter row and narrows to people carrying any selected tag.
-- A **Goal** can name a tag as a contributor.
-- A **pulse survey** can target a tag as its audience.
-- An **Announcement** can target a tag as its audience.
-
-In all four cases the membership is resolved at read time from the live tag assignments, never frozen. Tag someone tomorrow and they are inside the audience on the next read. Archived tags never resolve.
-
-Person tags are not a permission. They decide who a thing is aimed at, not what anyone is allowed to open.
-
-### Manager and report tree
-Your manager is a direct field on your user record. Your **report tree** is you plus everyone below you, walked recursively.
-
-There is also a dotted line concept: a second manager relationship used for matrix reporting. Dotted line reports appear in your KPI review queue, your team alignment board and your team timesheets. They do not appear in your goals scope. That inconsistency is known and tracked.
+A label from one shared workspace list, managed in Workspace settings, **Task system**, **Tags**. The same tag can go on a task, an SOP or a person. A person tag is a segment: the Directory filters by it, and a goal, a pulse survey or an announcement can be aimed at it. Membership is worked out each time, never frozen. A tag is not a permission.
 
 ## Accountability
 
 ### KRA
-Key Result Area. A permanent area of accountability attached to a **Role**, not to a person. "Customer retention". "Platform reliability".
-
-A KRA has no number and no deadline. It is a container. It carries a **weight** from 0 to 100 expressing what share of the job it represents.
-
-When you hold a Role, you get a `KRAAssignment` for each of its KRAs, and the assignment carries your own weight, seeded from the Role's default and editable per person. Each individual weight is bounded 1 to 100 on the assignment, but the total is not a hard cap: a total over 100 saves and returns an advisory warning rather than being rejected, so someone already over budget can still rebalance. The role-level weights behave the same way, warning past 100 rather than refusing. Nothing requires either total to reach 100.
-
-Important, and easy to get wrong: **KRA weight is displayed but is not used in any scoring math today.** A 5% KRA and a 50% KRA count identically in every score the product computes.
+Key Result Area. A permanent area of accountability attached to a **job title**, not to a person. "Customer retention". "Platform reliability". It has no number and no deadline, and it carries a **weight** from 0 to 100 saying what share of the job it is. Each holder inherits the weight and can have it adjusted. Weights are shown and totalled, and the total turns red past 100, but it is not enforced, and KRA weight does not yet weigh any score.
 
 ### KPI
-Key Performance Indicator. A permanent running gauge underneath a KRA. It has a definition, a unit, a direction and a healthy line.
+Key Performance Indicator. A permanent gauge under a KRA, with a definition, a unit, a direction of good (**Higher is better**, **Lower is better** or **Hold the line**), a healthy line, how often it is recorded, and whether it is **Quantitative** (a number) or **Qualitative** (a 1 to 5 rating). A KPI is **owned** by the job title and graded, or **shared**, which it influences and is reviewed on. A north-star gauge is the one that matters most for its KRA.
 
-Direction is one of:
-- **HIGHER**: bigger is better. At or above the line is healthy, within 10% below is at risk.
-- **LOWER**: smaller is better. At or below the line is healthy, within 10% above is at risk.
-- **MAINTAIN**: hold the line. Anything more than 0.5% off is off track. There is no at-risk band.
-
-A KPI's healthy line (`targetValue`) can be empty. That is a real state, not a mistake. When there is no line, the product reports "no target" and refuses to invent one or to score against nothing.
-
-A KPI is also marked **owned** or **shared**. Owned means the Role controls the number and is graded on it. Shared means the Role influences it.
-
-### KPI record / reading
-One measurement of one KPI by one person for one period. Periods are month keys in `YYYY-MM` form.
-
-A record moves through Pending, Submitted, Approved or Rejected. Rejected records stop counting immediately: they no longer drive any key result or goal.
-
-Older records with week or quarter period keys still exist in the database but no longer drive anything.
+### KPI reading
+One measurement of one KPI by one person for one period. A reading moves through Not recorded, Submitted, Approved or Changes requested. A reading sent back stops counting at once.
 
 ### Compliance
-On the team alignment board, "compliance" means the share of a person's **current period** KPI records that are Submitted or Approved. It is not a measure of whether they hit target. Someone can be 100% compliant and entirely off track.
-
-A person with no records shows a dash, not 100%. This is deliberate: the least measured team used to look like the healthiest.
+On the Alignment board, the share of a person's current period readings that are Submitted or Approved. It is not a measure of whether they hit target. For SOPs, compliance is the share of assignments acknowledged.
 
 ## Goals
 
-### Goal / OKR
-A time boxed objective. The product uses "Goal" in the interface and `OKR` in the code and API paths. They are the same object.
-
-A goal belongs to a **quarter** (or to no quarter) and sits at one of three levels: Company, Department or Individual. There is no Team level.
+### Goal
+A time-boxed objective with one owner, contributors and one progress number. Goals sit at Company, Department or Individual level and can nest.
 
 ### Owner
-The single accountable person on a goal. One goal, one owner. Not a committee.
+The single accountable person on a goal.
 
 ### Contributor
-Anyone else attached to the goal. A contributor entry points at exactly one subject: a person, a department, a role, or a **tag**.
+Anyone else attached to a goal: a person, a department, a job title or a tag. Department, job title and tag contributors are worked out each time the goal is read, so a new hire inherits their team's goals.
 
-Department, role and tag contributors are stored as the department, the role or the tag, never as a frozen list of names. Membership is resolved every time the goal is read, so a new hire inherits their team's goals automatically, someone who picks up a tag joins that goal's audience, and a leaver drops out automatically. Only active, non-deleted people ever resolve.
-
-A goal shared across five people is still **one record with one scoreboard**. Seeing it on five profiles is seeing the same row five times, not five copies.
-
-### Key result / Target
-A measurable outcome under a goal, with a start value, a target value and a current value. Progress runs from the start value toward the target value, so a target that improves by going down rises as the number falls.
-
-A key result can be **linked to a KPI**. When it is, its current value and progress are read from that KPI's latest usable reading at the moment you look, scoped to the goal owner's own records. Nothing is written back onto the key result row, and the number you typed by hand is kept (returned as `enteredValue`) rather than overwritten. There is no control in the interface that creates the link; today it can only be set through the API.
-
-### Progress
-One derived number per goal, shown identically everywhere.
-
-- A goal with key results: the mean of their live progress.
-- A goal with sub-goals: the mean of its own key results plus each **measured** sub-goal's progress. Unmeasured sub-goals contribute nothing, so empty sub-goals cannot drag a real number down.
-- A goal with neither: nothing to derive. The API says `MANUAL` if somebody hand set a number, or `NONE` if there is nothing, and the interface shows a dash rather than a 0% that looks like failure.
-
-Status thresholds: 100 or above is Completed, 70 or above is On track, 40 or above is At risk, below that is Behind.
+### Target
+A measurable result under a goal, with a start value, a target value and a current value. Progress runs from the start toward the target, so a target that improves by going down rises as the number falls. A target can be measured by a KPI, which then supplies its number.
 
 ### Check-in
-A dated update on a key result with a value and a note. The dialog asks for a change (Increase or Decrease plus an amount) and does the arithmetic against the current value; the API is sent the resulting absolute value. Checking in recomputes the goal's progress and pushes it up the parent chain.
+A dated update on a target: an increase or a decrease, and a note.
+
+### Progress
+One number per goal, worked out from its targets, or from its measured sub-goals. A goal with nothing measured shows a dash, not 0%. **Effort** and **On track?** are the automated signals beside it. See [Goals](/using/goals).
 
 ## Knowledge
 
-### SOP
-Standard Operating Procedure. A documented procedure, versioned, and assignable to people.
+### Doc
+A page in the block editor, with sub-pages, version history, comments and sharing. Docs live under the Docs hub and open in place in Work.
 
-There are four kinds, picked once when you create it:
-
-- **Written SOP**: long-form prose in the block editor, with its own description field. No steps.
-- **Step-by-step SOP**: an ordered list of steps with per-step notes and screenshots.
-- **Checklist SOP**: discrete steps someone ticks off, runnable as a process run.
-- **Click-capture SOP**: the recorder extension writes a screenshot and a step for each click.
-
-Under the hood, Step-by-step is a Written SOP whose body is a step list, which is why the detail page's Type field reads Written, Step-by-step, Checklist or Recording.
-
-SOPs can be attached to a KRA, from the **Linked KRA** picker on the SOP's own page. That is what makes them flow automatically: when someone is hired into a Role, every published SOP under that Role's KRAs is assigned to them. A SOP can also be linked from a board task, and the SOP page lists those under **Used by tasks**.
-
-Statuses are Draft, In review, Approved, Published and Archived. Only Published SOPs are visible to ordinary viewers in a folder, and only Published SOPs auto-assign.
-
-Visibility is folder based and inherits downward: access to "HR" also grants "HR / Onboarding". SOPs with no folder are visible org wide.
-
-### SOP assignment
-One person's copy of the obligation to read or run an SOP, with progress in steps completed out of steps total. This is what drives the SOP read rate on the team alignment board and the SOP component of the performance score.
-
-An assignee closes it with the **Mark as read** button in the SOP header, which acknowledges the SOP, completes the assignment and stamps the date. The button appears for anyone holding an assignment, including people who cannot otherwise manage SOPs.
-
-### Process run
-One execution of a step-by-step SOP, with a history at `/process-runs` and a public share link at `/run/<token>` for people outside the workspace.
-
-### Policy
-Distinct from an SOP. A policy is a document people acknowledge rather than execute, with an acknowledgement ledger. Lives at `/policies`.
+### Canvas
+A freeform board for diagrams, planning and system design, with **Design with AI**. Canvases were called whiteboards before.
 
 ### Notepad
-Your private sticky notes, opened from the topbar Notepad tool. A notepad note is stored as a Doc anchored to you, and it is owner-only: notepad notes never appear in `/docs`, in the Library, or in any document picker, and nobody else can open them. Notepad is not Docs, and it is not a place to write something a colleague needs to read.
+Your private scratch pad, opened from the top bar. A Notepad note is yours alone: nobody else can open it, and it never shows in Docs or a doc picker.
 
-## Work chassis
+### SOP
+Standard Operating Procedure. A documented procedure, versioned and assignable. Four kinds: **Written**, **Step-by-step**, **Checklist** (which can be run) and **Click-capture** (recorded by the browser extension). SOPs are organised by categories, subcategories and tags. A published SOP under a KRA is assigned to everyone who holds that KRA's job title.
+
+### SOP assignment
+One person's obligation to read or run an SOP. They close it with **Mark as read**, which is what the SOP read rate counts.
+
+### Run
+One execution of a Checklist SOP, with a share link so someone outside the workspace can complete it.
+
+### Policy
+A document people acknowledge rather than execute, with an acknowledgement ledger.
+
+### Contract
+An agreement with parties, sent and signed by link.
+
+### Notetaker
+Paste a meeting transcript and get decisions, action items and attendees as a meeting note. It does not record audio.
+
+## Work
 
 ### Space
-The top container. Usually a team, a client or a major area of work. A Space holds Folders and Lists, and its visibility (org wide, or membership only) is inherited by everything inside it.
+The top container: a team, a client or a major area of work. A Space holds Folders and Lists. Who can open it is set in **Manage access**: **Invite only**, **Space members** or **Everyone at** your company.
 
 ### Folder
-An optional grouping inside a Space. Purely organisational.
+An optional grouping inside a Space. A Folder can be shared on its own, and **Restricted** stops it taking access from the Space.
 
-### List (board)
-Where tasks live. The interface calls it a List. The code and the API call it a `Board`, so you will see `/api/boards` and `/boards/<slug>` in URLs.
+### List
+Where tasks live. Each List has its own statuses, fields and views. Board is its default view unless another is pinned.
 
-A List owns its own status set. Two Lists can have completely different statuses, and "done" is resolved against each List's own statuses rather than a global assumption.
+### Task
+One row on a List, with a status, assignees, dates, priority, tags, custom fields, subtasks, a checklist, comments and tracked time. A task opens as a drawer at its own address.
 
-### Item / Task
-One row on a List. The interface calls it a Task. The code and database call it an `Item`.
+### Home List
+The List a task was made in. A task can also be added to other Lists, where it carries a chip naming its home.
 
-An Item carries an owner, status, priority, dates, tags, custom fields, subtasks, a checklist, comments and tracked time.
-
-**Know this:** a separate legacy `Task` table also exists, written only by the older `/api/tasks` endpoint. `/analytics`, the performance score's task component, `/api/tasks/workload` and the scheduled "tasks due today" digest still read that legacy table, so they cannot see the tasks you create on Lists. Global search used to read it too, but no longer: `/api/search` now indexes the real `Item` graph, so searching finds your board tasks.
+### Subtask
+A task with another task as its parent. It goes wherever its parent goes.
 
 ### View
-One way of rendering a List. Seventeen renderers exist: List/Table, Board/Kanban, Calendar, Gantt, Timeline, Workload, Cards, Hierarchy, Pivot, Chart, Dashboard, Form, Doc, Whiteboard, File gallery, Map and Activity.
+One way of drawing a List: List, Board, Calendar, Gantt, Timeline, Workload, Team, Cards, Hierarchy, Pivot, Chart, Dashboard, Map, Doc, Canvas, Form, File gallery or Activity. A view's settings are saved with it for everyone. **Pin as default view** makes it open first.
 
-Views are per List and their configuration (hidden fields, extra columns) autosaves.
+### Bird's eye
+A Space, or a Folder, as columns of cards, one per List. **Focus** opens one List as columns of its statuses.
+
+### My work and the Personal list
+**My work** is every task assigned to you, grouped by when it is due. The **Personal list** under it is a private List only you can see.
+
+### Everything
+Every task you can open, across all Spaces.
+
+### Template
+A saved task, List or Space to start from. **Save as template** on each, and the Template Center to apply one.
+
+### Trash
+Where deleted and archived things go, on two tabs. Items stay until an Owner or Admin deletes them for good.
+
+### Public link
+A view-only address for one task, doc or SOP that works without signing in, while Workspace settings, **Access** allows public links. A table or form has its own public link in its share dialog.
+
+## Sharing
+
+### Manage access
+The dialog in every `…` menu that says who can open a thing and at what level. Below Full access it reads **Who has access**.
+
+### Full access, Can edit, Can edit assigned tasks, Can comment, Can view
+The sharing levels. **Full access** changes settings, sharing, delete and transfer. **Can edit** adds and changes tasks, docs and rows. **Can edit assigned tasks**, on Lists only, reads and discusses every task and changes only tasks assigned to the person or that they made. **Can comment** reads and discusses, never changes. **Can view** is read only. A Space also has **Owner**: Full access plus every Restricted List in it.
+
+### Restricted
+On a Folder, List, doc or channel: only the people listed can open it, plus Admins, and it takes no access from above. A restricted channel has no admin read-around.
+
+## AI
+
+### Ask AI
+The chat in the AI hub that answers and does work in the product, and asks first before anything other people would see.
+
+### AI teammate
+An AI helper with one job that you chat with. It works as you, sees only what you can, and asks before anything other people will see. See [AI teammates](/using/ai-teammates/overview).
+
+### Workspace teammate
+A teammate an Owner or Admin made for **Everyone in the workspace**. Everyone gets their own chat with it; nobody reads anyone else's.
+
+### Approval card
+The card a teammate or Ask AI shows before doing something other people will see. You **Approve**, **Edit**, **Deny** or **Approve and don't ask again**. A request nobody answers expires after 7 days.
+
+### Don't ask
+Your choice to let a teammate do one kind of thing without stopping for you. Inviting people always asks.
+
+### Routine
+A job a teammate does for you on a schedule, at most once an hour. Its reports arrive in your chat with it.
+
+### Practice run
+A run or a message that shows what a teammate would do without changing anything.
+
+### Memory
+Short facts a teammate keeps about how you work, visible on its Memory tab. On a workspace teammate, Owners and Admins can add shared memories for everyone.
+
+### Group chat
+One chat with two to five of your teammates.
+
+### AI question
+The unit your plan counts: each Ask AI message, each teammate message, routine run, group chat answer, answer in Talk, automation step and ask of another teammate. A total for the workspace, not a monthly allowance.
+
+### Workspace agent
+An agent an Owner or Admin added from the catalogue on the AI teammates page. It runs as whoever runs it, and any schedule it had is a routine now.
+
+### Automation
+A workflow in the AI hub: a trigger, conditions and actions, including **Ask an AI teammate**.
+
+## Talk
+
+### Channel
+A conversation on a topic, findable by everyone at the company unless it is **Restricted: only people you add**.
+
+### Direct message and group
+A conversation with one person, or a few.
+
+### Thread
+Replies on one message, in a panel beside the conversation.
+
+### Guest link
+A link that lets someone outside the workspace join a conversation's calls, or a meeting, without an account.
+
+## Tables and Forms
+
+### Table
+A spreadsheet in the Tables hub, with formulas, formatting, validation, pivots and typed columns, including links to other tables with lookups and rollups.
+
+### Form
+A set of questions whose answers land as tasks in a List or rows in a table.
 
 ## Time
 
 ### Timer
-A running clock on a task. Stopping a timer on a board card writes a time entry into your open weekly timesheet, linked back to the card. Timers on anything other than a board card do not reach the timesheet.
+A running clock on a task. Stopping it writes an entry into your weekly timesheet.
 
 ### Timesheet
-Your week of logged hours, anchored to Monday. Statuses are Draft, Submitted, Approved. Once a sheet is submitted or approved, card timers stop writing to it: a locked sheet is never modified behind your back.
+Your week of hours, with Draft, Submitted and Approved states, and **Log time** for an entry by hand. Managers see **Approvals** and **Team**.
 
 ### Workload
-Open work per person, used for capacity. **Teams → Workload** shows your report tree's open items plus unassigned open items on boards your team actually works in. Completed work is excluded.
+Open work per person, for capacity. A manager's **Workload** page shows their chain.
 
 ## Scoring
 
 ### Performance score
-A composite monthly number per person, from KPI records, the latest manager rating, peer feedback, self assessment, SOP compliance, goal progress and task completion, plus a small kudos bonus. Components with no data are skipped rather than counted as zero.
+A monthly number per person, from KPI readings, the latest manager rating, peer feedback, self review, SOP compliance, goal progress and task delivery, plus a small kudos bonus. Parts with no data are skipped.
 
-It feeds the person detail API, the dashboard's top performers, and the Talent 9-box auto-placement.
-
-### 9-box / Talent
-A performance by potential grid at `/talent`. You can place people by hand, or auto-place them from performance scores. Review calibration does not feed it: the two systems are currently disconnected.
+### Performance band
+The name a score range gets: Exceptional, Strong, On track, Needs focus or At risk by default. Set in Workspace settings, **Scoring & reviews**.
 
 ### Review cycle
-A scheduled performance review across a set of people, moving through self assessment, manager review, calibration and finalize. Administered at `/reviews` by HR admins. Managers see their own tree's reviews at `/team/reviews`.
+A performance round: self review, manager review, peer feedback and calibration, finalized into outcomes. See [Review cycles and cadences](/admin/reviews-and-cadences).
 
 ### Weekly review
-A different, lighter thing: a per-person weekly check-in with a manager approval state. It is what the team alignment board's "weekly review" column reads.
+A lighter, per-person weekly check-in with a manager approval state.
+
+### Talent (9-box)
+A performance by potential grid, filled by hand, from performance scores, or from a finalized review cycle.
+
+## Settings and plans
+
+### My settings and Workspace settings
+The two doors of Settings. My settings is yours; Workspace settings is for Owners and Admins. See [Settings](/admin/settings).
+
+### Seat
+A person who can sign in, or an open invitation. Your plan sets how many seats a workspace has.
+
+### Module
+Talk and Tables, the premium parts of WorkwrK, turned on in Workspace settings, **Apps & modules** from the Growth plan.

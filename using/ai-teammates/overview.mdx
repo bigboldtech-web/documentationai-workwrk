@@ -1,0 +1,148 @@
+---
+title: AI teammates
+description: AI helpers with one job each that you chat with. They work as you, see only what you can, and ask before anything other people will see.
+---
+
+An AI teammate is an AI helper with one job. You chat with it, and it does real work for you: it finds your tasks, plans your day, writes updates, creates tasks and docs, and posts in Talk.
+
+Three rules hold for every teammate:
+
+- **It works as you.** Everything it does is done in your name, with your access.
+- **It sees only what you can.** It can't open a List, doc or conversation that you can't open.
+- **It asks before anything other people will see.** A post in Talk, a comment on a shared task or a task for someone else waits for your approval, unless you chose **Don't ask** for it. See [Approvals and Don't ask](/using/ai-teammates/approvals).
+
+## Where to find your teammates
+
+On the rail, open **AI**, then **AI teammates**. The page has four tabs:
+
+| Tab | What it shows |
+| --- | --- |
+| **Chats** | Your teammates and your group chats. Pick one to open its chat. |
+| **Waiting for you** | Only the teammates with something waiting for your approval. The tab shows how many. |
+| **Workspace agents** | The agents your Owners and Admins added from the catalogue. See [Workspace agents](#workspace-agents) below. |
+| **Run history** | A list of runs, with filters for the agent, the status and the dates. A teammate's runs show only to the person it worked for. |
+
+The **AI teammates** row in the AI sidebar shows a number when something waits for your approval, and a dot when a teammate answered or reported since you last opened its chat.
+
+Each row in Chats can carry a chip: **Waiting**, **Paused**, **Removed**, **Just you** or **Workspace**. Use **Search teammates** to find one by name, and **Show removed** to see teammates that were removed.
+
+## Make a teammate
+
+<Steps>
+<Step title="Open the New menu" icon="plus">
+On the AI teammates page, choose **New**, then **New teammate**.
+</Step>
+<Step title="Pick a template or start from scratch" icon="layout-template">
+A template fills in the form for you. **Start from scratch** leaves it empty. Nothing is made yet, and you can change everything later.
+</Step>
+<Step title="Fill in the form" icon="pencil">
+Give it a **Name**, a **Colour**, its **One job** (what it does, in one line) and its **Instructions** (how to do the job; it reads these before every chat).
+</Step>
+<Step title="Choose its tools" icon="wrench">
+Under **Tools**, tick what it may use, and choose **Ask me first** or **Don't ask** where that choice is offered.
+</Step>
+<Step title="Create it" icon="check">
+Choose **Create teammate**. Its chat opens.
+</Step>
+</Steps>
+
+The templates are:
+
+| Template | Its one job |
+| --- | --- |
+| **Chief of Staff** | Keeps your week on track: plans your day, chases what is late and drafts your updates. |
+| **Project Manager** | Keeps a project moving: finds stuck work, nudges owners and keeps statuses true. |
+| **People Ops** | Answers people questions from your SOPs and sets up onboarding work. |
+| **Meeting Prep** | Gets you ready for meetings: an agenda, open work with the people attending, and follow-ups after. |
+| **Talk and inbox triage** | Reads what is waiting for you in Talk and your Inbox, and tells you what needs a reply, what can wait and what should become a task. |
+| **Status Reporter** | Writes your weekly status from your real tasks and goals, and posts it where you say after you approve. |
+
+No template starts with **Don't ask** turned on for anything. If Talk or Tables is off in your workspace, a template's Talk or Tables tools are left out, and the form says so.
+
+Form limits: a name can be up to 60 characters, the one job up to 200, and the instructions up to 8,000.
+
+### Just you, or everyone in the workspace
+
+Owners and Admins see one more choice in the form, **Who can use it**:
+
+- **Just me**: only you can use it. This is the only choice for everyone else.
+- **Everyone in the workspace**: everyone gets their own chat with it. Nobody reads anyone else's chat.
+
+A teammate made for everyone is managed by the workspace's Owners and Admins. Everyone else can use it, and keeps their own approval choices, their own memories and their own routines with it. See [Workspace teammates](#workspace-teammates) below.
+
+## Chat with a teammate
+
+Type in the composer at the foot of the chat and press Enter, or choose **Send**. Shift and Enter starts a new line. Under the field you see **Works as you. Sees only what you can see.**
+
+A new chat shows the teammate's job and, for a teammate made from a template, up to four starter questions to try.
+
+While it works, the chat shows what it is doing, one row per tool it uses. A row that waits for you reads **Waiting for your approval:** followed by what it wants to do. Centred lines in the chat record what happened, for example:
+
+- **Memory updated:** when it remembered something for you, with a **See memory** link.
+- **Created routine:** when it set up a routine, with **Pause** and **Settings** links.
+- **You approved:**, **You said no:** and **Expired without an answer:** after a request is decided.
+
+Each message you send uses one of your workspace's AI questions, however many steps the teammate takes to answer. See [Limits and plans](/using/ai-teammates/limits).
+
+### Practice run
+
+Turn on **Practice run** beside **Send** to see what the teammate would do without changing anything. The composer then reads **Practice run is on. Nothing will change.** The teammate still looks things up, but every action is shown as **Would** followed by what it would do, and the answer ends with **Practice run · nothing was changed**.
+
+A practice run still uses one AI question. Group chats have no Practice run.
+
+## A teammate's settings
+
+In the chat header, choose **Settings**. The settings open on five tabs:
+
+| Tab | What it holds |
+| --- | --- |
+| **Instructions** | The name, colour, one job, instructions, the **On** switch and the **Monthly limit**. |
+| **Tools and approvals** | What it may use, and what it asks you first. See [Approvals and Don't ask](/using/ai-teammates/approvals). |
+| **Memory** | What it remembers. See [Memory](/using/ai-teammates/memory). |
+| **Routines** | Your routines with it. See [Routines](/using/ai-teammates/routines). |
+| **Activity** | **Recent runs**, **Approvals** and **Usage**: how many AI questions it used this month. |
+
+Whoever manages a teammate can change the Instructions tab. For your own teammate that is you. For a teammate made for everyone it is the Owners and Admins, and everyone else reads **An Owner or Admin manages this teammate.**
+
+**Monthly limit** is optional. It is the most AI questions the teammate may use in a month, on top of your plan's limit. Leave it empty for no limit of its own. Use a whole number from 1 to 100,000.
+
+## Pause, remove or add back
+
+The **...** menu in the chat header has **Copy link** for everyone. Whoever manages the teammate also sees **Pause** or **Turn on**, and **Remove**.
+
+- **Pause** stops it answering. Its composer reads that it is paused, and its routines skip their runs until it is turned on again.
+- **Remove** asks first: it stops working and its routines pause. Its chat and activity are kept.
+- **Add back** brings a removed teammate back. It is offered to whoever manages the teammate. Turn on **Show removed** in Chats to find it.
+
+## Workspace teammates
+
+A teammate made for **Everyone in the workspace** shows the **Workspace** chip.
+
+- Everyone has their own chat with it. Nobody, including Owners and Admins, reads anyone else's chat with it.
+- Owners and Admins choose its name, instructions and tools. They can also set a tool to **Ask everyone first**, which holds that tool at **Ask me first** for everyone.
+- Each person chooses their own **Ask me first** or **Don't ask** for its tools, within what the managers allow.
+- Each person's memories are their own. Owners and Admins can also add shared memories that it uses with everyone.
+- If an Owner or Admin changes its name, job, instructions, tools, approval rules or model, everyone's routines with it pause until each person checks the teammate and resumes theirs. Automation steps that ask it stop until the automation is published again. See [Routines](/using/ai-teammates/routines).
+
+## Workspace agents
+
+The **Workspace agents** tab lists the agents your Owners and Admins added from the catalogue with **Add agent**. Every Member can read the list. Owners and Admins add, turn on, pause, run and remove them.
+
+- **Open chat** opens your own chat with the agent, which works like a teammate's chat.
+- **Run now** runs the agent as you, in your own chat with it. Anything it asks to do waits there for your approval.
+- An agent no longer runs on a schedule of its own. To run one on a schedule, set up a routine in its chat. A schedule an agent had before routines arrived is now a routine for the person who set it up, and the agent's **Runs on** column says so, for example **Now a routine for** followed by their name.
+
+## Who can use AI teammates
+
+- Everyone in the workspace except Guests and agent accounts. Guests can't use AI teammates, and an agent account can't have them.
+- AI must be on for the workspace. An Owner or Admin turns it on or off in Workspace settings, **Data**, **Retention & privacy**, **AI features for everyone**. When it is off, a teammate's chat reads **AI is turned off for this workspace.**
+- An Owner or Admin can hide the AI hub from the rail, or limit who sees it, in Workspace settings, **Apps & modules**.
+
+<Columns cols={2}>
+<Card title="Approvals and Don't ask" icon="shield-check" href="/using/ai-teammates/approvals">What a teammate asks first, and how to decide.</Card>
+<Card title="Routines" icon="calendar-clock" href="/using/ai-teammates/routines">Work a teammate does on a schedule.</Card>
+<Card title="Memory" icon="brain" href="/using/ai-teammates/memory">What a teammate remembers, and how to change it.</Card>
+<Card title="Group chats and asking other teammates" icon="users" href="/using/ai-teammates/group-chats">Several teammates in one chat.</Card>
+<Card title="Teammates in Talk and Automations" icon="message-square" href="/using/ai-teammates/talk-and-automations">Ask a teammate in a conversation or from an automation.</Card>
+<Card title="Limits and plans" icon="gauge" href="/using/ai-teammates/limits">What a teammate can and can't do, and what it uses.</Card>
+</Columns>

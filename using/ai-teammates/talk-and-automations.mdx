@@ -1,0 +1,104 @@
+---
+title: Teammates in Talk and Automations
+description: Ask one of your AI teammates in a Talk conversation, or from a step in an automation.
+---
+
+## Ask a teammate in Talk
+
+You can ask one of your teammates a question in a Talk conversation, and it answers there for everyone in it to read. Talk is a premium module, included from the Growth plan. See [Talk](/using/talk).
+
+### How to ask
+
+<Steps>
+<Step title="Open a private channel, a group or a direct message" icon="message-square">
+Teammates can't be asked in public channels.
+</Step>
+<Step title="Type @ and pick the teammate" icon="at-sign">
+Your teammates are listed under **AI teammates** in the @ list, with the hint **It answers here as you, marked as from the teammate.** Typing a teammate's name by hand does nothing: pick it from the list.
+</Step>
+<Step title="Write your request and send" icon="send">
+One teammate per message. A message that asks a teammate can't carry files: send them in a message of their own.
+</Step>
+</Steps>
+
+While it works, the conversation shows that the teammate is working on it. Its answer goes where you asked: in the conversation, or in the thread if you asked in a thread. It is posted as your message, marked **via** the teammate's name.
+
+### What the teammate reads and does in Talk
+
+- It reads up to the last 30 messages before yours, or the thread you asked in.
+- It does not read your chat with it, its memories of you, your other Talk messages or your Inbox. It can't remember things, set up routines or ask other teammates from Talk.
+- Its answer is cleaned before it posts: links become plain words, nobody is pinged with @, and it is at most 8,000 characters.
+- Anything else it would do that other people see waits for your approval in your chat with it, whatever you chose there, and your Inbox gets a row. The details stay on the card in your chat, because not everyone in the conversation may be able to open what it is for.
+- Your chat with the teammate records **Asked in** followed by the place and your request, then its answer.
+- It uses one of your AI questions.
+
+### Who sees the answer
+
+The answer is shown to the people who were in the conversation when it posted. Someone who joins later sees **An AI teammate answered here. Its answer was written for the people who were there then.**
+
+### Where you can't ask a teammate
+
+When you can't ask a teammate in a conversation, the @ list says why under **AI teammates**:
+
+| Where | What it says |
+| --- | --- |
+| A public channel | **AI teammates can't be asked in public channels. Ask in a private channel, a group or a direct message.** |
+| A conversation with a Guest in it | **AI teammates can't be asked in a conversation with guests.** |
+| A conversation you are not a member of | **Join this conversation to ask a teammate here.** |
+| An archived conversation | **This conversation is archived.** |
+| More than 250 people | **AI teammates can be asked only where there are at most 250 people.** |
+
+Guests can't ask AI teammates. You can ask teammates up to 5 times a minute.
+
+If the teammate can't answer, the conversation says it **didn't answer here**, and your chat with it has the details. If your message didn't send, **Send without the teammate** posts the same words as a plain message.
+
+## Ask a teammate from an automation
+
+An automation can have one of your teammates do one thing, or answer one question, each time it runs. Later steps can use its answer.
+
+### Add the step
+
+<Steps>
+<Step title="Open the automation" icon="workflow">
+In the AI hub, open **Workflows** and open or create an automation.
+</Step>
+<Step title="Add Ask an AI teammate" icon="bot">
+Add the action **Ask an AI teammate**. Pick the **Teammate** and write the **Request**.
+</Step>
+<Step title="Use the trigger's values" icon="braces">
+The request supports `{{field}}` tokens from the trigger. Their values reach the teammate marked as information, not instructions.
+</Step>
+<Step title="Use the answer in later steps" icon="list-checks">
+Use `{{teammate.answer}}` in a later step.
+</Step>
+</Steps>
+
+`{{teammate.answer}}` works in these later steps:
+
+- **Create a task**: the title.
+- **Add a comment**: the comment.
+- **Send an in-app notification**: the title and the message.
+- **Set a field**: the value. If the answer isn't a value the field takes, the field is left alone.
+- **Send an email**: the subject and the body, only when the email goes to a member of the workspace.
+
+The answer is never sent to Guests, to an outside email address or to a webhook. It is cleaned the same way as in Talk and kept to 4,000 characters.
+
+### Rules for teammate steps
+
+- **The teammate works as you**, the person who made the automation. So once an automation has this step, only you can add, change or publish the step, or turn the automation back on. Others who can edit the automation can still pause it.
+- **Approvals**: anything else the teammate would do that other people see waits for your approval in your chat with it, whatever you chose there, and your Inbox gets a row.
+- **It starts from the request alone**: it does not read your chat, its memories of you, your Talk messages or your Inbox, and it can't remember things or set up routines.
+- **Cost**: each run of the step uses one of your AI questions, and counts toward the teammate's own monthly limit if it has one.
+- **Daily limit**: one automation can ask its teammates up to 20 times a day (UTC). Past that, the step says so and asks again the next day.
+- **Who reads the answer**: only you and the workspace's Owners and Admins can read what the teammate answered in the automation's runs. Everyone else sees that it answered.
+- **Your chat** with the teammate records **Asked by the automation** followed by its name and the request, then the answer.
+
+### When a teammate step doesn't run
+
+The run says why. The most common reasons:
+
+- **The teammate is paused, so it didn't run.**
+- **The teammate has used all its AI questions for this month, so it didn't run.**
+- The workspace teammate it asks was changed by whoever manages it after you published the automation. The run names what changed. Check the teammate, then publish the automation again.
+- **This automation was published before AI teammate steps were checked for changes, so it didn't run. Open it and publish it again.**
+- AI is turned off for you, or you can no longer be acted for in this workspace.

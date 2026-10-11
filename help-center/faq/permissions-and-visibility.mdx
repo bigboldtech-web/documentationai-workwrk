@@ -1,92 +1,72 @@
 ---
 title: Why can't I see this?
-description: The three doors that decide who sees whose data, how Space and List visibility work, and why an app may be missing from your sidebar.
+description: The workspace roles, how sharing decides who opens a Space, Folder or List, who sees whose people data, and why an app may be missing from your rail.
 ---
 
-If something is missing in WorkwrK, it is almost always one of three rules: your access level, your position in the reporting tree, or the visibility set on a Space or List. Work through them in that order.
+If something is missing in WorkwrK, it is almost always one of three rules: it was not shared with you, you are not in the right reporting line for someone's people data, or the app is hidden from your rail. Work through them in that order.
 
-## The three doors
+## Your role
 
-People data, KRAs, KPIs, goals and reviews all use the same ladder, and it is enforced on the server, not just hidden in the interface.
+Everyone in a workspace is an **Owner**, an **Admin**, a **Member** or a **Guest**.
 
-| Door | Who | What they can reach |
-| --- | --- | --- |
-| 1 | `Employee`, `Agent` | Their own data only. Their career home at `Me` in the Home sidebar carries their KRAs, KPIs and goals. |
-| 2 | `Manager`, `Team Lead` | Themselves plus everyone in their reporting tree, all the way down, not just direct reports. |
-| 3 | `Director`, `VP`, `C-Level`, `HR`, `Company Admin`, `Super Admin` | The whole organisation. |
+- **Owners** and **Admins** open every Space and every Workspace settings page.
+- **Members** work in the Spaces they are added to and see what is open to the whole company.
+- **Guests** see only what is shared with them.
+
+A Member also has a tier (Member, Team lead, Manager, Director, VP, Executive, People team or Agent), which decides which manager pages they open. It does not change what they can open in Spaces and Lists.
+
+## Spaces, Folders and Lists
+
+Whether you can open a piece of work is decided by **sharing**, from its `…` menu, **Manage access**.
+
+| Thing | You can open it when |
+| --- | --- |
+| A Space | You are listed in it, or it is open to **Everyone at** your company, or you are an Admin |
+| A Folder | You can open its Space, or it was shared with you on its own; a **Restricted** Folder opens only to the people listed, plus Admins |
+| A List | You can open its Folder or Space, or it was shared with you; a **Restricted** List opens only to the people listed, plus Admins; a List open to **Everyone at** your company opens to all |
+| A task | You can open its List, or it is assigned to you, or you made it |
+
+Sharing flows down from a Space to its Folders and Lists, and never climbs: being given a List does not give you the Space above it. You see the List, and the path to it.
+
+To be added, ask someone with Full access on the Space, Folder or List to open its `…` menu, choose **Manage access**, and add you. The level they give you decides what you can do: **Full access**, **Can edit**, **Can edit assigned tasks** (Lists only), **Can comment** or **Can view**.
+
+<Callout kind="tip">
+  Seeing a List is not the same as editing it. If you can read a List but every change is refused, you hold **Can view** or **Can comment** on it. Ask for **Can edit**. A task assigned to you is yours to change whatever your level on the List, unless Can comment is all you hold there.
+</Callout>
+
+## People data
+
+A person's KRAs and KPIs, goals, reviews, assets and scores show only to the person, their reporting chain, the People team, Directors and above, and Owners and Admins. Everyone else sees the directory card: name, job title, department and manager.
 
 Two consequences people trip over:
 
-- A manager with **no reports assigned** effectively sees only themselves. Reporting lines are set per person, so if nobody reports to you yet, the team surfaces will look empty. An admin fixes this under `Settings`, then `Reporting hierarchy`, or by setting a person's reporting manager.
-- Door 2 is the *reporting* tree, not the department. Sharing a department with someone does not put them in your tree.
-
-## Why an app is missing from the rail
-
-Some apps in the left rail are gated by access level. They are hidden rather than shown as a locked door, and the pages behind them enforce the same rule if you reach them by URL.
-
-| App | Minimum access |
-| --- | --- |
-| `Teams`, `Automation` | Manager tier: Team Lead, Manager, Director, VP, C-Level, HR, or an org admin |
-| `Review cycles`, `Candor`, `Announce`, `Kudos`, `Surveys`, `Tools`, `Assets`, `Policies`, `Contracts`, `Trash` | HR or an org admin |
-
-Everything else, including `Home`, `Planner`, `Docs`, `Library`, `Goals`, `SOPs`, `Timesheets`, `Forms`, `Clips` and `Dashboard`, is available to everyone.
-
-The rail is also personal: apps can be pinned and unpinned. If an app you are entitled to has vanished, check the `More` tile in the rail before assuming it is a permission problem.
-
-<Callout kind="tip">
-  Employees are never stranded by the Teams gate. Opening a manager-only page sends you to your own profile, which carries your KRAs, KPIs, goals and reviews.
-</Callout>
-
-## Spaces
-
-A Space carries one of three visibility settings, chosen in its `Share` dialog:
-
-| Setting | Who sees it |
-| --- | --- |
-| `Private` | Only invited members |
-| `Workspace` | Members, plus organisation admins |
-| `Org-wide` | Every member of the organisation |
-
-A Space appears in your sidebar if it is `Org-wide`, or if you are a member of it. Organisation admins see every Space. So a `Workspace` Space is still invisible to you until someone adds you as a member.
-
-To be added, ask a Space owner or admin to open the Space's `…` menu, choose `Sharing & Permissions`, and add you. Roles inside a Space are `Owner`, `Admin`, `Member` and `Guest`.
-
-## Lists and boards
-
-A List has its own visibility, which defaults to following its Space:
-
-| Setting | Who sees it |
-| --- | --- |
-| `Inherit Space` | Members of the parent Space. This is the default. |
-| `Private` | Tighter than the Space: board members only |
-| `Org-wide` | Looser than the Space: every member of the organisation |
-
-Two extra rules worth knowing:
-
-- A List inside a **private Folder** is hidden from everyone except the folder's owner, whatever the List's own visibility says.
-- The Space **owner** can see through a `Private` List in their Space. A Space member cannot.
+- A manager with **no reports** sees only themselves on My team and Workload. Reporting lines are set per person. An Owner, Admin or the People team fixes it on the person's record, or in **Teams**, **Org chart** with **Edit reporting lines**.
+- The chain is the *reporting* line, not the department. Sharing a department with someone does not put them in your chain.
 
 ## Goals
 
-Goals follow their own audience rules, which combine with the three doors:
+- Company goals are visible to everyone.
+- Your own goals, and goals whose contributors include you (directly, or through your department, job title or a tag), are visible to you.
+- A manager sees the goals of anyone in their chain.
+- Directors and above, the People team and Admins see every goal.
 
-- Company-level goals are visible to everyone in the organisation.
-- Your own goals, and goals whose contributors resolve to you, are visible to you.
-- A manager sees the goals of anyone in their report tree.
-- Door 3 levels see everything.
+Opening a goal you are not entitled to see shows a not found page, so a missing goal and a forbidden goal look the same from outside. That is deliberate.
 
-Opening the URL of a goal you are not entitled to see returns a not-found page, not a redirect, so a missing goal and a forbidden goal look the same from outside. That is deliberate.
+## Why an app is missing from the rail
+
+Owners and Admins decide what the rail shows in Workspace settings, **Apps & modules**: an app can be hidden, or shown only to **Managers and up**, **People team and Admins** or **Admins only**. Talk and Tables also show only while the module is on.
+
+So an app you expected may be hidden for your tier, or turned off for the workspace. Ask an Owner or Admin.
 
 ## Quick diagnosis
 
 | Symptom | Most likely cause |
 | --- | --- |
-| A colleague's name is missing from a picker | They are not in your report tree, and you are not on Door 3 |
-| A Space others talk about is not in my sidebar | It is `Private` or `Workspace` and you are not a member |
-| A List inside a Space I can see is missing | The List is `Private`, or its Folder is private |
-| A whole app is missing from the rail | It is access-gated, or you unpinned it. Check `More` |
-| A team page redirects me to my profile | You are below manager tier |
-
-Your own access level is shown as a read-only chip on your `Profile`, under `Settings` in the `Personal` section. If it says you should have access and you still do not, ask an organisation admin to check it under `Settings`, then `Members`, and your reporting manager under `Settings`, then `Reporting hierarchy`.
+| A Space others talk about is not in my sidebar | It is invite only or for Space members, and you are not listed |
+| A List inside a Space I can see is missing | The List, or its Folder, is **Restricted** |
+| I can open a List but can't change anything in it | You hold Can view or Can comment on it |
+| A colleague's record shows only a card | They are not in your chain, and you are not People team, Director or above, or an Admin |
+| A whole app is missing from the rail | It is hidden or limited in Apps & modules, or its module is off |
+| A manager page sends me to my own record | Your tier is Member |
 
 For the full model, see [Visibility and permissions](/reference/visibility-and-permissions).

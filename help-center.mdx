@@ -3,37 +3,46 @@ title: Help Center
 description: Short, tested answers to the questions people actually hit in WorkwrK, plus who to ask when the answer is "your admin has to do it".
 ---
 
-Most WorkwrK questions turn out to be one of three things: something is hidden because of your access level, something needs a permission you do not have, or a flow has a required step nobody mentioned. The pages below cover the real behaviour of the product, checked against what the app actually does.
+Most WorkwrK questions turn out to be one of three things: something was not shared with you, something needs a role you do not have, or a flow has a step nobody mentioned. The pages below cover the real behaviour of the product, checked against what the app actually does.
 
 ## How to get help
 
 <Steps>
-  <Step title="Check whether it is a visibility rule" icon="eye">
-    A surprising share of "it's broken" is really "you are not entitled to see it". [Why can't I see this?](/help-center/faq/permissions-and-visibility) explains the three doors WorkwrK uses and how Space and List visibility work.
+  <Step title="Check whether it is a sharing rule" icon="eye">
+    A surprising share of "it's broken" is really "it was not shared with you". [Why can't I see this?](/help-center/faq/permissions-and-visibility) explains how sharing, roles and the reporting line decide what you see.
   </Step>
-  <Step title="Ask your workspace admin" icon="user-cog">
-    Access levels, permissions, reporting lines, Space membership and invites are all set inside your own workspace, and your admins can change any of it without leaving the app. Your organisation admins are the people who hold the `Company Admin` or `Super Admin` access level; if you are not sure who that is, ask your manager. Admins find the controls under `Settings`, in the `Admin` section.
+  <Step title="Ask your workspace's Owner or Admin" icon="user-cog">
+    Roles, tiers, reporting lines, sharing and invitations are all set inside your own workspace, and your Owners and Admins can change any of it without leaving the app. If you are not sure who they are, ask your manager. They find the controls in **Workspace settings**, in the avatar menu.
   </Step>
   <Step title="Escalate account or billing questions" icon="mail">
-    Anything your admin cannot fix from inside the workspace, such as a billing or account question, goes through the contact page at `https://workwrk.com/contact`.
+    Anything your admin cannot fix from inside the workspace, such as a billing or account question, goes through the contact page at `https://workwrk.com/contact`, or billing@workwrk.com for billing.
   </Step>
 </Steps>
 
 <Callout kind="info">
-  There is no in-app support chat and no ticket queue inside WorkwrK. Your workspace admin is the first line for everything to do with access, membership and permissions.
+  There is no in-app support chat and no ticket queue inside WorkwrK. Your workspace's Owners and Admins are the first line for everything to do with access, membership and sharing.
 </Callout>
 
 ## Frequently asked
 
 <Columns cols={3}>
   <Card title="Inviting your team" icon="user-plus" href="/help-center/faq/how-to-invite-team">
-    The real invite flow, including the KRA and SOP that every invite must carry.
+    The invite flow, what an invitation carries, and the domain and seat rules.
   </Card>
   <Card title="Why can't I see this?" icon="eye-off" href="/help-center/faq/permissions-and-visibility">
-    Who sees whose data, and why an app or a Space may be missing from your sidebar.
+    How sharing, roles and the reporting line decide who sees what.
   </Card>
   <Card title="Notifications and reminders" icon="bell" href="/help-center/faq/notifications-and-reminders">
-    What actually triggers a notification, and how reminders fire whether or not the app is open.
+    What triggers a notification, and how reminders fire whether or not the app is open.
+  </Card>
+  <Card title="Why did my AI teammate ask first?" icon="shield-check" href="/help-center/faq/why-did-my-teammate-ask-first">
+    The reasons a teammate stops for your approval.
+  </Card>
+  <Card title="AI questions and teammates" icon="gauge" href="/help-center/faq/ai-questions-and-teammates">
+    What counts as an AI question, and how to stay within a limit.
+  </Card>
+  <Card title="Can admins read my teammate chats?" icon="lock" href="/help-center/faq/can-admins-read-my-teammate-chats">
+    Who can see your chats, memories and what a teammate did.
   </Card>
 </Columns>
 
@@ -47,7 +56,13 @@ Most WorkwrK questions turn out to be one of three things: something is hidden b
     Installing the recorder extension, starting a capture, and what to do when nothing lands.
   </Card>
   <Card title="My note or doc is missing" icon="file-question" href="/help-center/troubleshooting/missing-notes-or-docs">
-    The Notepad and Docs are separate stores. Which one you wrote in decides where to look.
+    The Notepad and Docs are separate. Which one you wrote in decides where to look.
+  </Card>
+  <Card title="Why did my routine pause?" icon="pause" href="/help-center/troubleshooting/why-did-my-routine-pause">
+    Each reason an AI teammate's routine stops, and how to start it again.
+  </Card>
+  <Card title="Why can't I turn on Talk or Tables?" icon="boxes" href="/help-center/troubleshooting/turn-on-talk-or-tables">
+    The premium modules and the plan they come with.
   </Card>
 </Columns>
 
@@ -58,15 +73,42 @@ Most WorkwrK questions turn out to be one of three things: something is hidden b
     Space, Folder, List, tasks and views, in the order the product expects.
   </Card>
   <Card title="Write and run an SOP" icon="scroll-text" href="/help-center/guides/run-an-sop">
-    Pick the right SOP kind, publish it, assign it, and watch acknowledgements land in Compliance.
+    Pick the right SOP kind, publish it, assign it, and watch acknowledgements land in compliance.
   </Card>
   <Card title="Track a goal" icon="trophy" href="/help-center/guides/track-a-goal">
     Owner versus contributors, targets with a start value, check-ins, and how progress is calculated.
+  </Card>
+  <Card title="Approve a teammate's request" icon="check" href="/help-center/guides/approve-a-teammate-request">
+    Find what an AI teammate is waiting on, then approve, change or deny it.
+  </Card>
+  <Card title="Let a teammate act without asking" icon="toggle-right" href="/help-center/guides/let-a-teammate-act-without-asking">
+    Don't ask for a tool, or from an approval card.
+  </Card>
+  <Card title="Stop or pause a routine" icon="calendar-clock" href="/help-center/guides/stop-a-routine">
+    Pause a routine for a while, or delete it.
+  </Card>
+  <Card title="Make a teammate for everyone" icon="users" href="/help-center/guides/make-a-teammate-for-everyone">
+    Share one AI teammate with the whole workspace.
+  </Card>
+  <Card title="Ask a teammate in Talk" icon="message-square" href="/help-center/guides/ask-a-teammate-in-talk">
+    Ask in a conversation, and where you can't.
+  </Card>
+  <Card title="Turn on two step verification" icon="shield" href="/help-center/guides/turn-on-two-step-verification">
+    A code from an authenticator app, and backup codes.
+  </Card>
+  <Card title="Log out of every device" icon="log-out" href="/help-center/guides/log-out-of-every-device">
+    End every session at once.
+  </Card>
+  <Card title="Download a copy of your data" icon="download" href="/help-center/guides/download-my-data">
+    Your own records as a file.
+  </Card>
+  <Card title="Delete your account" icon="trash-2" href="/help-center/guides/delete-my-account">
+    What is erased, and what stays with your workspace.
   </Card>
 </Columns>
 
 ## Related reference
 
-- [Visibility and permissions](/reference/visibility-and-permissions) is the full reference behind the FAQ answer.
-- [Status](/reference/status) records what is built, what is partial, and what does not exist yet, so you can tell a bug from a gap.
-- [Glossary](/reference/glossary) defines Space, List, KRA, KPI, SOP and the rest of the vocabulary used across these pages.
+- [Visibility and permissions](/reference/visibility-and-permissions) is the full reference behind the sharing answer.
+- [What's built](/reference/status) records what is built, what is partial, and what is not there yet, so you can tell a bug from a gap.
+- [Glossary](/reference/glossary) defines Space, List, KRA, KPI, SOP, AI teammate and the rest of the vocabulary used across these pages.

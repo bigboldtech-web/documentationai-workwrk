@@ -1,39 +1,36 @@
 ---
 title: Time tracking and finding things
-description: Task timers, how tracked time reaches your weekly timesheet, the approval flow, and an honest map of what search actually covers.
+description: Task timers, how tracked time reaches your weekly timesheet, the approval flow, search and the keyboard shortcuts, and what reaches your Inbox.
 ---
 
-Two unglamorous surfaces you will use every day. Both have sharp edges worth knowing before you rely on them.
+Two unglamorous surfaces you will use every day. Both have edges worth knowing before you rely on them.
 
 ---
 
 ## Tracking time on a task
 
-Time is tracked **against a task**. There are three ways to start:
+Time is tracked **against a task**. There are two ways to start:
 
-- the **Track time** field in the task detail: a play button and your running total
-- **Start timer** in a task row's `…` or right-click menu
-- the topbar timer pill, which appears whenever a timer is running and stops it in one click
+- the **Time tracked** field in the task drawer: a start button and your running total
+- **Start timer** in a task's `…` menu
 
-Only one timer runs at a time per person. While one is running, the pill in the topbar shows the task and a live clock; the task's own Track time field shows the same clock in red.
+Only one timer runs at a time per person. While one is running, the task's own Time tracked field shows the clock.
 
-Click the total (not the play button) in the task detail to open the full tracker: your recent sessions, and a manual-entry form for time you forgot to track.
+Click the total in the task drawer to open the full tracker: your recent sessions on this task.
 
-### The one gotcha with manual entries
+### Time entered by hand
 
-**Stopping a running timer** on a task writes an entry into your weekly timesheet. **Adding a manual entry** does not. Manual entries count toward the task's tracked total and show in the session list, but they never reach your timesheet.
-
-If the time needs to appear on your timesheet, run the timer.
+Stopping a running timer writes an entry into your weekly timesheet. To add time you forgot to track, use **Log time** on the Timesheets page, or **Time entry** in the Planner sidebar's **+** menu, which opens the same thing on this week.
 
 ---
 
 ## How tracked time becomes a timesheet
 
-When you stop a task timer, the system:
+When you stop a task timer, WorkwrK:
 
 1. Closes the session and stores its duration.
-2. Finds (or creates) your **DRAFT** timesheet for the week that contains the stop time. Weeks start Monday, in UTC.
-3. Appends a time entry to it, in hours rounded to two decimals, on that day, described with the task's title and linked back to the task.
+2. Finds, or creates, your **Draft** timesheet for the week that contains the stop time. Timesheet weeks start on Monday, in UTC.
+3. Appends a time entry to it, on that day, described with the task's title and linked back to the task.
 
 If the week's timesheet has already been submitted or approved, **nothing is written**. A locked week is never silently modified. Track the time, then talk to whoever approves your sheets.
 
@@ -41,26 +38,21 @@ If the week's timesheet has already been submitted or approved, **nothing is wri
 
 ## The Timesheets page
 
-`/timesheets` opens on four stat tiles (drafts, submitted, approved, hours logged) and four scopes:
+**Planner**, **Timesheets** opens on your weeks, with three views:
 
-| Scope | Who can use it | What it shows |
+| View | Who can use it | What it shows |
 | --- | --- | --- |
-| **Mine** | Everyone | Your recent weeks. |
-| **Approve queue** | Managers | Submitted weeks assigned to you, plus unassigned ones. |
-| **Team** | Managers | Your full report tree, direct and indirect. |
-| **All** | Managers | Org-wide. |
+| **My timesheets** | Everyone | Your weeks. |
+| **Approvals** | Managers | Submitted weeks waiting on you. |
+| **Team** | Managers | Your chain's weeks. |
 
-**Start this week** opens (or reopens) the current week's timesheet so entries have somewhere to land. It is idempotent: pressing it twice does not create two sheets.
-
-Click a row to expand it and see its entries, with the task each entry came from.
+Click a week to expand it and see its entries, with the task each entry came from. **Log time** adds an entry by hand.
 
 Row actions depend on status:
 
 - A **Draft** week can be **Submit**ted.
 - A **Submitted** week can be **Retract**ed back to draft.
-- In the **Approve queue**, a submitted week can be **Approve**d or **Reject**ed.
-
-There is no control on this page for typing a time entry by hand. Entries arrive from stopped task timers.
+- In **Approvals**, a submitted week can be **Approve**d or **Reject**ed.
 
 ---
 
@@ -68,81 +60,67 @@ There is no control on this page for typing a time entry by hand. Entries arrive
 
 ### Search (Cmd/Ctrl + K)
 
-The command palette opens with **Cmd + K** (**Ctrl + K** on Windows and Linux) or the search box in the topbar. Type at least two characters and results come back live from the server, searched across the real work graph in parallel and returned as one ranked list.
+The search palette opens with **Cmd + K** (**Ctrl + K** on Windows and Linux) or the search box in the top bar: **Search or type a command…**. Type at least two characters and results come back live, as one ranked list.
 
-**What search covers today:**
+**What search covers:**
 
-- **Tasks** (the Items on your Lists), each linking to `/item/<id>`
-- **Lists** (boards), linking to `/boards/<slug>`
-- **Spaces** and **Folders**
-- **Notes and documents**, access-checked so a private note never appears in someone else's results, linking to `/docs/<id>`
-- **Whiteboards**
+- **Tasks**, **Lists**, **Spaces** and **Folders**
+- **Docs**, **canvases**, **tables** and **forms**
 - **People**
-- **SOPs**
-- **Goals** (OKRs)
-- **Meetings**
-- **Departments**
-- **Ideas**, **Policies** and **Announcements**
+- **SOPs**, **goals**, **meetings**, **departments**, **ideas**, **policies** and **announcements**
 
-Results are visibility-gated the same way the app is. A Space or Board you cannot read never appears, private notes are checked per viewer, and org admins see everything. Search deliberately does **not** touch the legacy `Task` table, and the old finance result types (vendors, purchase orders, GL accounts, budget plans) are gone: those modules were removed and their dead-link results with them.
+Results are access-checked the same way the app is. A Space, List or doc you cannot open never appears, and a Notepad note shows only to its owner.
 
 ### The palette before you type
 
-With an **empty query** the palette shows real, working rows, not sample data. In order:
+With an empty query the palette shows real, working rows: your recent pages, quick actions such as creating a task, a doc or a reminder, and navigation rows to Inbox, My work, the Planner, Goals, Docs and more. Every row either navigates or runs an action.
 
-- **Recents**: the apps you opened most recently, as navigation rows.
-- **Quick actions**: Create task, New doc, New notepad, Set a reminder, Open AI Notetaker, Post an announcement, Open Timesheets. Each one fires a real shell action or opens a real page.
-- **Navigate and Command rows**: every entry is a real link to a real page (Today, Inbox, My tasks, Planner, Goals, Docs home, Timesheets, Connect apps, and more). Command rows also carry a short keyword alias you can type, for example `mw` for My Work.
-
-There are no decorative rows left. Every row either navigates or runs an action.
-
-### Other keyboard shortcuts
+### Keyboard shortcuts
 
 | Shortcut | Does |
 | --- | --- |
-| **Cmd/Ctrl + K** | Open or close the search palette. |
-| **Cmd/Ctrl + Shift + K** | Open the quick task modal. |
-| **Cmd/Ctrl + J** | Open or close the AI panel. |
-| **Cmd/Ctrl + B** | Collapse or expand the sidebar. |
-| **Cmd/Ctrl + 1-9** | Jump to the Nth pinned app in the rail. |
-| **Escape** | Close the palette. |
+| **Cmd/Ctrl + K** | Open the search palette. |
+| **Cmd/Ctrl + Shift + K** | Create a task. |
+| **Cmd/Ctrl + Shift + E** | New note. |
+| **Cmd/Ctrl + J** | Ask AI. |
+| **Cmd/Ctrl + \\** | Collapse or expand the sidebar. |
+| **?** | The keyboard shortcuts overlay. |
+| **g** then **1** to **8** | Go to the first to eighth hub on the rail. |
+| **g** then **i**, **h** or **w** | Go to Inbox, Home or My work. |
+| **Escape** | Close what is open. |
 
-Quick task moved off **Cmd/Ctrl + T** to **Cmd/Ctrl + Shift + K**. Browsers reserve Cmd/Ctrl + T for a new tab and never delivered it to the app, so the old binding silently did nothing. Shift + K sits next to the search chord and is free in every target browser.
+Pages have their own: on My work, **1** to **6** switch views and **f** opens Filter; in the Inbox, the arrow keys move between notifications, **e** clears one, **u** marks it unread and **s** snoozes it. My settings, **Keyboard shortcuts** lists every one by where it works.
 
 ### Precise ways to work a set of tasks
 
-Search finds a task by title now, but these remain the sharper tools when you want many tasks at once, not one:
+Search finds a task by title. These remain the sharper tools when you want many tasks at once:
 
-- **Everything** (`/everything`): every task you are allowed to read across all Spaces, newest 500, grouped by status, with the full List-view toolbar. The search box and filters in that toolbar work over the whole set.
-- **A List's own search**: the magnifier in the board toolbar filters that List's tasks by title as you type.
-- **My Wrk** (`/tasks`) and its sub-pages: **Assigned to me**, **Today & Overdue**, **Personal List**.
+- **Everything**: every task you can open across all Spaces, grouped by status, with the full List toolbar.
+- **A List's own search**: the magnifier in the List toolbar filters that List's tasks by title as you type.
+- **My work**: everything assigned to you, grouped by when it is due.
 - **Filters** on any view, which are far more precise than text search: field, operator, value, joined with AND or OR, and savable.
 
-### Finding notes and files
+### Finding docs, files and mentions
 
-- The **Library** (`/library`) has a search box per tab and Space chips to narrow by Space.
-- The **Docs** home has its own search, sort and tabs.
-- **Mentions** (`/me/mentions`) collects every place across documents and SOPs where someone `@`-mentioned you, with the surrounding text as the excerpt. Clicking a row jumps to the exact block.
+- The **Docs** hub has its own search, filters and views.
+- **Files** has a search box, filters by type and uploader, and views for favorites, recent files and files in Spaces.
+- **Mentions** collects every place in a doc or an SOP where someone mentioned you, with the surrounding text. Clicking a row jumps to the exact block.
 
 ---
 
-## Inbox, and what actually reaches it
+## Inbox, and what reaches it
 
-`/inbox` sorts notifications into Primary, Other, Later (snoozed) and Cleared.
+**Inbox** in the Work sidebar sorts notifications into **Primary**, **Other**, **Mentions**, **Snoozed** and **Cleared**.
 
-The task pipeline now emits real notifications:
+Tasks write real notifications:
 
-- **Assigning or reassigning a task** notifies the new owner.
-- **Changing a task's status** notifies the owner plus everyone who has commented on the task.
-- **Comment mentions** notify the person mentioned.
+- **A task is assigned to you**, or handed to you.
+- **A task you are assigned to changes status**; so does a task you watch or commented on.
+- **Someone comments** on a task assigned to you, or on a task you follow.
+- **Someone mentions you** in a comment or a doc.
+- **A task is due today**: once a day in the morning, for each task assigned to you due that day.
+- **An AI teammate is waiting for your approval**, from a routine, an answer in Talk or an automation.
 
-Each of these honors the recipient's `/settings/notifications` toggles, and you are never notified about your own action (assigning yourself work, or moving your own task, is not news).
+Each of these has its own switch in My settings, **Notifications**, and you are never notified about your own action. The **Overdue** switch is there too, but the daily overdue notification is not sent yet.
 
-**Due-date notifications do not fire automatically yet.** The producer that sweeps tasks due today and overdue is written and ready, but nothing calls it on a schedule: no cron job covers board Items today. So a due date arriving does not, on its own, land in your Inbox. Until that job is wired, use My Wrk and the "Today & Overdue" filter for what is due.
-
-A live **notifications bell** sits in the top right, next to the reminders bell. It carries an unread count badge, opens a popover of your recent notifications with **Mark all read**, and can raise a desktop notification when the count climbs while the tab is in the background, once you grant permission from the popover's **Enable desktop alerts** button.
-
-Two related surfaces to set expectations on:
-
-- **Assigned Comments** in the sidebar renders its empty state permanently. Assigning a comment to a person is not built yet, so there is no data behind either tab.
-- **Favorites** in the sidebar (the section with your starred Spaces, Lists, Docs, Folders, tables, whiteboards and files) is the real favorites list. The separate `/favorites` page is something else entirely: it is the pinboard for your pinned AI chats.
+A **notifications bell** sits in the top right, next to the reminders bell. It carries an unread count, opens your recent notifications, and can raise a desktop alert while the tab is in the background once you allow it from the **Desktop** tab. The avatar menu has **Do not disturb** and **Mute notifications** for an hour, until tomorrow, or until you turn it back on.

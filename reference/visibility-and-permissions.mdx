@@ -1,188 +1,141 @@
 ---
 title: Visibility and permissions
-description: The three-door model in practice, what each Level actually sees per module, and where the rules are enforced.
+description: The four workspace roles, member tiers, the sharing levels on Spaces, Folders, Lists and docs, and who sees whose people data.
 ---
 
-WorkwrK decides visibility with a fixed ladder of **Levels**, not with editable roles. Your Level is a field on your user record (`User.accessLevel`). Your **Role** is your job title and carries your KRAs. The two are separate things.
+WorkwrK answers two different questions, and it is worth keeping them apart:
 
-## The ladder
+- **Who can open a piece of work**: a Space, Folder, List, task, doc, table, form or canvas. That is decided by **sharing**.
+- **Who can see a person's people data**: their KRAs and KPIs, goals, reviews and scores. That is decided by **the reporting line** and a few roles.
 
-From the top down: `SUPER_ADMIN`, `COMPANY_ADMIN`, `C_LEVEL`, `VP`, `DIRECTOR`, `MANAGER`, `TEAM_LEAD`, `HR`, `EMPLOYEE`, `AGENT`.
+Both sit on top of each person's **workspace role**.
 
-There are two Level lists in the code and they are not the same, which matters if you are reasoning about who can hand out admin.
+## Workspace roles
 
-- `src/lib/access-levels.ts` is the **Role** level list. It deliberately omits `SUPER_ADMIN` and `COMPANY_ADMIN`, so nobody can promote themselves through a Role edit. The Role Definition picker also drops `AGENT`, leaving seven options.
-- `src/lib/permissions.ts` is the **person** level list, and it contains every level. The invite modal filters out `SUPER_ADMIN` and offers the other nine, `COMPANY_ADMIN` included. Settings → Members offers all ten, `SUPER_ADMIN` included, and `PATCH /api/users/[id]` puts no ceiling on the value an admin may set.
+Everyone in a workspace holds one of four roles. Workspace settings, **Access**, explains them with a live count of each.
 
-So "granted by hand, not from a dropdown" is true of Super Admin only if nobody with Company Admin uses the Members dropdown. Company Admin is straightforwardly grantable from the invite modal and from Members.
+| Role | What it means |
+| --- | --- |
+| **Owner** | Runs the company account: billing, ownership and security. |
+| **Admin** | Runs the workspace day to day: opens every Space, invites people and uses every Workspace settings page. |
+| **Member** | An employee: works in the Spaces they are added to and sees what is open to the whole company. |
+| **Guest** | Outside the company, sees only what is shared. |
 
-Note that `HR` sits below `TEAM_LEAD` in the seniority list but is treated as an org wide tier for people data. It is a scope, not a rank.
+Owners and Admins open every Workspace settings page, including **Plan & billing**, **Security** and **API & webhooks**. Members with a manager tier, and the People team, can also open **Members**, **Access** and **Scoring & reviews** to read them; in Members a manager sees their own team. Everyone opens My settings.
 
-## The three doors
+On Guests, be precise: the **Guests** tab in Workspace settings, **Members**, says **Guests are people outside your company who can only see what you share with them. Inviting someone to a Space by email today creates a member account.** So the people you invite to a Space join as Members.
 
-Three named groups do almost all the work. They are defined in `src/lib/alignment-scope.ts` and mirrored in `src/lib/page-gates.ts` and the app catalog, so the nav, the page and the API all agree.
+### Member tiers
 
-| Door | Levels | Sees |
-| --- | --- | --- |
-| Employee | `EMPLOYEE`, `AGENT` | themselves only |
-| Manager | `TEAM_LEAD`, `MANAGER`, plus everyone above | themselves plus their recursive report tree |
-| Org wide | `COMPANY_ADMIN`, `SUPER_ADMIN`, `C_LEVEL`, `VP`, `DIRECTOR`, `HR` | the whole organization |
+A Member also carries a **tier**. The tier decides which manager pages they open, such as My team, Review cycles or Analytics. It does not change what they can open in Spaces and Lists, which sharing decides. An Owner or Admin sets it on the person's row in Workspace settings, **Members**.
 
-Two narrower sets exist for heavier actions:
+| Tier | Typical use |
+| --- | --- |
+| **Member** | Most people. |
+| **Team lead**, **Manager** | People who lead others. |
+| **Director**, **VP**, **Executive** | Senior leaders, who see people data across the company. |
+| **People team** | The people who look after everyone's people information. |
+| **Agent** | An agent account. It works as a Member, can edit what it is given, never has Full access, and never exports or invites. |
 
-- **Org admin** is `SUPER_ADMIN` and `COMPANY_ADMIN` only. Deleting a goal, editing org settings and SOP folder access sit here. A Director can edit a goal but cannot delete someone else's.
-- **HR admin** is `SUPER_ADMIN`, `COMPANY_ADMIN` and `HR`. Review cycle administration sits here.
+The **Agent** tier is a kind of account, not an AI teammate. AI teammates are AI helpers each person makes and chats with, and an agent account can't have them. See [AI teammates](/using/ai-teammates/overview).
 
-## Hiding a link is never the permission
+Creating a Space needs an Owner, an Admin, or a Member whose tier is Team lead, Manager, Director, VP or Executive.
 
-Every gated page calls a server side gate before it renders, and the matching API re-checks the same ladder. The rail hides apps you cannot use, but if you type the URL you still get redirected or a 404, not the page.
+---
 
-- `requireManagerPage()` sends anyone below manager tier to `/people/me`. It does not strand them: that is their own career home with their KRAs, KPIs, goals and reviews.
-- `requireHrAdminPage()` sends managers to `/team/reviews` and everyone else to `/people/me`.
-- `requireGoalPage(id)` runs `canSeeGoal` and calls `notFound()` when you fail, so a guessed goal URL reads as "does not exist" rather than "exists but you cannot see it".
+## Sharing work
 
-## Audience is not permission
+### Share from any menu
 
-A second, separate mechanism decides who a thing is **aimed at**. Goals, announcements and pulse surveys all carry an audience, and an audience can be everyone, a set of people, a set of departments, a set of offices, a set of roles, or a set of **person-tags**, depending on the module.
+Every Space, Folder, List and doc has **Manage access** in its `…` menu, and so do tables, forms and canvases. Below Full access the row reads **Who has access**, which shows who can open it without letting you change it. The dialog has two parts: the people it is shared with, and **General access**, which says who else can open it.
 
-Two rules hold across all of them:
+### The levels
 
-- **Membership resolves at read time.** A department, role or tag audience is stored as the department, role or tag, never as a frozen list of names. Someone who joins the department or picks up the tag is inside the audience on the very next read; a leaver drops out. Only ACTIVE, non-deleted users resolve, and archived tags never resolve.
-- **Audience narrows what you are shown, it does not widen what you may open.** An announcement targeted at your tag appears in your feed and notifies you. An announcement targeted at someone else's tag does not. Neither changes what your Level lets you reach anywhere else in the product.
+Each kind of thing offers its own levels:
 
-Announcements are the clearest case: the composer's **Who sees this** control is real targeting, and both the feed filter and the notification fan-out use the same resolver (`src/lib/announcement-audience.ts`). A legacy or malformed stored audience normalises to "everyone" rather than throwing, so old rows stay visible.
+| Level | Space | Folder | List | Doc | Table | Canvas, Form |
+| --- | --- | --- | --- | --- | --- | --- |
+| **Owner**: Full access, plus every Restricted List in the Space | Yes | | | | | |
+| **Full access**: change settings, sharing, delete and transfer | Yes | Yes | Yes | Yes | Yes | Yes |
+| **Can edit**: add and change tasks, docs and rows | Yes | Yes | Yes | Yes | Yes | Yes |
+| **Can edit assigned tasks**: read and discuss every task, change only tasks assigned to them or that they made | | | Yes | | | |
+| **Can comment**: read and discuss, never change | | | Yes | Yes | | |
+| **Can view**: read only | Yes | Yes | Yes | Yes | | Yes |
 
-## What each door sees, per module
+On a doc, **Can edit** also lets someone change who can open it, and **Full access** adds locking it, moving it to Trash and saving it as a template.
 
-### Your own profile and career home
+On a List, the two lowest levels work like this:
 
-`/people/me` redirects to `/people/<your id>`. That page renders in one of three modes decided on the server:
+- **Can view**: read only, except tasks assigned to them or that they made, which they can change.
+- **Can comment**: read and discuss every task, change none, not even their own, unless they can open the List another way.
 
-- **self**: your job title and description, your inherited KRAs with your own KPI readings, the recorder that puts numbers into the approval loop, your goals, your reviews, your assets, and your person-tags read-only.
-- **manage**: what a manager or an org wide viewer sees when inspecting a report. The same narrative plus edit actions, including editing that person's tags.
-- **peer**: a minimal directory card. Name, title, department, manager. Never KPI readings, reviews, moods, scores or tags.
+### How sharing adds up
 
-Anyone in the org gets at least peer mode on anyone else, because @mentions and tagging need names and avatars.
+- **Sharing flows down.** A share on a Space reaches its Folders and Lists. A share on a Folder reaches the Lists inside it.
+- **A share only adds.** Sharing something never takes away access someone already has from elsewhere.
+- **Roles never climb.** Sharing a List with someone does not give them the Folder or Space above it. They see what you shared, and the path to it.
+- **The path is not a place.** A Space or Folder someone sees only because something inside it was shared with them shows as a path. They can't open its other contents, and its menu has **Copy link** only.
+- **Folders share on their own.** You can share a Folder without sharing its Space, and the person sees that Folder and the path to it.
+- **Restricted cuts the flow.** **Restricted** on a Folder or List stops it taking access from above, so only the people listed, plus Admins, can open it. Turning it on asks first, and says who would lose access.
+- **Assigning someone a task lets them open it**, and change it, even if they can't open the rest of the List, unless Can comment on that List is all the access they hold there.
+- **You have Full access to what you made.**
 
-### People directory
+### General access
 
-`/api/users` supports `scope=team` and `scope=all`. A caller below the org wide door is forced to `team` no matter what they pass, and `team` means their recursive report tree. If they have no reports, they see only themselves.
+| Thing | Who else can open it |
+| --- | --- |
+| Space | **Invite only** (only the people listed), **Space members** (the people listed, plus Admins), or **Everyone at** your company |
+| Folder | Inherits from its Space or parent Folder, unless **Restricted** is on |
+| List | **Inherits from** its Folder or Space (the default), **Restricted**, or **Everyone at** your company |
+| Doc | Follows where it lives, unless **Restricted** is on. Also its public link and private link |
+| Table, Form | The public link and its embed code |
 
-The directory also accepts `?tagIds=`, which narrows to people carrying any of those person-tags. It is ANDed with the scope, so a tag filter can only ever shrink what you were already allowed to see: it never reaches a person outside your door.
+Inside a Space open to everyone at the company, a share can only add rights. The dialog says so: everyone can already open everything in that Space, so to keep people to one Folder or List, set the Space to **Space members**.
 
-### KRAs and KPIs
+### Public links
 
-`/api/kras` resolves scope to `all` for org wide levels, `team` for managers, `own` for everyone else. Non-admins cannot escape their scope by passing a different value.
+Workspace settings, **Access**, **Public links** decides whether SOPs, tasks and docs can have a public, view-only link. With it on, a task's **Public link** works as described in [A public link for one task](/using/spaces-and-tasks#a-public-link-for-one-task). With it off, no new public link can be made for an SOP, a task or a doc, and existing ones stop answering.
 
-For a specific person's alignment data, `canTouchUserAlignment` is the single predicate: yourself always, org wide levels always, managers when the target is inside their recursive report tree, nobody else.
+---
+
+## People data
+
+A person's record, under **Teams**, has an Overview and Skills for everyone in the company. The rest of it, their KRAs and KPIs, goals, reviews, assets and scores, shows only to:
+
+- the person themselves,
+- their reporting chain (their manager, that manager's manager, and up),
+- the **People team**,
+- people whose tier is **Director**, **VP** or **Executive**,
+- Owners and Admins.
+
+Everyone else sees the directory card: name, job title, department and manager. People pickers, such as the assignee picker in a List and the reporting manager picker, search the whole company, so you can always find a colleague by name.
 
 ### Goals
 
-The goals list at `/okrs` is open to every signed in member. The **rows** are what get filtered, in `/api/okrs`:
+- Everyone sees Company goals.
+- You see the goals you own, and the goals whose contributors include you, directly or through your department, job title or a tag.
+- Everyone sees Department goals for their own department.
+- A manager also sees the goals of people in their reporting chain.
+- Directors, VPs, Executives, the People team and Admins see every goal.
 
-- Everyone sees goals at COMPANY level.
-- Everyone sees their own goals, whether they own them or are a resolved member of the audience. That includes goals targeted at a department, a role or a tag they carry.
-- Everyone sees DEPARTMENT level goals for their own department.
-- Managers additionally see goals owned by anyone in their report tree, goals whose audience covers anyone in that tree (including by tag), and unowned objectives.
-- Org wide levels see everything.
+Opening a goal you can't see shows a not found page, so a missing goal and a forbidden goal look the same from outside.
 
-Audience membership is resolved at read time, never from a frozen list.
+### Audience is not permission
 
-Editing and deleting use separate predicates. `canEditOkrOwner` allows the owner, org wide levels, and a manager over the owner. `canDeleteGoal` narrows the org wide door to org admins only. The interface gates its Delete button on the same predicate the API enforces, so you never see a Delete that then returns 403.
+Goals, announcements and pulse surveys carry an **audience**: everyone, some people, departments, offices, job titles or tags. The audience decides who something is aimed at, and it is worked out each time it is read, so someone who joins a department or picks up a tag is in the audience straight away. An audience never widens what anyone can open elsewhere.
 
-### Reviews
+### Notepad notes are yours alone
 
-`/reviews` (review cycle administration) is HR admin. Below that tier, cycle shells still render (names and counts) but the review rows are filtered to ones you are in: your own, ones you are the reviewer on, and for managers, your report tree's.
+A Notepad note is private to the person who wrote it. Nobody else can open it, including Admins, and it never shows in Docs or a doc picker.
 
-Weekly reviews have their own resolver: the subject and the recorded manager get edit, org admins get admin, Director and above get read down their tree, everyone else gets nothing.
+---
 
-### Spaces, boards and tasks
+## Apps on the rail
 
-This is membership based, not Level based, and it composes downward.
+The rail shows the hubs and apps each person can open. Owners and Admins change it in Workspace settings, **Apps & modules**: hide an app, set who sees it (**Everyone**, **Managers and up**, **People team and Admins** or **Admins only**), and change the order. Hiding an app or raising who can see it takes it off people's rails. Nothing is deleted.
 
-- A Space grants edit to its OWNER and ADMIN members, read to MEMBER and GUEST, and read to everyone in the org when its visibility is ORG. Otherwise nothing.
-- A Board inherits from its parent Space, but can be narrower: a PRIVATE board blocks a viewer who only had read on the Space.
-- An Item inherits from its Board, except that the item's owner always gets at least edit on their own row.
+---
 
-Org admins override all three.
+## Who can do what
 
-### Docs, and the Notepad exception
-
-Documents follow their own share model (owner, explicit per-person edit or view grants, and an optional public link).
-
-Notepad notes are the one carve-out. A notepad note is a Doc anchored to `NOTEPAD` plus its owner's user id, and `src/lib/doc-access.ts` treats that anchor as owner-only: no share, no manager override. The plain `/api/docs` list also filters those rows out, which is why they never surface in `/docs`, in the Library, or in a document picker, even for an admin browsing normally.
-
-### SOPs
-
-SOP visibility runs through `src/lib/sop-access.ts` and is folder based, with inheritance.
-
-- Org admins see every SOP.
-- Everyone else sees SOPs with no folder (treated as org wide visible) plus SOPs in folders they have been granted, plus every descendant of those folders. Access to "HR" also grants "HR / Onboarding".
-- Within a folder, a viewer sees only PUBLISHED SOPs. Editors, owners and the author also see drafts.
-
-Granting folder access is an org admin action.
-
-One deliberate exception on the SOP detail page: the **Mark as read** acknowledgement control renders for anyone who holds an assignment on that SOP, including people with no SOP management rights at all. Being assigned a procedure has to be enough to close it out.
-
-### Timesheets
-
-`/api/timesheets` takes a scope: `mine`, `team`, `approve` or `all`. Everything except `mine` requires manager tier. `team` uses the effective report tree, which includes dotted line reports.
-
-Note that `all` is available to any manager tier caller, not just org wide levels. A Team Lead can request org wide timesheet rows.
-
-### Teams cockpit
-
-| Surface | Minimum tier |
-| --- | --- |
-| `/team`, `/team/alignment`, `/team/reviews`, `/team/kpi-reviews`, `/team/workload` | manager |
-| `/team/rollup` | director and above |
-| `/reviews`, `/talent`, `/candor`, `/announcements`, `/kudos`, `/surveys`, `/tools`, `/assets`, `/policies`, `/agreements`, `/trash` | HR admin (rail visibility) |
-| `/settings` org sections, `/organization` admin actions | org admin |
-
-`/team/workload` additionally redirects you to `/team` if you have no reports, because an empty capacity grid is not useful.
-
-## Two report tree definitions
-
-There are two, and they do not return the same people.
-
-- `getTeamUserIds` walks `User.managerId` only. Solid line, self included, no depth cap.
-- `getEffectiveReportTree` walks solid **and** dotted lines (`UserDottedLine`), capped at 6 levels.
-
-Goals, the people directory, KRAs and the alignment scope helpers use the first. Timesheets, the KPI review queue and the team alignment board use the second. If a dotted line report appears on one manager surface and not another, this is why. Consolidating the two is a known open item.
-
-## The permission matrix is mostly aspirational
-
-`/settings/permissions` presents a matrix of 16 modules with per action toggles per Level, stored on `Organization.settings.permissions`. The 16 are people, organization, kras, sops, reviews, okrs, tasks, meetings, policies, announcements, assets, surveys, ideas, analytics, tools and settings. There is no row for tags, docs or candor, so those are governed entirely by the ladders above.
-
-Only 11 of 439 API route files actually call `requirePermission`, and between them they cover five modules:
-
-| Module | Route files that check it |
-| --- | --- |
-| `kras` | `/api/kras`, `/api/kras/orphans`, `/api/kra-assignments`, `/api/kpis` |
-| `sops` | `/api/sops`, `/api/sops/record`, `/api/sops/[id]` |
-| `assets` | `/api/assets`, `/api/assets/[id]` |
-| `policies` | `/api/policies` |
-| `announcements` | `/api/announcements` |
-
-Everything else is governed by the hardcoded Level ladders described above. One file names the helper without ever calling it, so do not count it: `src/app/api/tag-assignments/route.ts` mentions `requirePermission` only in a comment, which is why attaching a tag to a person is gated by the profile's manage mode rather than by the matrix.
-
-Treat the matrix as authoritative for those five modules and decorative everywhere else. Trimming it to what is enforced is on the plan.
-
-`SUPER_ADMIN` and `COMPANY_ADMIN` always pass `checkPermission` regardless of the matrix, so an admin cannot lock themselves out.
-
-## Where to look in the code
-
-| Concern | File |
-| --- | --- |
-| Three door sets, alignment scoping | `src/lib/alignment-scope.ts` |
-| Server side page gates | `src/lib/page-gates.ts` |
-| Central resource resolver (space, board, item, user, KRA, weekly review, module) | `src/lib/access.ts` |
-| Goal visibility, audience resolution | `src/lib/goal-audience.ts` |
-| Announcement audience resolution | `src/lib/announcement-audience.ts` |
-| Person tags, and resolving a tag to its holders | `src/lib/user-tags.ts` |
-| Report trees | `src/lib/team.ts`, `src/lib/reporting-line.ts` |
-| Doc and Notepad access | `src/lib/doc-access.ts` |
-| SOP folder visibility | `src/lib/sop-access.ts` |
-| Level list shown in pickers | `src/lib/access-levels.ts` |
-| Permission matrix | `src/lib/permissions.ts` |
-| Rail visibility tiers | `src/components/layout/os/apps-catalog.tsx` |
+Workspace settings, **Access**, **Who can do what** lays out every role and tier against what they can do, read from the rules the product enforces. It is read only: you change what people can do by changing their role or tier in **Members**, or what is shared with them.

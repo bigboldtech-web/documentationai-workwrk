@@ -1,114 +1,103 @@
 ---
-title: Your profile (Me)
-description: "The Me page: your job title, your tags, your KRAs and KPI readings, recording your numbers, your goals, and your review record."
+title: Your profile
+description: "Your record under Teams, My profile: your job title, your KRAs and KPI readings, recording your numbers, your goals, your reviews, your skills and kudos, and your weekly review."
 ---
 
-**Me** is the first row in the Home sidebar. It goes to `/people/me`, which resolves to your own person page at `/people/<your id>`.
+**My profile** is the first row in the Teams sidebar, and **My profile** in your avatar menu goes to the same place. It is your own record: everyone in the company has one of the same shape.
 
-This is your career home. It answers three questions in one place: what am I accountable for, how is it reading, and what is the record.
-
----
-
-## Three views of the same page
-
-The same route renders in one of three modes, decided on the server before anything is drawn:
-
-- **Self**: your own page. Your job title and description, your KRAs with **your** KPI readings, the recorder for your own numbers, your goals, your reviews, your assets.
-- **Manage**: a manager or an org-wide viewer looking at a report. The same narrative about that person, plus Edit profile, Manage alignment, editing that person's tags, and recording numbers on their behalf.
-- **Peer**: a colleague you do not manage. A minimal directory card: name, title, department, manager. No KPI readings, no reviews, no mood check-ins, no scores.
-
-The mode is not a UI toggle. The APIs behind the page enforce the same ladder again, so a peer cannot pull a report's numbers by calling them directly.
+It answers three questions in one place: what am I accountable for, how is it reading, and what is the record. Your name, photo and contact details, your data download and account deletion live in **My settings**, **Profile** instead. See [Settings](/admin/settings).
 
 ---
 
-## The header, and your tags
+## One record, shown by who is looking
 
-The header carries your avatar, name, job title (a link to that role's definition page), email, phone, department and who you report to.
+The same record opens for everyone, with only the tabs the viewer is allowed to see:
 
-Under that sits your **tags**. A tag is a free label from the org-wide list, used for the cuts the org chart does not make: a launch team, a shift, a cohort, a cost centre. Tags matter because they are a targeting primitive: a goal can list a tag as a contributor, and a pulse survey or an announcement can be aimed at one. Membership is resolved every time those are read, so picking up a tag today puts you in everything already aimed at it.
+- **Everyone** at the company sees the card at the top (name, job title, department, who you report to) and the **Overview** and **Skills** tabs.
+- **You**, your reporting chain, the People team, Directors and above, and Owners and Admins also see **KRAs & KPIs**, **Goals**, **Reviews**, **Assets**, and your score.
+- **Kudos** shows to everyone but Guests, and **Reports** shows when you have direct reports.
 
-On your own page your tags are **read-only**. The picker is editable in manage mode, which means a manager in your line or an org-wide viewer sets them. If a tag on you is wrong, ask them.
+The same rule is checked again when the data is read, so a colleague cannot pull your numbers by other means.
 
 ---
 
-## Your KRAs and KPIs
+## The card and your tags
 
-The **My KRAs & KPIs** section is the core of the page.
+The card carries your photo, name, job title, department, office and who you report to. **Edit profile** on your own record changes your personal fields. Your job title, department, office and manager are a management decision: the record says **Ask your manager or the People team to change your job title, department, office or manager.**
 
-KRAs come **with your job title**. You do not create them here. If yours is empty, the page says so plainly: "KRAs come with your job title: once your role's template is defined, they appear here." Ask your manager, or whoever owns the role definition, to define them on the role.
+Under the card, **Overview** shows what your job title is for and, for the people who may see it, your score. Your **Tags** are there too. A tag is a label from the workspace list, used for the cuts the org chart does not make: a launch team, a shift, a cohort. Tags matter because a goal can list a tag as a contributor, and a pulse survey or an announcement can be aimed at one. The people who manage your record set them; you can read yours.
 
-The section header shows the **total weight** across your KRAs and the current measurement period.
+---
 
-Each KRA card shows its name, the job title it came from (as a link to that role's page), its **weight**, its description, and then one row per KPI underneath. A KRA whose role has been detached shows an amber "No job title" marker instead of pretending.
+## KRAs & KPIs
 
-Each KPI row shows:
+The **KRAs & KPIs** tab is the core of the record.
+
+KRAs come **with your job title**. You do not create them here. If yours is empty, the tab says **Ask your manager to assign KRAs.**
+
+Each KRA shows its name, its weight, its description, and then one row per KPI underneath. Each KPI row shows:
 
 | Element | Meaning |
 | --- | --- |
-| Star icon | This is a north-star KPI. |
+| Star | This is the north-star gauge. |
 | Direction arrow | Higher is better, lower is better, or hold the line. |
-| **Shared** chip | A shared gauge: you influence it and it is reviewed, but you are not graded on it. Absence of the chip means you own it. |
-| Coloured dot | Health against the healthy line: Healthy, At risk, Off track, or No baseline. |
-| Value | Your latest reading and its period, or "No reading". |
+| **Shared** chip | A shared gauge: you influence it and it is reviewed, but you are not graded on it. No chip means you own it. |
+| Coloured dot | Health against the healthy line. |
+| Value | Your latest reading and its period, or **No reading**. |
 | Target | The healthy line, or "no baseline yet" when the KPI has none. |
-| Status chip | Where this period's record stands: Pending, Submitted, Approved or Sent back. |
+| Status chip | Where this period's reading stands: Not recorded, Submitted, Approved or Changes requested. |
 
-Two honesty rules are built into this display. A KPI with no target reads **"no baseline yet"** rather than inventing a line, and a KPI with no reading reads **"No reading"** rather than showing a zero.
+Two honesty rules are built into this display. A KPI with no healthy line reads **no baseline yet** rather than inventing a line, and a KPI with no reading reads **No reading** rather than showing a zero.
 
 ### Recording your numbers
 
-**Record my numbers** opens the recorder inline. Pick a period, expand a KRA, and type the actual value for each KPI, with an optional note.
+**Record my numbers** opens the recorder on the tab. Pick a period, expand a KRA, and type the actual value for each KPI, with an optional note. A qualitative KPI takes a 1 to 5 rating instead.
 
-Saving a self-report writes a **SUBMITTED** record into the manager approval loop. It is not final until your manager signs off, which is why the row's status chip moves from Pending to Submitted and then to Approved or Sent back. Your note travels with it and is visible to your manager at sign-off.
+Saving a self-report sends it to your manager as **Submitted**. It is not final until your manager signs off, which is why the status chip moves to Approved or Changes requested. Your note travels with it.
 
-A manager recording numbers on a report's behalf writes through the manager path instead, and their notes are stored separately as manager notes.
+A manager recording numbers on a report's behalf uses **Record numbers** on that person's record, and can open **Manage alignment** there to adjust KRAs, weights and SOPs.
 
----
-
-## Your goals
-
-The **My goals** section lists the goals you carry this quarter with their status chip and progress bar. Each row links to the goal detail page.
-
-You carry a goal either because you own it or because you resolve into its audience: as yourself, through your department, through your role, or through one of your tags.
-
-The number here is the same derived rollup the Goals page shows: it reads **"—"** when nothing about the goal is measured yet, not `0%`. If you have no goals, the section offers a link to set one.
-
-**All goals** in the section header goes to `/okrs?mine=1`, filtered to goals you own or contribute to.
+**History**, below the KRAs, lists past readings: the KPI, its period, the score, and actual over target. A reading awaiting sign-off shows Pending instead of a score.
 
 ---
 
-## The record: tabs at the bottom
+## Goals
+
+The **Goals** tab lists the open goals you carry, each with the same On track verdict the Goals pages show. You carry a goal either because you own it or because you are a contributor: as yourself, through your department, your job title, or one of your tags.
+
+The number here is the same derived rollup the Goals pages show: it reads as a dash when nothing about the goal is measured yet, not 0%.
+
+---
+
+## Reviews
+
+The **Reviews** tab links to **My weekly review** and lists your review-cycle results, with the cycle name and who reviewed you. A completed review offers its appraisal letter.
+
+### My weekly review
+
+**My weekly review** is the heartbeat. It opens the current week's review, creating a draft if one does not exist, and gives you:
+
+- a progress slider for each of your active KRAs
+- a snapshot for each KPI under those KRAs
+- **Highlights** and **Blockers**
+
+You can **Save draft** or **Submit**. The page shows where the week stands and your manager's state: pending, approved or changes requested.
+
+---
+
+## Skills, kudos, assets and reports
 
 | Tab | Contents |
 | --- | --- |
-| **My reviews** | Your performance reviews as the subject, with the cycle name and who reviewed you. On your own page it also links to **My weekly review**. |
-| **KPI history** | Past KPI records: the KPI name, its period, the score, and actual-over-target. A record awaiting sign-off shows "Pending" instead of a score. |
-| **Skills** | Skills with your self-rating out of 10, and your manager's rating when one exists. |
-| **Kudos** | Kudos you have received. |
-| **Check-ins** | Your daily mood check-ins: the mood, what went well, challenges, and tomorrow's plan. |
+| **Skills** | Your skills, with your own rating and your manager's when one exists. **Add skill** and **Edit rating** on your own record; your manager can **Rate** and **Remove**. |
+| **Kudos** | Kudos you have received, with reactions. On a colleague's record, **Give kudos**. |
 | **Assets** | Equipment assigned to you. |
-| **Direct Reports** | Only appears if you have reports. Cards linking to each person's page. |
-
-Managers looking at a report see extra blocks above the tabs: a composite score with its breakdown, a performance trend chart when there is history, and four stat tiles (average KPI, active KRAs, average mood, latest review score). Where there is no data, these read "N/A" rather than a fabricated figure.
+| **Reports** | Only when you have direct reports: each one as a link, and **Open in Org chart**. |
 
 ---
 
 ## Your assigned SOPs
 
-Procedures assigned to you live at `/sops/my-sops`, grouped into overdue, active and done.
+Procedures assigned to you live in the **Docs** hub under **My SOPs**, grouped into overdue, active and done.
 
-Closing one out is yours to do, not your manager's: **Acknowledge** on the row, or **Mark as read** in the header of the SOP itself, completes the assignment, stamps the date and counts every step as done. The SOP header then reads **Acknowledged** with that date. Neither control needs any management permission, so an ordinary employee always has a way to finish what they were assigned.
-
----
-
-## My weekly review
-
-`/me/weekly-review` is the heartbeat surface, linked from the Reviews tab on your own page.
-
-It opens the current week's review, creating a draft if one does not exist, and gives you:
-
-- a progress slider for each of your active KRAs
-- a snapshot input for each KPI under those KRAs
-- **Highlights**, **Blockers** and **Plan** text areas
-
-You can **Save draft**, **Submit**, or reopen a submitted week. A banner at the top shows where the week stands: Draft, Submitted or Acknowledged, plus your manager's status (Pending, Approved or Changes requested).
+Closing one out is yours to do, not your manager's: **Acknowledge** on the row, or **Mark as read** in the header of the SOP itself, completes the assignment and stamps the date. The SOP header then reads **Acknowledged** with that date. Neither control needs any management permission, so an ordinary Member always has a way to finish what they were assigned.

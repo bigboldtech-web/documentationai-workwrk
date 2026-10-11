@@ -7,12 +7,12 @@ Rate limiting is enforced per API key. Two counters run at once: one for the cur
 
 ## The limits
 
-| Window | Default | Stored as |
-| --- | --- | --- |
-| Per minute | 120 requests | `rateLimitPerMinute` on the key |
-| Per day | 50,000 requests | `rateLimitPerDay` on the key |
+| Window | Default |
+| --- | --- |
+| Per minute | 120 requests |
+| Per day | 50,000 requests |
 
-Both values live on the key record itself, so different keys can carry different budgets. The **Generate API key** screen does not expose those fields, so every key created there starts on the defaults above.
+Both values live on the key itself, so different keys can carry different budgets. Every new key starts on the defaults above. To change them, open the key in Workspace settings, **API & webhooks**, set **Requests a minute** and **Requests a day**, and choose **Save limits**. The list's **Rate limit** column shows each key's budget.
 
 <Callout kind="info">
   Limits are per key, not per organization. Two keys in the same org get 120 requests a minute each. That is the clean way to stop a chatty backfill script from starving your production integration: give it its own key.

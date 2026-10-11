@@ -1,0 +1,88 @@
+---
+title: Routines
+description: Work an AI teammate does for you on a schedule, such as a morning brief or a weekly status, and how to run, pause or delete it.
+---
+
+A routine is a job a teammate does for you on a schedule: every weekday morning, every Friday afternoon, or every few hours. Each run works as you, writes its report into your chat with the teammate, and asks before anything other people will see, as a chat does.
+
+Routines are yours. On a workspace teammate, each person has their own routines with it, and nobody sees anyone else's.
+
+## Set up a routine
+
+### In the chat
+
+Ask in words, for example: **Every Monday at 9:00, send me a status report.** The teammate sets it up and the chat shows a line such as **Created routine: Weekly status · Mondays at 9:00**, with **Pause** and **Settings** links.
+
+The teammate needs the **Set up routines** tool for this. Every template starts with it.
+
+### In the settings
+
+<Steps>
+<Step title="Open the Routines tab" icon="calendar-clock">
+In the chat header, choose **Settings**, then **Routines**.
+</Step>
+<Step title="Choose New routine" icon="plus">
+Give it a **Name** and say **What to do each time**.
+</Step>
+<Step title="Choose When" icon="clock">
+Pick **Every weekday morning**, **Every Monday** or **Every month start** (each at 9:00, the last on the 1st), or **Custom cron** to type a schedule of your own as a cron expression. Asking in the chat is the easier way to set any other day or time.
+</Step>
+<Step title="Save" icon="check">
+The routine shows with its schedule in words and **Next run** followed by its next time.
+</Step>
+</Steps>
+
+### Schedules a routine can run on
+
+- Weekdays, every day, one day a week or one day a month, at a time you choose. A monthly routine runs on a day from the 1st to the 28th, so every month has it.
+- Every hour, or every 2 to 24 hours.
+
+A routine runs at most once an hour. A schedule more often than that is refused with **Routines run at most once an hour.**
+
+Routines run in your time zone: the one you set in My settings, **Preferences**, **Language & region**, **Time zone**. If you have not set one, the routine uses your workspace's zone or your browser's, and its schedule names that zone. Set yours first to be sure.
+
+## What a run does
+
+- Each run uses one AI question. The form says so: **Each run uses one AI question.**
+- Its report arrives in your chat with the teammate as a card headed with the routine's name and time, showing what it did and the first lines of its report. **And** followed by a number opens the rest.
+- Anything it wants to do that other people would see waits for your approval, unless you chose **Don't ask** for it. A run that asks for something also writes one row in your Inbox, such as **Chief of Staff is waiting for your approval**, and the row opens the approval card. See [Approvals and Don't ask](/using/ai-teammates/approvals).
+- A routine can't set up another routine, and can't ask your other teammates.
+
+## Run now and Practice run
+
+On the **Routines** tab, each routine's menu has:
+
+- **Run now**: runs it at once. When it finishes, a message tells you its report is in the chat. It uses one AI question, like a scheduled run.
+- **Practice run**: runs it without changing anything, and reports what it would do. It still uses one AI question.
+- **Pause** or **Resume**, **Edit** and **Delete**.
+
+## Stop a routine
+
+- **Pause it** from the routine's menu on the **Routines** tab, or with **Pause** on its **Created routine** line in the chat. It stops running until you choose **Resume**.
+- **Delete it** from the routine's menu. **Delete this routine?** asks first: it stops running, and its past reports stay in the chat.
+
+Pausing the teammate itself skips every routine's runs until the teammate is turned on again. Removing the teammate pauses its routines.
+
+## When a routine pauses or skips by itself
+
+A routine pauses when something stops it from running as you. You get an Inbox row, such as **Chief of Staff paused a routine**, and a line in the chat saying why. Only you can resume it, from the **Routines** tab, once the reason is fixed.
+
+| What the routine says | What to do |
+| --- | --- |
+| This workspace has used all its AI questions. Resume it after the plan changes. | An Owner or Admin changes the plan in Workspace settings, **Plan & billing**. Then resume it. |
+| Its teammate's settings changed since this routine was set up or last resumed. | Someone who manages the teammate changed it. Check the teammate, then resume the routine. |
+| This teammate was removed. | It can't run. Delete it, or ask whoever manages the teammate to add it back. |
+| The person it works for can no longer use this teammate. | You lost access to the teammate. |
+| AI isn't available to the person it works for. | AI is off for you or the workspace. |
+| The person it works for has used the free AI questions one person gets across free workspaces. Resume it after the plan changes. | On the free Starter plan, each person has a limit of their own. An Owner or Admin can change the plan. |
+
+A routine skips a run, and tries again at its next time, when:
+
+- the teammate is paused,
+- the teammate has used its monthly limit of AI questions,
+- the scheduler reached it more than three hours late: **Skipped: the scheduler reached it more than three hours late.**
+
+## Limits
+
+- Up to 10 routines with one teammate, and 30 across all your teammates.
+- A name can be up to 80 characters, and what to do each time up to 4,000.

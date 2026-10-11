@@ -14,7 +14,7 @@ Subscriptions are per organization, and every delivery is signed so you can prov
 
 ## Registering a subscription
 
-`POST https://workwrk.com/api/webhooks` with `url` and `events`. The caller must be signed in as **Company admin** or **Super admin**; on production the session cookie is `__Secure-next-auth.session-token`.
+`POST https://workwrk.com/api/webhooks` with `url` and `events`. The caller must be signed in as the workspace's **Owner** or an **Admin**; on production the session cookie is `__Secure-next-auth.session-token`.
 
 <CodeGroup show-lines="true" tabs={["Request","Response"]}>
   ```bash Request

@@ -1,70 +1,57 @@
 ---
 title: How do I invite my team?
-description: The real invite flow, why every invite must carry at least one KRA and one SOP, and what a new person finds waiting when they sign in.
+description: The invite flow, what an invitation carries, the domain and seat rules, and what a new person finds waiting when they join.
 ---
 
-An invite in WorkwrK is not just an email. It is the moment a person's role definition is created, so the form asks for more than an address.
+An invitation in WorkwrK can carry a job title, and the job title is the definition: its KRAs, KPIs and SOPs attach automatically when the person joins. So the dialog asks for a little more than an address, and nothing else needs to exist first.
 
 ## Before you start
 
-You need two things to exist in the workspace first:
+You need to be allowed to invite people: Owners and Admins are, and so are managers, who see their own team in Members. Every invitation also needs:
 
-- **At least one KRA.** Create them from `Teams` in the left rail, then `KRAs & KPIs`.
-- **At least one SOP.** Create them from `SOPs` in the left rail, then `New SOP`.
+- **An allowed email domain.** The workspace's own domain is always allowed. Owners and Admins add others under **Invite rules** in Workspace settings, **Members**, **Pending invites**.
+- **A free seat.** Every open invitation takes a seat. When the workspace is full, the invitation is refused. See [Plans and billing](/admin/plans-and-billing).
 
-If either list is empty the invite modal says so: "Invites need at least one KRA and one SOP so every new hire lands with a role definition."
-
-You also need permission to add people. By default that is Manager, Team Lead, HR, Director, VP, C-Level and the organisation admins. If you do not have it, the send fails with "Insufficient permissions".
-
-## Sending the invite
+## Sending the invitation
 
 <Steps>
-  <Step title="Open the invite modal" icon="user-plus">
-    Click `Invite` at the bottom of the left app rail, or go to `Settings`, then `Members`, and use the `Invite` button in the header. Both open the same modal.
+  <Step title="Open Invite people" icon="user-plus">
+    Choose **Invite** on the Directory under **Teams**, or in Workspace settings, **Members**. Both open the same dialog.
   </Step>
   <Step title="Enter the email addresses" icon="mail">
-    Type or paste into `Email addresses`. Commas, spaces, semicolons and Enter all turn an address into a chip. Anything that is not a valid address is flagged rather than silently dropped, so you can fix it. One invite is sent per address.
+    Type or paste into **Email addresses**. Commas, spaces and Enter all turn an address into a chip. Anything that is not a valid address is flagged rather than silently dropped. One invitation is sent per address.
   </Step>
   <Step title="Pick the access level" icon="shield-check">
-    `Access level` decides how much of the organisation this person can see. The default is `Employee`. Super Admin is deliberately not offered here.
+    **Access level** is the role and tier the person starts with. The Owner role is never offered. **This is an agent account** makes an account for a bot or service.
   </Step>
-  <Step title="Optionally place them" icon="network">
-    `Department`, `Role` and `Reporting manager` are all optional, but worth filling in. The reporting manager is what puts the person inside a manager's report tree, which drives most of what each of them can see later. Picking a `Role` also lets the new person inherit that role's KRA weights.
-  </Step>
-  <Step title="Pick at least one KRA and at least one SOP" icon="target">
-    These two pickers are labelled `KRAs (pick at least 1)` and `SOPs (pick at least 1)`, and they are required. The `Send invite` button stays disabled until both have a selection, and the server refuses the invite without them.
+  <Step title="Place them" icon="network">
+    **Department**, **Role** and **Reporting manager** are optional, but worth filling in. The reporting manager puts the person inside a manager's chain, which drives what each of them can see later. The **Role** is what makes their KRAs, KPIs and published SOPs attach when they join.
   </Step>
   <Step title="Add a personal message and send" icon="send">
-    `Personal message` is optional and is quoted inside the invitation email. Then press `Send invite`, or `Send N invites` when you have several addresses. Addresses that fail, for example because that person is already invited, stay in the field so you can fix and retry.
+    **Personal message** is optional and is quoted inside the invitation email. Then press **Send invite**. Addresses that fail, for example because that person is already invited, stay in the field so you can fix and retry.
   </Step>
 </Steps>
 
-## Why the KRA and SOP are required
-
-WorkwrK is a work and performance system, so a new person is not meant to land in an empty workspace and go looking for something to do. When the invitation is accepted, the KRAs and SOPs you chose are turned into real assignments on that person's account inside the same transaction that creates the account:
-
-- Each **KRA** becomes an active assignment with a weight. If the KRA already carries a weight, that weight is inherited. If it does not, the selected KRAs are split evenly. An admin can rebalance later from `KRAs & KPIs`.
-- Each **SOP** becomes an assignment marked **mandatory**, waiting to be acknowledged. The new person sees them under `SOPs` then `My SOPs`.
-
-So the first screen a new joiner sees already carries what they are accountable for and what they must read. That is the point of the gate.
-
 ## What the invitee does
 
-1. They receive an invitation email with a link back to the workspace.
-2. The link opens the join form, which asks for `First name`, `Last name` and a `Password` of at least 8 characters. The email address is fixed by the invitation and cannot be changed.
-3. They press `Join team`, land on a short welcome flow that asks how they work and what their title is, and are signed in.
-4. A welcome email follows.
+1. They receive an invitation email with a link to your workspace.
+2. The link opens the **Join** page, which shows what they are joining. Someone new chooses a name and a password; someone who already has a WorkwrK account logs in, then joins.
+3. They land in the workspace with the access level, department, job title and manager the invitation carried. If it carried a job title, its KRAs and published SOPs are already waiting on their record and under **My SOPs**.
 
 <Callout kind="alert">
-  Invitations expire after 7 days. An expired invite cannot be accepted; the person needs a fresh one. Under `Settings` then `Members`, the `Pending invites` table shows each invitation as `Pending` or `Expired` and offers `Revoke`.
+  Invitations expire after the number of days set in **Invite rules** (7 by default). An expired invitation shows **Ask for a new invitation** on the Join page. In Workspace settings, **Members**, **Pending invites** shows each invitation as **Pending** or **Expired**, and lets you resend or revoke it.
 </Callout>
 
-## Managing invites after sending
+## Managing invitations after sending
 
-Go to `Settings`, then `Members`. Below the member table, `Pending invites` lists every unaccepted invitation with its email, access level, when it was sent and its status. `Revoke` cancels one.
+Workspace settings, **Members**, **Pending invites** lists every invitation not yet accepted, with its email, role, whether it is to the workspace or to a Space, when it expires, and its status. A resend gives it a new link and a fresh expiry. Revoke cancels it.
 
 ## Inviting someone into a single Space
 
-There is a second, narrower path. Open a Space's `Share` dialog and invite by email from there. That invitation carries the Space and the Space role, and drops the person straight into that Space when they accept. It does not ask for a KRA or an SOP, so it does not create a role definition. Its pending list has `Copy link`, `Resend email` and `Revoke`.
+A Space's **Manage access** dialog can also invite by email. That invitation carries the Space and drops the person straight into it when they accept. They join the workspace as a Member.
 
-Use the rail `Invite` button when you are onboarding a colleague properly, and the Space `Share` dialog when you only need someone in one workspace area.
+## Inviting many people at once
+
+Workspace settings, **Data**, **Import**, **People from a CSV** checks each row first, and everyone ready gets an invitation. Nobody joins until they accept, and everyone joins as a Member.
+
+More in [People and invites](/admin/people-and-invites).

@@ -6,10 +6,51 @@ description: Notable user-facing changes to WorkwrK, grouped by month.
 WorkwrK ships continuously. There are no numbered releases to install or upgrade, so this page summarises the changes people actually notice, month by month, newest first. Work on the product started on 26 March 2026; the entries below begin with the first full month of building. Smaller fixes and internal refactors are not listed.
 
 <Callout kind="info">
-  Not everything named here is finished. [Status](/reference/status) is the honest per-area record of what is built, what is partial, and what is not there yet.
+  Not everything named here is finished. [What's built](/reference/status) is the honest per-area record of what is built, what is partial, and what is not there yet.
 </Callout>
 
-<Update label="2026-09" description="Canvas becomes a system-design studio, Goals learn to measure effort and call their own status, and the company mission and values run through the whole app" tags={["canvas", "goals", "culture", "kudos", "ai"]}>
+<Update label="2026-10" description="AI teammates: helpers you chat with that do real work, ask before anything other people will see, and now work in group chats, Talk and Automations" tags={["ai teammates", "ai", "work", "plans", "security", "privacy"]}>
+
+## Added
+
+- **AI teammates.** AI helpers with one job each, under AI on the rail. Start from a template (Chief of Staff, Project Manager, People Ops, Meeting Prep, Talk and inbox triage, Status Reporter) or from scratch. A teammate works as you and sees and changes only what you can. See [AI teammates](/using/ai-teammates/overview).
+- **Approval cards.** Anything a teammate would do that other people see, such as a task for someone else, a comment on a shared task or a post in Talk, waits on a card until you approve, change or deny it, unless you chose Don't ask for it. Inviting people always asks. A request nobody answers expires after 7 days.
+- **Memory, routines and practice runs.** Teammates remember what you ask them to (you see and delete it on the Memory tab), run routines on the schedule you set, at most once an hour, and show what they would do without changing anything in a Practice run.
+- **Group chats.** One chat with two to five of your teammates, from New on the AI teammates page. Name a teammate with @ to ask it, or the group's lead answers.
+- **Teammates can ask each other.** A teammate with Ask your other teammates can hand part of a request to up to three of your other teammates. New Chiefs of Staff start with it.
+- **Ask a teammate in Talk.** In a private channel, a group or a direct message, type @ and pick a teammate under AI teammates. It answers there, marked as from the teammate.
+- **Ask an AI teammate in Automations.** A new automation step has one of your teammates do one thing or answer one question, and later steps can use its answer.
+- **Approve from the Inbox.** A teammate's request from a routine, Talk or an automation opens in the Inbox as its approval card.
+- **AI fields in Lists**, turned on by the workspace in Workspace settings, Data: Summary, Sentiment, Categorize and Translation fields, filled when someone chooses Fill with AI.
+- **A public link for one task**, where the workspace allows public links: view only, with an optional end date, and the sharer can turn it off.
+- **The workspace export carries the work**: tasks with their descriptions, checklists, tags, fields and comments, Docs and SOPs, and Tables.
+- **Bird's eye** shows tasks added to a List from elsewhere, a Folder has its own Bird's eye, and cards move up and down in Focus.
+- **Drag tasks up and down** on the Board, in the List view, and in a task's subtasks and checklist.
+- **Two new ways to share a List**: Can edit assigned tasks, and Can comment. Workspace settings, Access, has a new Who can do what tab that lays out every role.
+- **AppSumo codes** can be redeemed in Workspace settings, Plan & billing.
+
+## Changed
+
+- **Ask AI asks first.** Before anything other people would see, Ask AI shows the same approval card AI teammates use. Your own work still happens at once.
+- **Agent schedules are routines.** A scheduled agent in Workspace agents now runs as the person who set it up, as one of their routines, and asks before anything other people would see. Run now runs it as you, in your own chat with it.
+- **Plans count what they promise.** Seats count people who can sign in plus open invitations, and every AI request a person starts uses one of the plan's AI questions. On Starter, each person also has 50 free questions in total across free workspaces. Plan & billing offers only what works for your workspace.
+- **A workspace teammate stays the teammate you chose.** If an Owner or Admin changes a workspace teammate, routines with it pause and automation steps that ask it stop until you check it and resume or publish again.
+- **Settings, My settings, the sign-in screens and the access screens** move onto the new frame. Settings has two doors, My settings and Workspace settings.
+- **Owner, Admin, Member and Guest** replace the old level names on screen, with member tiers for seniority.
+- **People pickers** list the whole company, not only your own team.
+- **Deleting your account** now also erases the words of your Ask AI and AI teammate chats, the requests teammates asked you to approve, what teammates remembered about you and your routines, in every workspace. An erased account can't be restored.
+- **Download my data** now includes your AI teammate chats, requests, memories, routines and approval choices.
+
+## Fixed
+
+- A closed workspace no longer gets reminder emails, and weekly digests reach every team in a large workspace.
+- A retried message in Talk never posts twice. Owners and Admins can archive and restore any channel except #general from Browse channels.
+- Rich text and uploaded files are handled more safely, and every page has security headers.
+- Where AI teammates can't be asked in Talk, typing @ says why under AI teammates.
+
+</Update>
+
+<Update label="2026-09" description="A new frame for the whole product, Bird's eye, tasks in more than one List, sharing from any menu, sign-in hardening, a system-design Canvas, and Goals that measure their own effort" tags={["work", "talk", "docs", "tables", "people", "security", "access", "canvas", "goals", "culture"]}>
 
 ## Added
 
@@ -18,12 +59,37 @@ WorkwrK ships continuously. There are no numbered releases to install or upgrade
 - **Explain and critique a diagram.** The AI can walk through how a board works, or review it like a staff architect and flag single points of failure, scaling gaps and fixes, reasoning only about what is actually drawn.
 - **Goals measure the effort behind them.** A goal's **Effort** card shows the real work moving it, hours logged, tasks done versus open, and who is contributing, derived from the tasks under its linked KRAs and the items in its linked Boards and Spaces. Nothing is self-reported.
 - **Goals assess themselves.** An **On track?** card gives an automated verdict, On track, At risk or Off track, with a reason and a next step, computed from progress, pace against the deadline, check-in freshness and effort. The verdict is deterministic; AI writes the explanation on top.
-- **Mission and values greet the team.** Set one mission and as many values as you like at Settings, Identity. A brief welcome screen shows the mission when someone opens WorkwrK, and every loading screen across the app shows a mission or value instead of a bare spinner, taking turns so the team absorbs them over time.
+- **Mission and values greet the team.** Set one mission and as many values as you like in Workspace settings, Identity & culture, on the Culture tab. A brief welcome screen shows the mission when someone opens WorkwrK, and every loading screen across the app shows a mission or value instead of a bare spinner, taking turns so the team absorbs them over time.
 - **Recognition runs on your real values.** Giving Kudos now offers your configured company values to tag, and the Kudos page rolls up which values are recognised most and who lives them.
+- **Share anything from its menu.** Share a Space, Folder, List or doc from its own menu with Manage access. The person sees what you shared and the path to it, nothing more.
+- **Tasks in more than one List**, with connected and mirror columns, dashboards and a Space Overview.
+- **Bird's eye**: a whole Space at a glance, one column per List.
+- **Pin a view as the default.** Board is every List's default view, and any view can be pinned as the default.
+- **Open Docs, Tables and Canvases in place in Work**, without jumping to their own section.
+- **Personal events on the Calendar.** New event makes an event, not a task, and a teammate's events show on the Team calendar as Busy.
+- **Multiple assignees** on a task.
+- **Live board updates.** A task someone else moves appears without a refresh.
+- **Your own security settings.** Change your password, log out everywhere and read your recent security activity in My settings, Security. Sessions end after 12 hours without activity, or sooner if your workspace sets it.
+- **Two step verification at log in**, with an authenticator app and backup codes.
+
+## Changed
+
+- **One frame for every page**: the navy rail, the top bar, the sidebar and one page header, with a compact title row.
+- **Eight hubs on the rail**: Work, Planner, AI, Talk, Teams, Docs, Tables and Settings, with the rest of the apps in the hub sidebars.
+- **Work, Lists and Boards** rebuilt on the new frame. A task opens as a drawer at its own address.
+- **Docs, canvases, SOPs, policies and contracts** move onto the new frame.
+- **Tables and Forms** move onto the new frame, with a File, Edit, View, Insert, Format and Data menu bar in the sheet and autosave in the form builder.
+- **Talk, the Planner and People** (the Directory, org chart, My team, workload, goals and KPIs, reviews, talent, candor, surveys and kudos) move onto the new frame.
+- **Text is one step larger** across the product.
+- **Access matches what people expect**: a Space or List member can add and edit the work in it, assigning someone a task lets them open it, and the share dialog shows the real grants.
 
 ## Fixed
 
 - **AI stopped hard-failing on a retired model.** When the model a feature asked for became unavailable, requests were failing outright. Features now fall back automatically to an available model, so a single retired model id can no longer take an AI feature down.
+- Changing a task's owner from a List row no longer removes the task's other assignees.
+- Bullets and numbered lists in task descriptions show as lists.
+- List and board options an earlier part of the refresh had dropped are back.
+- Every link the rail change had dropped is back.
 
 </Update>
 

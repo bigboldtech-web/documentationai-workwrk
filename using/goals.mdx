@@ -5,7 +5,7 @@ description: Creating a goal, the difference between the owner and contributors,
 
 A goal in WorkwrK is one record with **one accountable owner**, **many contributors**, and **one progress number**. There are no per-person copies of a shared goal, so there is never a question about whose number is the real one.
 
-Goals live at `/okrs`, reached from **Goals** in the left rail.
+Goals live in the **Work** sidebar, under **My goals**, **Team goals** and **Company goals**.
 
 ---
 
@@ -19,7 +19,7 @@ The page opens with a stats strip (average progress, on track, needs attention, 
 
 Each goal is a row linking to its detail page: name, level chip, quarter or due date, the contributor avatar stack, the owner's avatar, and a thin progress bar with a percentage.
 
-`?mine=1` narrows the list to goals you carry, either as owner or as a resolved contributor. That filtering happens on the server, so it is a real narrowing, not a client-side hide.
+**My goals** narrows the list to goals you carry, either as owner or as a resolved contributor. That filtering happens on the server, so it is a real narrowing, not a client-side hide.
 
 Hover a row for its `…` menu, or right-click it. The menu offers **Open**, **Edit goal**, **Assign owner**, **Copy link** and **Delete goal**. Edit, Assign owner and Delete only appear when you are actually allowed to do them, matching what the API will accept.
 
@@ -27,7 +27,7 @@ Hover a row for its `…` menu, or right-click it. The menu offers **Open**, **E
 
 ## Creating a goal
 
-Use the `+` on the Goals sidebar, the **New goal** button in a level card's header (which presets that level), or go to `/okrs?new=1`.
+Use the **New goal** button in a level card's header, which presets that level.
 
 The modal asks for:
 
@@ -51,9 +51,9 @@ This distinction is the point of the model, so it is worth stating plainly:
 - The **owner** is a single person. They are accountable. They appear in the hero of the goal page and in the owner column on the list.
 - **Contributors** are the audience: who can see the goal and push it. You add them as individual people, as whole departments, as roles, or as **tags**. Departments, roles and tags are stored as references and resolved to their **current** active members whenever the goal is read. Move someone into a department and they inherit that department's goals without anyone editing the goal. Stick a tag on someone and the same thing happens.
 
-The tag option is the one to reach for when the group is not a department and not a job title: a cohort, a task force, a programme, a shift. Create the tag at Settings → Tags, attach it to people from their profile, then name the tag as a contributor here. Archived tags stop resolving.
+The tag option is the one to reach for when the group is not a department and not a job title: a cohort, a task force, a programme, a shift. Create the tag in Workspace settings, **Task system**, **Tags**, attach it to people on their record, then name the tag as a contributor here. Archived tags stop resolving.
 
-Both feed the same visibility rules: a goal is visible to its owner, to its resolved contributors, to a manager looking down their report tree, and to org-wide levels. Company goals are visible to everyone. Guessing the URL of a goal you are not entitled to see returns a 404, not a redirect.
+Both feed the same visibility rules: a goal is visible to its owner, to its resolved contributors, to a manager looking down their chain, and to Directors and above, the People team and Admins. Company goals are visible to everyone. Guessing the address of a goal you are not entitled to see shows a not found page, not a redirect.
 
 ---
 
@@ -74,7 +74,7 @@ Below the hero:
 
 If the goal has not been checked in within its cadence, an amber banner appears at the top of the cards saying how long it has been.
 
-The same staleness also drives reminders, unless the cadence is None. A scheduled job (`/api/cron/okr-reminders`) checks every goal that has an owner and is not complete: when a goal has gone past its cadence window without a check-in, it drops a notification in the owner's bell and escalates by email to the owner. The email honours the owner's notification preferences, so someone who has turned off reminder emails is nudged in the bell only. A goal set to the None cadence is skipped entirely, no bell and no email. In production that job runs on weekday mornings; if you are running WorkwrK on your own infrastructure the schedule does not travel with the code, so check it before relying on the nudge.
+The same staleness also drives reminders, unless the cadence is None. On weekday mornings, every goal that has an owner and is not complete is checked: when a goal has gone past its cadence window without a check-in, a notification lands in the owner's bell and an email follows. The email honours the owner's notification settings, so someone who has turned off reminder emails is nudged in the bell only. A goal set to the None cadence is skipped entirely, no bell and no email.
 
 ### Linked work drives effort, not the progress number
 
@@ -109,7 +109,7 @@ Those targets are labelled as derived and the check-in dialog shows an amber not
 
 Nothing you typed is destroyed by this. A hand-entered value stays stored on the target; it simply is not what the UI reads while the KPI link exists.
 
-**Honest note:** there is no control anywhere in the interface that creates this link. The API accepts a `kpiId` on a target and everything downstream of the link works correctly, but today the link can only be made through the API.
+**Honest note:** there is no control anywhere in the interface that creates this link. Everything downstream of the link works correctly, but today the link can only be made through the API.
 
 ---
 
@@ -126,7 +126,7 @@ That last rule is deliberate. A brand-new goal with no targets is not "0% done a
 
 Status follows the same source. While a goal is measured, On track / At risk / Behind / Completed is derived from the rolled-up progress rather than read from a stale column.
 
-Because it is derived in one place, the same number appears on the Goals list, on the goal detail ring, in the "Cascades to" rows on the parent, and in the Goals section of your profile. If they ever disagreed, one of them would be lying, so they do not disagree.
+Because it is derived in one place, the same number appears on the Goals list, on the goal detail ring, in the "Cascades to" rows on the parent, and on the Goals tab of your record. If they ever disagreed, one of them would be lying, so they do not disagree.
 
 ---
 

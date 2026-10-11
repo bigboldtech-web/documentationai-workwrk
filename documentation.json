@@ -50,7 +50,7 @@
                 "icon": "table"
               },
               {
-                "title": "Docs and library",
+                "title": "Docs, files and the Notepad",
                 "path": "using/docs-and-library",
                 "icon": "file-text"
               },
@@ -58,6 +58,16 @@
                 "title": "Canvas and diagrams",
                 "path": "using/canvas",
                 "icon": "shapes"
+              },
+              {
+                "title": "Talk",
+                "path": "using/talk",
+                "icon": "message-square"
+              },
+              {
+                "title": "Tables and Forms",
+                "path": "using/tables-and-forms",
+                "icon": "sheet"
               },
               {
                 "title": "Goals",
@@ -70,9 +80,14 @@
                 "icon": "sparkles"
               },
               {
-                "title": "My profile",
+                "title": "Your profile",
                 "path": "using/my-profile",
                 "icon": "user"
+              },
+              {
+                "title": "Sign-in and security",
+                "path": "using/account-security",
+                "icon": "lock"
               },
               {
                 "title": "Time and search",
@@ -82,11 +97,52 @@
             ]
           },
           {
+            "group": "AI teammates",
+            "icon": "bot",
+            "pages": [
+              {
+                "title": "AI teammates",
+                "path": "using/ai-teammates/overview",
+                "icon": "bot"
+              },
+              {
+                "title": "Approvals and Don't ask",
+                "path": "using/ai-teammates/approvals",
+                "icon": "shield-check"
+              },
+              {
+                "title": "Routines",
+                "path": "using/ai-teammates/routines",
+                "icon": "calendar-clock"
+              },
+              {
+                "title": "Memory",
+                "path": "using/ai-teammates/memory",
+                "icon": "brain"
+              },
+              {
+                "title": "Group chats",
+                "path": "using/ai-teammates/group-chats",
+                "icon": "users"
+              },
+              {
+                "title": "Talk and Automations",
+                "path": "using/ai-teammates/talk-and-automations",
+                "icon": "workflow"
+              },
+              {
+                "title": "Limits and plans",
+                "path": "using/ai-teammates/limits",
+                "icon": "gauge"
+              }
+            ]
+          },
+          {
             "group": "Administration",
             "icon": "settings",
             "pages": [
               {
-                "title": "Functions and levels",
+                "title": "Departments, roles and tiers",
                 "path": "admin/functions-and-levels",
                 "icon": "network"
               },
@@ -109,6 +165,11 @@
                 "title": "Settings",
                 "path": "admin/settings",
                 "icon": "sliders-horizontal"
+              },
+              {
+                "title": "Plans and billing",
+                "path": "admin/plans-and-billing",
+                "icon": "credit-card"
               }
             ]
           },
@@ -127,7 +188,7 @@
                 "icon": "shield-check"
               },
               {
-                "title": "Status",
+                "title": "What's built",
                 "path": "reference/status",
                 "icon": "activity"
               },
@@ -216,6 +277,21 @@
                 "title": "Notifications and reminders",
                 "path": "help-center/faq/notifications-and-reminders",
                 "icon": "bell"
+              },
+              {
+                "title": "Why did my AI teammate ask first?",
+                "path": "help-center/faq/why-did-my-teammate-ask-first",
+                "icon": "shield-check"
+              },
+              {
+                "title": "AI questions and teammates",
+                "path": "help-center/faq/ai-questions-and-teammates",
+                "icon": "gauge"
+              },
+              {
+                "title": "Can admins read my teammate chats?",
+                "path": "help-center/faq/can-admins-read-my-teammate-chats",
+                "icon": "lock"
               }
             ]
           },
@@ -238,6 +314,16 @@
                 "title": "Missing notes or docs",
                 "path": "help-center/troubleshooting/missing-notes-or-docs",
                 "icon": "file-question"
+              },
+              {
+                "title": "Why did my routine pause?",
+                "path": "help-center/troubleshooting/why-did-my-routine-pause",
+                "icon": "pause"
+              },
+              {
+                "title": "Can't turn on Talk or Tables",
+                "path": "help-center/troubleshooting/turn-on-talk-or-tables",
+                "icon": "boxes"
               }
             ]
           },
@@ -260,6 +346,51 @@
                 "title": "Track a goal",
                 "path": "help-center/guides/track-a-goal",
                 "icon": "target"
+              },
+              {
+                "title": "Approve a teammate's request",
+                "path": "help-center/guides/approve-a-teammate-request",
+                "icon": "check"
+              },
+              {
+                "title": "Let a teammate act without asking",
+                "path": "help-center/guides/let-a-teammate-act-without-asking",
+                "icon": "toggle-right"
+              },
+              {
+                "title": "Stop or pause a routine",
+                "path": "help-center/guides/stop-a-routine",
+                "icon": "calendar-clock"
+              },
+              {
+                "title": "Make a teammate for everyone",
+                "path": "help-center/guides/make-a-teammate-for-everyone",
+                "icon": "users"
+              },
+              {
+                "title": "Ask a teammate in Talk",
+                "path": "help-center/guides/ask-a-teammate-in-talk",
+                "icon": "message-square"
+              },
+              {
+                "title": "Turn on two step verification",
+                "path": "help-center/guides/turn-on-two-step-verification",
+                "icon": "shield"
+              },
+              {
+                "title": "Log out of every device",
+                "path": "help-center/guides/log-out-of-every-device",
+                "icon": "log-out"
+              },
+              {
+                "title": "Download a copy of your data",
+                "path": "help-center/guides/download-my-data",
+                "icon": "download"
+              },
+              {
+                "title": "Delete your account",
+                "path": "help-center/guides/delete-my-account",
+                "icon": "trash-2"
               }
             ]
           }

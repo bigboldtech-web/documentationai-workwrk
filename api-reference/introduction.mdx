@@ -1,11 +1,11 @@
 ---
 title: API overview
-description: The WorkwrK v1 REST API: base URL, the seven resources it exposes, and your first authenticated request.
+description: The WorkwrK v1 REST API: base URL, the seven resources it exposes, what changed recently, and your first authenticated request.
 ---
 
-The WorkwrK API is a small, deliberately narrow REST API over the parts of the product that other systems most often need to read or write: your people directory, the KRA/KPI spine, tasks, kudos, and published SOPs.
+The WorkwrK API is a small, deliberately narrow REST API over the parts of the product that other systems most often need to read or write: your people directory, the KRA and KPI spine, tasks, kudos, and published SOPs.
 
-Every request is authenticated with an API key, and every key belongs to exactly one organization. There is no cross-organization access and no way to widen a key's reach beyond the org that minted it.
+Every request is authenticated with an API key, and every key belongs to exactly one workspace. There is no cross-workspace access and no way to widen a key's reach beyond the workspace that made it.
 
 ## Base URL
 
@@ -13,7 +13,7 @@ Every request is authenticated with an API key, and every key belongs to exactly
 https://workwrk.com/api/v1
 ```
 
-All paths on this page are relative to that base. Requests and responses are JSON. Timestamps are ISO-8601 strings in UTC.
+All paths on this page are relative to that base. The API answers on the app's address, `https://app.workwrk.com/api/v1`, too. Requests and responses are JSON. Timestamps are ISO-8601 strings in UTC.
 
 ## The seven resources
 
@@ -21,23 +21,33 @@ The API exposes seven resources, grouped into five tags. The tags are what you w
 
 | Tag | Resource | Methods | What it is |
 | --- | --- | --- | --- |
-| People | `/people` | `GET`, `POST` | Everyone in the organization. `POST` creates an invitation, not an active user. |
+| People | `/people` | `GET`, `POST` | Everyone in the workspace. `POST` creates an invitation, not an active user. |
 | Alignment | `/kras` | `GET`, `POST` | Key Result Areas, the buckets accountability hangs off. |
 | Alignment | `/kpis` | `GET`, `POST` | Measures defined under a KRA, each with a target, unit and frequency. |
 | Alignment | `/kpi-records` | `GET`, `POST` | Individual readings logged against a KPI for a person and a period. |
-| Work | `/tasks` | `GET`, `POST` | Tasks, including SLA-tracked ones. |
+| Work | `/tasks` | `GET`, `POST` | The tasks your Lists show, including SLA-tracked ones. |
 | Culture | `/kudos` | `GET`, `POST` | The recognition feed. |
 | Knowledge | `/sops` | `GET` | SOPs. Defaults to published ones. |
 
-`/sops` is read-only over the API. SOPs are authored in the app.
+`/sops` is read-only over the API. SOPs are written in the app.
 
 <Callout kind="info">
-  Every `GET` needs a key with the **READ** scope; every `POST` needs **WRITE**. See [Authentication](/api-reference/authentication) for how the scopes resolve.
+  Every `GET` needs a key with the **READ** scope; every `POST` needs **WRITE**, except `POST /people`, which needs **ADMIN**. See [Authentication](/api-reference/authentication) for how the scopes resolve.
 </Callout>
+
+## What changed
+
+These changes affect integrations built on an earlier version of the API:
+
+- **Signing in instead of a key works only for Owners and Admins.** A signed-in Member calling the API gets `403`. Integrations use a key. See [Authentication](/api-reference/authentication).
+- **Inviting people needs an ADMIN key.** `POST /people` used to need WRITE. With a key, the person is invited as an Employee and `accessLevel` is ignored; from a signed-in Owner's or Admin's session, `accessLevel` is read, and never above their own.
+- **Invitations follow the workspace's rules.** The email must use one of the workspace's invite domains (`400` otherwise), `roleId` and `departmentId` must belong to the workspace (`400`), and an email already in the workspace or with a pending invitation gets `409`. When the workspace has no free seat, the answer is `403` with `"code": "seat_limit"`. The invitation expires by the workspace's invite rule, and `acceptUrl` is now a `/join?token=` link.
+- **Tasks are the real tasks.** `GET /tasks` and `POST /tasks` read and write the tasks your Lists show. `status` filters by a List's own status name, exact but case-insensitive. `assigneeId` matches the owner or any assignee. Archived tasks and meetings are left out. Results are ordered by due date, newest first, with undated tasks last. A task made with `POST` lands on the assignee's Personal list, and its `id` opens in the app at `/item/` followed by that id. List items no longer carry `kraId`.
+- **Kudos checks both people.** `POST /kudos` needs both people to be in the workspace and not removed (`404` otherwise; `400` when giver and receiver are the same). The receiver is told in their Inbox and by email, by their own settings, unless they are a Guest or deactivated.
 
 ## Your first request
 
-Create a key first in Settings, then API keys. The full walkthrough is in [Authentication](/api-reference/authentication). Once you have one, list two people:
+Create a key first in Workspace settings, **API & webhooks**. The full walkthrough is in [Authentication](/api-reference/authentication). Once you have one, list two people:
 
 <CodeGroup>
 ```bash Request
@@ -86,6 +96,8 @@ curl "https://workwrk.com/api/v1/people?limit=2" \
 ```
 </CodeGroup>
 
+In the API, `accessLevel` still uses the stored level names. In the app they read as roles and tiers: `SUPER_ADMIN` is the Owner, `COMPANY_ADMIN` an Admin, and the rest are Member tiers (`EMPLOYEE` is Member, `C_LEVEL` is Executive, `HR` is People team).
+
 A write looks the same, with a JSON body:
 
 ```bash
@@ -102,13 +114,13 @@ curl -X POST https://workwrk.com/api/v1/kudos \
 
 ## The OpenAPI spec
 
-The spec is generated by the server and served live, unauthenticated:
+The spec is generated by the server and served live, without a key:
 
 ```
 https://workwrk.com/api/v1/openapi.json
 ```
 
-It is OpenAPI 3.1. Import that URL directly into Postman, Insomnia, Stoplight, Redoc, or any generator. You do not need to download and host a copy. The per-endpoint pages in this section are rendered from that same spec, so they cannot drift from what the server actually serves.
+It is OpenAPI 3.1. Import that URL directly into Postman, Insomnia, Stoplight, Redoc, or any generator. Its `servers` address follows the host you fetch it from. The endpoint pages in this section are rendered from a copy of that spec.
 
 ## Conventions worth knowing before you start
 
@@ -117,7 +129,7 @@ It is OpenAPI 3.1. Import that URL directly into Postman, Insomnia, Stoplight, R
     Every list endpoint takes `limit` and `cursor` and returns `data` plus `nextCursor`.
   </Card>
   <Card title="One error shape" icon="triangle-alert" href="/api-reference/errors">
-    Every failure is a JSON object with a single `error` string.
+    Every failure is a JSON object with an `error` string.
   </Card>
   <Card title="Per-key rate limits" icon="gauge" href="/api-reference/rate-limits">
     Counted per minute and per day, per key, in UTC windows.
@@ -133,4 +145,4 @@ It is OpenAPI 3.1. Import that URL directly into Postman, Insomnia, Stoplight, R
 
 ## What the API does not cover
 
-The v1 surface is the list above and nothing more. Spaces, boards, views, docs, whiteboards, goals, reviews, time tracking and settings are app-only today. If you need one of those programmatically, there is no supported endpoint for it yet, and an undocumented internal route is not a stable substitute.
+The v1 surface is the list above and nothing more. Spaces, Lists, views, docs, canvases, goals, reviews, time tracking, Talk, Tables, AI teammates and settings are app-only today. If you need one of those programmatically, there is no supported endpoint for it yet, and an undocumented internal route is not a stable substitute.

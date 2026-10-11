@@ -5,127 +5,142 @@ description: Invite someone into the workspace, find them in the directory and o
 
 ## Invite someone
 
-The Invite people modal opens from two places:
+The **Invite people** dialog opens from three places:
 
-- The **Invite** button at the bottom of the app rail.
-- Settings → Members, the invite button in the header.
+- **Invite** in the Teams hub's Directory.
+- Workspace settings, **Members**, the **Invite** button in the header.
+- The workspace menu at the top of the rail.
 
-The modal collects:
+The dialog says: **Teammates get an email with a link to join your workspace. Every invite can carry a role: its KRAs, KPIs and SOPs attach automatically.** It collects:
 
 - **Email addresses**. It is a chip input, so you can paste or type several separated by commas, spaces or Enter. Anything that is not a valid email is flagged instead of silently dropped.
-- **Access level**. Every level except Super Admin, including Company Admin. See [Functions and levels](/admin/functions-and-levels).
-- **Department**, **Role** and **Reporting manager**, all marked optional. These place the hire so they do not arrive unassigned. Picking a Role also drives KRA-weight inheritance on accept (see below).
-- **KRAs**, at least one. Required.
-- **SOPs**, at least one. Required.
+- **Access level**. Only the levels you may give are offered, for example **Employee: Standard employees** or **Admin: Full access to the workspace**. The Owner role is never offered here. See [Visibility and permissions](/reference/visibility-and-permissions).
+- **This is an agent account**, for an account that works as a Member, can edit what it is given, never has Full access, and never exports or invites.
+- **Department**, **Role** and **Reporting manager**, all optional. These place the hire so they do not arrive unassigned.
 - **Personal message**, optional, quoted inside the invitation email.
 
-The KRA and SOP requirement is enforced on the server, not just in the form. An invite without one of each is rejected, with "Pick at least one KRA before sending the invite — every new hire needs a role definition." or "Pick at least one SOP before sending the invite — every new hire needs starter SOPs to acknowledge.". This is deliberate: nobody joins the workspace without a role definition. If your org has no KRAs or SOPs yet, the modal tells you and you have to create them first.
+**The role is the definition.** Pick a **Role** (a job title) and its KRAs, KPIs and published SOPs attach automatically when the person joins: **No per-item selection needed.** There are no KRA or SOP pickers in the dialog, and an invite does not need a KRA or an SOP to exist first.
 
-One request is sent per email address. Successes are counted in the confirmation toast. Failures (already invited, already a member, network error) stay in the chip row so you can fix and retry without retyping the rest.
+One invitation is sent per email address. Successes are counted in the confirmation toast. Addresses that fail, such as someone already invited or already a member, stay in the chip row so you can fix and retry.
 
-### Placement is optional but built in
+### What every invitation checks
 
-The modal has pickers for department, role and reporting manager, so a hire can arrive already placed instead of landing unassigned. All three are optional: leave them blank and the person joins with no department, job title or manager, and you set those afterwards on their profile.
+- **The email domain.** Invitations go only to the workspace's allowed domains. The workspace's own domain is always allowed; Owners and Admins add others under **Invite rules**.
+- **A free seat.** Every open invitation takes a seat. When the workspace is full, a new invitation is refused. See [Plans and billing](/admin/plans-and-billing).
+- **Not already here.** An address already in the workspace, or with a live invitation, is refused. Resend that invitation from **Pending invites** instead. An expired one is renewed when you invite the address again.
 
-Setting the Role at invite time carries through to accept, where it seeds the KRAs and SOPs from the job title's template and inherits the role's KRA weights. If you would rather do it later, open Teams → Directory after they accept, open their card, and set Department, Role and Manager there instead. See [Roles, KRAs and KPIs](/admin/roles-kras-kpis).
+### Invite rules
+
+Workspace settings, **Members**, **Pending invites** has the **Invite rules** card:
+
+- **Allowed email domains**: domains besides your own that invitations may go to.
+- **Default role for invites**: **Member** or **Admin**.
+- **Invitation expiry**: how many days an invitation works, from 1 to 90. The default is 7.
 
 ### What happens when they accept
 
-The invite link is `/register?token=…` and it is valid for 7 days.
+The invitation link opens the **Join** page for your workspace, which shows exactly what they are joining.
 
-On accept, in a single transaction, WorkwrK:
+- Someone new chooses their name and a password, under your workspace's password rules.
+- Someone who already has a WorkwrK account logs in, then joins.
+- Someone already signed in with the invited address joins in one click.
 
-1. Creates the user with the access level from the invite, plus whatever department, role, manager or office the invite carried.
-2. Creates a KRA assignment for each KRA on the invite. The weight is that KRA's role level weight when it is above zero, otherwise the picked KRAs split 100% evenly.
-3. Creates a SOP assignment for each SOP on the invite, marked mandatory.
+On joining, they get the access level, department, role, manager and office the invitation carried. If the invitation named a role, its KRAs and published SOPs are assigned at the role's weights.
 
-Because it is one transaction, a partial signup can never leave someone without their role definition.
+If the link is out of date, the page says so and offers **Ask for a new invitation**. If the workspace has no free seat right now, the page says so, and the invitation keeps working once there is room.
 
-A new joiner closes out each assigned SOP from the SOP's own page, with the **Mark as read** button in the header. That is the acknowledgement the SOP read rate counts, and it works for people with no SOP management rights at all.
+A new joiner closes out each assigned SOP from the SOP's own page, with **Mark as read** in the header. That is the acknowledgement the SOP read rate counts, and it works for people with no SOP management rights at all.
 
-### Managing pending invites
+### Managing pending invitations
 
-Settings → Members lists pending invitations under the member table, with the email, access level and how long ago it was sent. Each row has a revoke action. Accepted invitations cannot be revoked.
+Workspace settings, **Members**, **Pending invites** lists every invitation not yet accepted, with its email, role, whether it is to the **Workspace** or **A Space**, when it expires, and its status, **Pending** or **Expired**. Each row can be resent or revoked. A resend gives the invitation a new link and a fresh expiry. Accepted invitations can't be revoked.
 
-Every invite is written to the audit log as `user.invited`, with the email, access level and the counts of KRAs and SOPs attached.
+Every invitation is recorded in the audit log.
+
+### Inviting someone into a single Space
+
+A Space's **Manage access** dialog can also invite by email. That invitation carries the Space and drops the person straight into it when they accept. It joins them to the workspace as a Member, not as a Guest.
+
+### Inviting many people at once
+
+Workspace settings, **Data**, **Import**, **People from a CSV** checks each row first, and everyone ready gets an invitation. Nobody joins until they accept, and everyone joins as a Member.
+
+---
 
 ## The directory
 
-Teams → Directory (`/people`) is the who's who. It is a manager tier page. Employees and Agents are sent to their own career home at `/people/me` instead.
+**Teams**, **Directory** is the who's who, open to everyone in the company.
 
-The page gives you:
+- Views: **All**, **New** (joined in the last 90 days), and for Owners, Admins and the People team, **No manager** and **Removed**.
+- **Filter** by search, department, job title, office, who they report to, tags, seniority and deactivated people. **Sort** by name, joined, tenure or most reports, and switch between a table and cards.
+- Click a person to open their record as a drawer over the list; open it in a new tab for the full page.
 
-- Stat tiles for headcount, departments, and joiners in the last 90 days.
-- Search across name, email, job title, department and tag name.
-- Status tabs: All, Active, New, Former.
-- Department chips, derived from the people themselves rather than from the departments list.
-- A **Tags** filter row, derived the same way from the tags people actually carry. Select one or more and the grid narrows to people carrying any of them, with a **Clear tags** control next to the row. The row hides itself when nobody is tagged, and on the Former tab.
-- Cards grouped by department, showing avatar, name, job title, department and office chips, manager, tenure, and up to four of the person's tags with a "+N" chip beyond that.
+What a record shows depends on who is looking. Everyone sees the directory card. A person's KRAs and KPIs, goals, reviews and assets show to them, their reporting chain, the People team, Directors and above, and Owners and Admins. See [Your profile](/using/my-profile).
 
-What you see is scoped by your level. Company Admin, Super Admin, C-Level, VP, Director and HR see the whole organization. Team Leads and Managers see themselves plus their recursive report tree, and the server enforces that regardless of what the page asks for. The tag filter is applied on top of that scope, so it can only ever narrow what you were already allowed to see.
+### Changing someone's details
 
-Removed people never appear in headcount, department chips or the grouped grid. They live only in the **Former** tab, sorted by removal date, each with a one click **Restore**.
+- **Role and tier** are for Owners and Admins, in Workspace settings, **Members**, on the person's row. Only an Owner can make someone an Owner, and the workspace always keeps at least one Owner.
+- **Job title**, **Department**, **Office**, **Reports to** and **Weekly capacity** can be changed by Owners, Admins and the People team.
+- People editing their own record are told **Ask your manager or the People team to change your job title, department, office or manager.**
 
-Open a person's card to reach their profile. From there a manager can edit their first and last name, phone, date of birth, status, department, role, office, manager and access level, and open **Manage alignment** to adjust their KRAs, weights and SOPs.
-
-Two guardrails on that edit:
-
-- Only Company Admin and Super Admin can change an access level, and the last remaining Company Admin cannot be demoted.
-- Everyone else can only edit themselves or someone inside their report tree. Employees editing their own row are limited to personal fields, so nobody can promote themselves or reassign their own manager.
+---
 
 ## Tagging people
 
-Under the person's name on their profile sits a tag control. A manager (or an org-wide level) can add and remove tags there; on your own page you can read your tags but not change them, and a peer never sees them at all.
+A person's record has a **Tags** row. The people who manage the person can add and remove tags there; on your own record you can read your tags.
 
-The tags come from one shared org taxonomy created at **Settings → Tags**. That is also the only place a tag can be minted, and the page cannot rename or delete one against the server, so name them carefully.
+Tags come from the one workspace list in Workspace settings, **Task system**, **Tags**, where they can also be archived or deleted.
 
 A person tag is not a permission. It is a segment, and four things read it:
 
-- The Directory's Tags filter.
+- The Directory's tag filter.
 - A **Goal**, which can name a tag as a contributor.
 - A **pulse survey**, which can target a tag as its audience.
 - An **Announcement**, which can target a tag as its audience.
 
-In all four the membership is resolved live from the tag assignments, not frozen at the moment you created the goal or the survey. Tag someone next week and they are inside those audiences on the next read; untag them and they drop out. Archived tags never resolve.
+In all four the membership is worked out each time it is read, not frozen when you created the goal or the survey. Tag someone next week and they are inside those audiences straight away; untag them and they drop out. Archived tags never count.
 
 This is the tool for groups that are not a department and not a job title: a joiner cohort, a programme, a task force, a shift.
 
+---
+
 ## The org chart
 
-Teams → Org chart (`/organization`) draws the reporting hierarchy from each person's manager.
+**Teams**, **Org chart** draws who reports to whom for the whole company, for every Member.
 
-It is scoped the same way as the directory. Org wide levels get the full company hierarchy. Managers and Team Leads get their own tree, and the subtitle says which one you are looking at.
+- **Filter** by search, department, office or job title, or show only people **Not linked to a manager**, or **Only my chain**.
+- **Edit reporting lines**, for Owners, Admins, the People team and Directors and above, adds **Reports to** and dotted line pickers to every row. Each saves when you pick.
+- The **...** menu has **Expand all**, **Collapse all**, display options and **Export CSV**.
 
-Levels deeper than two start collapsed and expand on click, all the way down. Above the chart are counters for people, departments, offices, roles, how many people have a manager, and the size of the top layer. People with no manager are listed separately rather than being hidden, which makes an unplaced hire easy to spot.
+---
 
 ## Offboarding
 
-Removing someone is done from their profile. It opens a confirm dialog that does real work before it asks you to confirm.
+Removing someone is done from the **...** menu on their record, **Remove from workspace**, or from their row in Workspace settings, **Members**.
 
-**Step 1: what they still hold.** The dialog loads a handover summary and lists their open tasks, live goals, KRA assignments, assigned company assets and direct reports, with names, capped at five per bucket. If nothing is outstanding it says so plainly.
+The dialog does real work before it asks you to confirm:
 
-**Step 2: reassign, optionally.** If they hold open tasks or have direct reports, you get a **Reassign open work to** picker. Choosing someone moves their open items and their direct reports to that person before removal. Completed and closed work is never touched, so history stays credited to the person who did it. The recipient is excluded from the reporting move so you cannot create a self managing loop.
+1. **What they still hold.** It lists their open work and their direct reports.
+2. **Who takes it over.** **Hand their open work and reports to** starts on their manager, or on you. **Done work keeps its owner. Goals, KRAs and assets stay on the record for the People team to reassign.**
+3. **Confirm.** Type their first name back, and they are removed.
 
-If they have direct reports and you do not pick anyone, the dialog warns you that those people will have no manager until you set one.
+If the hand-over fails, nothing is removed.
 
-**Step 3: remove.** Confirm and the person is removed.
+### What removal does
 
-### What removal actually does
+Removal can be undone, and nothing is lost:
 
-Removal is a soft delete. It sets `deletedAt` and flips their status to Inactive. Concretely:
+- They can't sign in, and an open session stops working.
+- All their history stays: tasks, docs, reviews, KPI numbers and kudos.
+- They leave headcount and the Directory's main views, and show under **Removed**.
+- They stop counting in any department, role or tag audience.
 
-- They cannot sign in. Login is refused for anyone removed or inactive, and the refusal is deliberately generic so it cannot be used to probe which emails exist.
-- An already open session stops working within five minutes. Their token is re checked against the database on that interval, and once it comes back removed the session is treated as signed out everywhere.
-- All their history survives: tasks, docs, reviews, KPI records, kudos. Nothing is deleted.
-- They disappear from headcount, the directory grid and department chips, and appear in the **Former** tab.
-- They stop inheriting anything. Role KRA fan out only reaches Active holders, goal audiences skip them, and a tag they still carry stops resolving them into any audience.
-
-The action is logged as `user_removed` with the actor.
+Members also offers **Deactivate** and **Reactivate**, which stop and restore someone's sign-in without removing them.
 
 ### Restoring
 
-From Teams → Directory, the **Former** tab, click **Restore** on their row. That clears `deletedAt` and sets their status back to Active, and is logged as `user_restored`. Their old assignments and history are still attached.
+Open the person from the Directory's **Removed** view and choose **Restore**: **They can sign in again, and their history picks up where it left off.**
 
 ### Who can remove whom
 
-Removal is stricter than editing. Company Admin and Super Admin can remove anyone in the org. Every other manager tier can only remove people inside their own reporting line. Nobody can remove themselves.
+Owners and Admins can remove anyone but themselves. Managers can remove people in their own reporting line, other than Owners and Admins. Nobody can remove themselves.

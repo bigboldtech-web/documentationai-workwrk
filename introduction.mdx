@@ -5,22 +5,21 @@ description: "WorkwrK is a People and Project Management System: the work your t
 
 WorkwrK is a **People + Project Management System (PPMS)**. It holds two things that are normally bought separately, and it holds them in one database so they can point at each other:
 
-1. **A work management platform.** Spaces, Folders, Lists, tasks, 17 view types, custom fields, subtasks, comments, time tracking. This is the ClickUp/Monday half.
-2. **A people and performance layer.** Job titles (Roles), the result areas each title owns (KRAs) with weights, the permanent gauges under those areas (KPIs), goals that hang off a single accountable person, and the reporting line that decides who sees what.
+1. **A work management platform.** Spaces, Folders, Lists, tasks, many view types, custom fields, subtasks, comments, time tracking. This is the ClickUp/Monday half.
+2. **A people and performance layer.** Job titles, the result areas each title owns (KRAs) with weights, the permanent gauges under those areas (KPIs), goals that hang off a single accountable person, and the reporting line that decides who sees whose people data.
 
 You use it to run the work, and to answer "who owns this, and how do we know it is going well" without leaving the product.
 
 ## Who it is for
 
-WorkwrK is built for the company that actually does the work, not for an agency running it on someone else's behalf. Today the first audience is internal: our own team. Everything in this documentation is written for someone who has an account and is looking at the real screens.
+WorkwrK is built for the company that actually does the work, not for an agency running it on someone else's behalf. Everything in this documentation is written for someone who has an account and is looking at the real screens.
 
-Access is shaped by a fixed ladder of levels: Employee, Agent, Team Lead, Manager, Director, VP, C-Level, HR, plus Company Admin and Super Admin. Those last two are kept out of the **Role** level picker so nobody can hand out admin from a job-title dropdown, but they are not hidden everywhere: the invite modal offers Company Admin, and Settings → Members offers the whole ladder to an existing admin. That ladder drives three doors:
+Everyone in a workspace is an **Owner**, an **Admin**, a **Member** or a **Guest**. Owners and Admins run the workspace. Members work in the Spaces they are added to, and carry a tier (Member, Team lead, Manager, Director, VP, Executive, People team or Agent) that decides which manager pages they open. Two rules then do almost all the work:
 
-- **Employees and Agents** see their own work and their own numbers.
-- **Team Leads and Managers** see themselves plus their whole recursive report tree.
-- **Directors, VPs, C-Level, HR, Company Admin and Super Admin** see the entire organization's alignment data.
+- **Sharing decides who opens a piece of work.** A Space, Folder, List or doc is open to the people it is shared with, at the level they were given, and to whatever is open to everyone at the company.
+- **The reporting line decides who sees a person's people data.** A person's KRAs, KPIs, goals and reviews show to them, their reporting chain, the People team, Directors and above, and Admins.
 
-This is enforced on the server in every alignment API, not by hiding nav links. An employee who types a manager URL lands on their own career home at `/people/me` instead.
+This is enforced on the server when the data is read, not by hiding links. See [Visibility and permissions](/reference/visibility-and-permissions).
 
 ## Why the two halves are one system
 
@@ -28,10 +27,10 @@ Most teams end up with a task tool that knows nothing about accountability and a
 
 WorkwrK connects them at four specific joints that exist in the product today:
 
-- **A task can be tagged to a KRA or a KPI.** The create-task modal and the task detail panel both carry an alignment control that stamps the KRA or KPI onto the task, so a piece of work carries the result area it serves.
-- **A task can link the SOP that says how to do it.** The task detail's linked-attachments panel has a SOPs section, and the SOP's own page mirrors the link back under **Used by tasks**.
-- **A goal's Key Result can be measured by a KPI.** When a Key Result is linked to a KPI, its number is derived at read time from the KPI's latest reading, and hand check-ins on it are refused with an explanation rather than silently accepted. (The link is supported by the data model and the API; see the honest note below about the missing picker.)
-- **A person's KRAs come from their job title.** Assigning someone to a Role seeds their KRA assignments from that Role's templates, at the Role's weights, along with the published SOPs under those KRAs.
+- **A task can be tied to a KRA or a KPI.** The create-task dialog and the task drawer both carry a **KRA / KPI** field, so a piece of work carries the result area it serves.
+- **A task can link the SOP that says how to do it.** The task's Related section links an SOP, and the SOP's own page mirrors the link back under **Used by tasks**.
+- **A goal's target can be measured by a KPI.** When a target is linked to a KPI, its number comes from the KPI's latest reading, and hand check-ins on it are refused with an explanation rather than silently accepted. (See the honest note below about the missing control.)
+- **A person's KRAs come from their job title.** Giving someone a job title seeds their KRAs from that title, at its weights, along with the published SOPs under those KRAs.
 
 ## What WorkwrK is not
 
@@ -39,21 +38,24 @@ WorkwrK connects them at four specific joints that exist in the product today:
 
 **It is not a payroll system.** WorkwrK does not calculate, file, or pay anything, and there is no pay run anywhere in the product.
 
-**It is not a compliance system of record for employment.** The person profile carries job title, function, reporting manager, access level, tags and status, because the alignment model needs them. It does not carry an employment file.
+**It is not a compliance system of record for employment.** The person record carries job title, department, reporting manager, office, tags and status, because the alignment model needs them. It does not carry an employment file.
 
 ## What you get on day one
 
-- **Work**: Spaces containing Folders containing Lists, and tasks inside those Lists, viewable as a table, a Kanban board, a calendar, a Gantt chart, a timeline, a workload grid, and more.
-- **People**: a directory, an org chart built from reporting lines, a job-title library, and a personal career home for every user.
-- **Alignment**: KRAs and KPIs managed per job title, monthly KPI recording, and goals with a single owner and many contributors.
-- **Knowledge**: SOPs in four kinds (written, step-by-step, checklist, click-capture), assigned to people who acknowledge them, and attachable to the KRA they serve.
-- **Segmentation**: one shared tag taxonomy. Tags stick to people as well as to work, so the Directory can be filtered by tag and a goal, a pulse survey or an announcement can be aimed at a tag instead of a hand-maintained list of names. Membership resolves live, so tagging someone tomorrow puts them in the audience.
+- **Work**: Spaces containing Folders containing Lists, and tasks inside those Lists, seen as a List, a Board, a calendar, a Gantt chart, a timeline, a workload grid, and more. Bird's eye shows a whole Space at once. See [Spaces and tasks](/using/spaces-and-tasks) and [Views](/using/views).
+- **People**: a directory, an org chart built from reporting lines, a library of job titles, and a record for every person. See [Your profile](/using/my-profile).
+- **Alignment**: KRAs and KPIs managed per job title, KPI recording and approval, and goals with a single owner and many contributors. See [Goals](/using/goals).
+- **Knowledge**: Docs, canvases and files, and SOPs in four kinds (written, step-by-step, checklist, click-capture), assigned to people who acknowledge them, and attachable to the KRA they serve. See [Docs, files and the Notepad](/using/docs-and-library).
+- **AI teammates**: AI helpers with one job each that you chat with. They work as you, see only what you can, and ask before anything other people will see. See [AI teammates](/using/ai-teammates/overview).
+- **Talk** and **Tables**, the premium modules from the Growth plan: chat, channels and calls, and a real spreadsheet. Forms come with every plan. See [Talk](/using/talk) and [Tables and Forms](/using/tables-and-forms).
+- **Segmentation**: one shared tag list. Tags stick to people as well as to work, so the Directory can be filtered by tag and a goal, a pulse survey or an announcement can be aimed at a tag instead of a hand-maintained list of names. Membership is worked out live, so tagging someone tomorrow puts them in the audience.
+
+For what each plan includes, see [Plans and billing](/admin/plans-and-billing). For your own sign-in and security, see [Sign-in and security](/using/account-security). For what is finished and what is not, see [What's built](/reference/status).
 
 ## Honest notes
 
 Documentation that overstates a product is worse than documentation that is missing. These are the gaps you will hit in the areas this page describes:
 
-- **Linking a Key Result to a KPI has no picker.** The API accepts `kpiId` on a Key Result, the goal detail page renders "measured by KPI" plus the gauge name for linked targets, and the check-in route correctly refuses hand entry on them. But there is no control in the UI that creates the link today. It can only be set through the API.
-- **KRA weights are not forced to total 100.** Each individual weight is validated (1 to 100 on a person's assignment, 0 to 100 on the role-level KRA), and the running total is shown and turns red past 100, but a save that pushes a person or a job title over the budget still goes through, with an advisory warning rather than a refusal. That is deliberate: a hard reject would trap someone already over budget so they could never save the edit that rebalances them.
-- **KRA weight does not weight anything yet.** It is stored, shown and inherited, but no scoring math multiplies by it. A 5% KRA and a 50% KRA count the same in every score the product computes.
-- **Tags cannot be renamed or deleted from Settings.** Settings → Tags creates them, and that is all it does against the server. Since a tag can now be the audience of a goal, a survey or an announcement, get the name right the first time.
+- **Linking a goal target to a KPI has no control.** The goal page labels linked targets as measured by the KPI, and refuses hand check-ins on them correctly. But there is no control in the interface that creates the link today. It can only be set through the API.
+- **KRA weights are not forced to total 100.** Each individual weight is checked, and the running total is shown, but a save that pushes a person or a job title over 100 still goes through, with a warning rather than a refusal. That is deliberate: a hard reject would trap someone already over budget so they could never save the edit that rebalances them.
+- **KRA weight does not weight anything yet.** It is stored, shown and inherited, but no score multiplies by it. A 5% KRA and a 50% KRA count the same in every score the product computes.

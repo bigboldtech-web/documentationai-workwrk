@@ -1,51 +1,49 @@
 ---
 title: My note or doc is missing
-description: The Notepad is private to you and Docs is shared with your organisation. Which one you wrote in decides where to look.
+description: The Notepad is private to you and Docs is shared with your workspace. Which one you wrote in decides where to look.
 ---
 
 WorkwrK has two places to write, and they do not mix. That is by design, and it explains almost every "my note vanished" report.
 
 ## The two stores
 
-| | Notepad | Docs and Library |
+| | Notepad | Docs |
 | --- | --- | --- |
-| Opened from | The `Notepad` quick tool in the top bar | `Docs` or `Library` in the left app rail |
+| Opened from | The **Notepad** quick tool in the top bar | **Docs** on the rail |
 | Who can see it | Only you | Whoever the doc is shared with |
-| Appears in Docs, Library or a doc picker | Never | Yes |
+| Appears in Docs or a doc picker | Never | Yes |
 | Best for | Scratch notes, a running personal list | Anything a colleague will read |
 
-A Notepad note is anchored to your own account. It will never show up in the Docs list, in the Library, or in any picker that offers docs, no matter who is looking. Equally, an organisation doc never appears in your Notepad.
+A Notepad note belongs to your own account. It will never show up in the Docs list or in any picker that offers docs, no matter who is looking. Equally, a workspace doc never appears in your Notepad.
 
 <Callout kind="alert">
-  A Notepad note cannot be shared. If you wrote something in the Notepad that a colleague needs, copy the text into a new doc under `Docs`. There is no move or convert action.
+  A Notepad note cannot be shared. If you wrote something in the Notepad that a colleague needs, copy the text into a new doc. There is no move or convert action.
 </Callout>
 
 ## If you wrote it in the Notepad
 
-1. Open the `Notepad` quick tool in the top bar. If it is not there, open your profile menu and pin it from the personal tools list.
+1. Open the **Notepad** quick tool in the top bar. If it is not there, open your avatar menu and pin it under **Personal tools**.
 2. The panel opens on the list of your notes, newest activity first. Each row shows the note's title and a short excerpt.
 3. A note's title is taken from its first non-empty line, so a note that begins with a blank line is listed as "Untitled note". Look for that.
-4. The panel saves as you type and shows `Saving…` while it does. Closing the panel, navigating away or closing the tab all flush the last edit first, and a failed save is retried, so an interrupted note is not normally lost.
+4. The panel saves as you type. Closing the panel, navigating away or closing the tab all save the last edit first, and a failed save is retried, so an interrupted note is not normally lost.
 
-If a note opens with "Couldn't load this note", go back and open it again. The editor deliberately refuses to render on a failed load, because typing into a blank editor would save over the real content.
+If a note opens with "Couldn't load this note", go back and open it again. The editor deliberately refuses to show an empty page on a failed load, because typing into it would save over the real content.
 
 ## If you wrote it in Docs
 
-Go to `Docs` in the left app rail. Use the tab strip at the top and the sidebar to narrow:
+Go to **Docs** on the rail. Use the views at the top to narrow: **All**, **Recent**, **Mine**, **Shared with me** and **Favorites**, plus the filters for location, owner and date.
 
-- Tabs: `All`, `Recent`, `Favorites`, `Created by me`
-- Sidebar: `All Docs`, `My Docs`, `Shared with me`, `Private`, `Meeting Notes`, `Archived`
+If it is not in any of those, it may have been moved to Trash. Open **Trash** in the Work sidebar, filter to docs, and choose **Restore** on the row you want. Items stay in Trash until an Owner or Admin deletes them for good.
 
-If it is not in any of those, it may have been deleted. Deleted docs are soft-deleted and stay restorable, so open the docs trash at `/docs/trash` and press `Restore` on the row you want. Nothing there is hard-deleted.
+If a colleague's doc is missing for you, it may be **Restricted**: only the people listed on it can open it. Ask them to share it with you from its `…` menu, **Manage access**.
 
-## If you created it from the Library
+## If you remember the Library
 
-The Library's `New note` action creates a normal doc and opens it in the docs editor, so a Library note is a doc. Look for it under `Docs`, not in the Notepad. Whiteboards and uploaded files created from the Library stay in the Library under their own tabs.
+The old Library page is gone. Notes it made are docs, so look under **Docs**. Its whiteboards are under **Canvases** in the Docs hub, its files under **Files**, and its tables in the **Tables** hub.
 
 ## Quick decision tree
 
-- Written in a yellow-headed side panel that slid in from the right? That is the **Notepad**. It is private and lives only there.
-- Written in a full page with a Docs sidebar? That is **Docs**. Use the tabs, then `/docs/trash`.
-- Created from the Library's `+` menu? That is a **doc**. Look under `Docs`.
+- Written in a side panel that slid in from the right? That is the **Notepad**. It is private and lives only there.
+- Written in a full page with the Docs sidebar? That is **Docs**. Use the views, then Trash.
 
-For how the two surfaces are meant to be used, see [Docs and Library](/using/docs-and-library).
+For how the two are meant to be used, see [Docs, files and the Notepad](/using/docs-and-library).

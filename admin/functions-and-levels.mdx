@@ -1,132 +1,84 @@
 ---
-title: Functions and levels
-description: What "Function" and "Level" mean in WorkwrK, where each one lives, and exactly what a level can see.
+title: Departments, roles and tiers
+description: What a department, a job title, a workspace role and a member tier each mean in WorkwrK, where each one lives, and what each one decides.
 ---
 
-Two words in WorkwrK get confused constantly. This page settles both.
+Four words in WorkwrK get confused constantly. This page settles them.
 
-**Function is a department.** It answers "which part of the business does this job title sit in?"
+- **Department** is where a job title and its people sit in the business.
+- **Job title** is the job: it carries the KRAs and SOPs.
+- **Workspace role** is Owner, Admin, Member or Guest: what a person can do in the workspace as a whole.
+- **Tier** is a Member's seniority: which manager pages they open.
 
-**Level is the access ladder.** It answers "how much of the company can this person see?"
+They are stored separately, edited in different places, and do different jobs.
 
-They are stored separately, edited in different places, and do different jobs. A Function is a row you create. A Level is a fixed value you pick from a list.
+## Departments
 
-## Function
+### Where departments live
 
-### Where functions live
+Under **Teams**, **Departments**, and in Workspace settings, **Structure**, on the **Departments** tab. Every Member can read the list; Owners, Admins and the people the workspace allows can change it.
 
-Functions are Departments. The page is at `/people/departments`.
+The page shows a tree with headcount per department, a search box, and a Tree or Grid toggle.
 
-There is no sidebar link to it today. You get there from:
+### Creating and changing a department
 
-- Teams → Roles, then the **Departments** button in the page header.
-- Teams → Skills, then the **Departments** link in the header.
-- Any Role Definition page: open the **Function** picker and click **Manage functions…** at the bottom of the menu.
+Choose **New department** and fill in a name and, if you like, a description, a colour, a department head and a parent department. Department names are unique in a workspace.
 
-The page shows four counters (Departments, Headcount, With head, Vacant head), a search box, and a Tree or Grid toggle. The tree nests sub departments and rolls headcount up from children.
+A department can be renamed, recoloured, given a different head, moved under another department, or deleted. The server refuses to delete a department that still has people in it, so move them first. There is no merge: move the people across and delete the empty one.
 
-### Creating a function
+### Attaching a department to a job title
 
-1. Open `/people/departments`.
-2. Click **New department**.
-3. Fill in the dialog: a name, and optionally a description, a colour, a department head and a parent department.
+A job title carries its department. Open the job title under **Teams**, **Job titles**, and set **Department** in its **Details** card.
 
-Department names are unique per organization, so a second department with the same name will fail to create.
+### Attaching a department to a person
 
-### Editing a function
+A person's department is set on their record, not on the job title. Owners, Admins and the People team change it from the person's record or from Workspace settings, **Members**. The **Invite people** dialog also takes a department, so a hire can arrive already placed. See [People and invites](/admin/people-and-invites).
 
-The Departments page now does full CRUD, so nothing you set at creation is stuck:
+## Job titles
 
-- **Rename** a department, and change its description and colour.
-- **Assign or change the department head** from a member picker.
-- **Re-parent** it, or add a sub department, to build a nested tree.
-- **Delete** it. The server refuses to delete a department that still has members, so reassign people first.
+A job title is a job, not a permission. It has a title, a description of what it is for and what it must ensure, a **Seniority**, and a department. It is where KRAs are defined, and everyone who holds it inherits those KRAs and the published SOPs under them. See [Roles, KRAs and KPIs](/admin/roles-kras-kpis).
 
-All of this rides the same API the page has always had (`POST /api/departments`, `PUT /api/departments/[id]`, `DELETE /api/departments/[id]`); the buttons that used to be missing are now wired. Merge and archive are the two operations still not offered.
+## Workspace roles
 
-### Attaching a function to a role
+Everyone in a workspace holds one of four roles. Owners and Admins set them on a person's row in Workspace settings, **Members**.
 
-A job title carries the function, not the person. To set it:
+| Role | What it means |
+| --- | --- |
+| **Owner** | Runs the company account: billing, ownership and security. Only an Owner can make someone else an Owner, and the workspace always keeps at least one. |
+| **Admin** | Runs the workspace day to day: opens every Space, invites people and uses every Workspace settings page. |
+| **Member** | An employee: works in the Spaces they are added to and sees what is open to the whole company. |
+| **Guest** | Outside the company, sees only what is shared. |
 
-1. Go to Teams → Roles and open the role.
-2. On the **Identity & scope** card, find the **Function** row.
-3. Click the current value (it reads "Unassigned" when nothing is set).
-4. Pick a department, or pick **No function** to clear it.
+What someone can open inside Work is decided by sharing, not by their role: a Member opens the Spaces, Folders and Lists shared with them, and whatever is open to everyone at the company. See [Visibility and permissions](/reference/visibility-and-permissions).
 
-The change saves immediately. If your org has no departments yet, the menu says so and links you straight to People → Departments. If departments do exist, the last item in the menu is **Manage functions…**, which opens the same page.
+## Tiers
 
-The breadcrumb at the top of the Role Definition page shows the function next to "Roles" once it is set.
+A Member also carries a tier, set on the same row in **Members**. The tier **decides which manager pages they open**, as the row's helper says, and the invite dialog offers the same choices as an access level.
 
-### Attaching a function to a person
+| Tier | Opens |
+| --- | --- |
+| **Member** | Their own work and record. |
+| **Team lead**, **Manager** | My team, Workload, Alignment, KPI reviews and Weekly reviews for their own chain, and they can create Spaces and run a review cycle for their chain. |
+| **Director**, **VP**, **Executive** | The same, plus people data across the whole company. |
+| **People team** | Everyone's people information, review cycles, and the Members, Structure, Access and Scoring & reviews pages. |
+| **Agent** | An agent account: works as a Member, can edit what it is given, never has Full access, and never exports or invites. |
 
-A person's department is set on their profile, not on the role.
-
-1. Go to Teams → Directory and open the person.
-2. Open the edit dialog on their profile.
-3. Set Department, and while you are there, Role, Manager, Office, Status and Access level.
-
-The invite modal now collects department, role and manager (all optional), so a hire can arrive already placed rather than unassigned. You can still adjust any of it here on their profile afterwards. See [People and invites](/admin/people-and-invites).
-
-## Level
-
-### The ladder is fixed
-
-Levels are a fixed enum in the database. You cannot add a level, rename one, or reorder them, because the levels are what the permission checks read. Every gate in the product compares against these exact values:
-
-`SUPER_ADMIN`, `COMPANY_ADMIN`, `C_LEVEL`, `VP`, `DIRECTOR`, `MANAGER`, `TEAM_LEAD`, `EMPLOYEE`, `AGENT`, `HR`.
-
-Note that HR is not a rung above or below Manager. It is a sideways door: HR sees org wide people data and administers review cycles, but it is not a Director tier.
-
-### Two places a level appears
-
-**On a role.** `Role.level` is the job title's level. It groups the Roles page into sections (C-Suite, VPs, Directors, Managers, Team leads, Individual contributors, and so on) and shows as the chip next to the role title.
-
-**On a person.** `User.accessLevel` is the level that actually governs what that person can open.
-
-These do not sync. Setting a role's level to Director does not promote the people holding that role. Changing someone's access level is a separate edit on their profile, or on Settings → Members, and only a Company Admin or Super Admin can make it.
+The tier does not sync with the job title's seniority. Changing a job title's seniority does not change the tiers of the people who hold it.
 
 ### Where you set each one
 
 | What | Where | Who can change it |
 | --- | --- | --- |
-| Role level | Teams → Roles → open role → Identity & scope → Level | Manager tier and above |
-| Person access level | Teams → Directory → open person → edit, or Settings → Members | Company Admin and Super Admin only |
-| Invited person's starting level | The Invite people modal, Access level dropdown | Whoever can send invites |
+| A job title's department and seniority | Teams, Job titles, open the job title, Details | Owners, Admins and the people the workspace allows to edit job titles |
+| A person's role and tier | Workspace settings, Members, the person's row | Owners and Admins; to or from Owner, an Owner only |
+| A person's department, job title, office and manager | Their record, or Workspace settings, Members | Owners, Admins and the People team |
+| An invited person's starting level | The Invite people dialog, Access level | Whoever sends the invitation, within what they may give |
 
-The three pickers do not offer the same list.
+## Who sees whose people data
 
-- The **Role Definition** level picker offers seven options and deliberately leaves out Agent and both admin tiers.
-- The **invite modal** offers every level except Super Admin, which includes Company Admin.
-- **Settings → Members** offers the full ladder, Super Admin included, and the API places no ceiling on what an admin can set. A Company Admin can promote someone to Super Admin from that dropdown.
+A person's KRAs and KPIs, goals, reviews, assets and scores show to the person, their reporting chain, the People team, Directors and above, and Owners and Admins. Everyone else sees the directory card: name, job title, department and manager. Hiding a page is never the permission: the same rule is checked on the server when the data is read.
 
-Settings → Members refuses to demote the last remaining Company Admin, so you cannot lock yourself out.
+Two more rules:
 
-## The three doors
-
-Access is a three door model. It is enforced on the server in every page gate and every alignment API, not by hiding nav links. Hiding a link is never the permission.
-
-**Door 1, your own work.** Employee and Agent. You see your own career home at `/people/me`, which carries your job title and its definition, your inherited KRAs and KPI readings, your goals, your reviews and your assets. Opening a management URL directly redirects you back here.
-
-**Door 2, your report tree.** Team Lead, Manager, Director, VP, C-Level, HR, and both admin tiers. You see yourself plus everyone below you in the reporting line, recursively. This unlocks the Teams cockpit: Directory, Org chart, Roles, KRAs and KPIs, Alignment board, Reviews, KPI approvals and Workload.
-
-**Door 3, the whole org.** Company Admin, Super Admin, C-Level, VP, Director and HR read alignment data across the entire organization rather than only their tree.
-
-### What each level gets
-
-| Level | Door | Notable |
-| --- | --- | --- |
-| Agent | 1 | Own work only. Not offered in the role level picker. |
-| Employee | 1 | Own work only. Redirected from every Teams management page to `/people/me`. |
-| Team Lead | 2 | Report tree. No org wide alignment, no rollup. |
-| Manager | 2 | Report tree. No org wide alignment, no rollup. |
-| HR | 2 and 3 | Org wide alignment, plus the only non admin level that can administer review cycles at `/reviews`. No Rollup page. |
-| Director | 2 and 3 | Org wide alignment, plus the Rollup page in the Teams sidebar. |
-| VP | 2 and 3 | Same as Director. |
-| C-Level | 2 and 3 | Same as Director. Can also save org settings. |
-| Company Admin | all | Full access. Cannot be restricted in the permission matrix. Can change other people's access levels. |
-| Super Admin | all | Full access. Never offered in the invite dropdown, but it is offered in the Settings → Members level dropdown, so an existing admin can grant it. |
-
-Two extra rules worth knowing:
-
-- Deleting a person is restricted further than editing them. A manager can only remove someone inside their own reporting line. Company Admin and Super Admin can remove anyone.
-- Removing a person takes effect on their live session within five minutes, because their token is re checked against the database on that interval.
+- **Removing a person** is for Owners and Admins, and for managers over people in their own chain, other than Owners and Admins. Nobody can remove themselves.
+- **A change to someone's role** takes effect on their next request, within minutes.

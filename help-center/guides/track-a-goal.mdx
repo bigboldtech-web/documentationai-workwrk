@@ -5,18 +5,18 @@ description: Create a goal, understand owner versus contributors, add a target w
 
 A goal in WorkwrK is one record with one accountable owner, any number of contributors, and one progress number. There are no per-person copies, so there is never a question about whose number is the real one.
 
-Goals live under `Goals` in the left app rail.
+Goals live in the Work sidebar, under `My goals`, `Team goals` and `Company goals`.
 
 ## 1. Create the goal
 
-Use the `+` on the Goals sidebar, or the `New goal` button in a level card's header, which presets that level.
+Use the `New goal` button in a level card's header, which presets that level.
 
 | Field | What it does |
 | --- | --- |
 | `Goal name` | Required. |
 | `Owner` | The one person accountable. Only managers and above see this field; everyone else's goals are owned by them. |
 | `Level` | `Company`, `Department` or `Individual`. Non-managers can only create `Individual` goals. |
-| `Contributors` | People, departments and roles who can see and push the goal. |
+| `Contributors` | People, departments, job titles and tags who can see and push the goal. |
 | `Start date`, `End date` | Optional. |
 | `Quarter` | Free text, for example `Q3 2026`. |
 | `Check-in cadence` | `Weekly`, `Biweekly`, `Monthly` or `None`. |
@@ -26,12 +26,12 @@ Use the `+` on the Goals sidebar, or the `New goal` button in a level card's hea
 
 This is the distinction that trips people up most, so it is worth being blunt about it.
 
-- The **owner** is one person, and they are accountable. They show on the goal's page and in the owner column of the list. Only the owner, their manager, and organisation-wide levels can edit the goal or check in on its targets.
-- **Contributors** are the audience: who can see the goal and push it forward. You add them as individual people, whole departments, or roles.
+- The **owner** is one person, and they are accountable. They show on the goal's page and in the owner column of the list. The owner, a manager in their chain, and Admins can edit the goal or check in on its targets.
+- **Contributors** are the audience: who can see the goal and push it forward. You add them as individual people, whole departments, job titles, or tags.
 
-Departments and roles are stored as references, not as a frozen list of names, and are resolved to their current members every time the goal is read. Move somebody into a department and they inherit that department's goals without anyone editing the goal. Take them out and they drop off.
+Departments, job titles and tags are stored as references, not as a frozen list of names, and are worked out from their current members every time the goal is read. Move somebody into a department and they inherit that department's goals without anyone editing the goal. Take them out and they drop off.
 
-Both feed visibility: a goal is visible to its owner, to its resolved contributors, to a manager looking down their report tree, and to organisation-wide levels. Company goals are visible to everyone.
+Both feed visibility: a goal is visible to its owner, to its contributors, to a manager looking down their chain, and to Directors and above, the People team and Admins. Company goals are visible to everyone.
 
 <Callout kind="alert">
   Adding contributors does not split the goal. There is one scoreboard, and everyone assigned shares the same progress bar. If two teams genuinely need separate numbers, create two goals.
@@ -79,7 +79,7 @@ A goal with no targets and no measured children has no computed progress. It sho
 
 ## Everyday use
 
-- `Goals`, then `My Goals`, narrows the list to goals you carry, as owner or as a resolved contributor. That narrowing happens on the server, so it is a genuine filter.
+- `My goals` narrows the list to goals you carry, as owner or as a contributor. That narrowing happens on the server, so it is a genuine filter.
 - The Goals page groups goals into `Company Goals`, `Department Goals` and `Individual Goals`, with a stats strip for average progress, on track, needs attention and completed.
 - `Check-in cadence` drives check-in reminders. Setting it to `None` silences reminders for that goal.
 - Deleting a target deletes its check-in history with it, and the goal's progress is recalculated from what remains.

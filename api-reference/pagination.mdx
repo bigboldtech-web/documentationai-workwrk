@@ -84,14 +84,15 @@ The pagination parameters are identical everywhere, but the sort order and the f
 | `/kpis` | `createdAt` ascending | `kraId` |
 | `/kpi-records` | `createdAt` descending | `userId`, `kpiId`, `period` |
 | `/kudos` | `createdAt` descending | `receiverId`, `giverId` |
-| `/tasks` | `date` descending | `assigneeId`, `status`, `from`, `to` |
+| `/tasks` | `date` (the due date) descending, undated tasks last | `assigneeId`, `status`, `from`, `to` |
 | `/sops` | `updatedAt` descending | `status`, `category`, `sopType` |
 
 Accepted filter values:
 
 - `/people` `status`: `ACTIVE`, `INACTIVE`, `ON_LEAVE`, `PROBATION`, `PIP`, `NOTICE_PERIOD`
-- `/tasks` `status`: `PLANNED`, `IN_PROGRESS`, `COMPLETED`
-- `/tasks` `from` and `to`: date or date-time strings, applied to the task's `date` field as a closed range. Either can be used alone.
+- `/tasks` `status`: the name of a status on the task's List, matched exactly but ignoring case, for example `In Progress`. Each List has its own statuses.
+- `/tasks` `assigneeId`: matches the task's owner or any of its assignees.
+- `/tasks` `from` and `to`: date or date-time strings, applied to the task's `date` (its due date) as a closed range. Either can be used alone. Archived tasks are left out.
 - `/kpi-records` `period`: the exact period string the reading was logged with, for example `2026-Q1`
 - `/sops` `status`: `DRAFT`, `IN_REVIEW`, `APPROVED`, `PUBLISHED`, `ARCHIVED`
 - `/sops` `sopType`: `WRITTEN`, `RECORDED`, `CHECKLIST`. Note that Step-by-step SOPs are stored as `WRITTEN` (the kind is carried inside the content), so `sopType=WRITTEN` returns both written and step-by-step SOPs and this filter cannot separate them.
@@ -104,7 +105,7 @@ Accepted filter values:
 
 The cursor identifies a row by `id`, and the server resolves its position using that endpoint's sort order. Because the sort field is not always unique or stable, a long pagination run is a series of snapshots rather than one consistent view.
 
-- **`/tasks` sorts by `date` and `/sops` by `updatedAt`.** Both can change while you are paging. Editing a SOP moves it to the front of the list, which can push a row you have not read yet onto a page you have already passed. If you need a stable window over tasks, pin it with `from` and `to`.
+- **`/tasks` sorts by `date` and `/sops` by `updatedAt`.** Both can change while you are paging, and tasks with no due date come last. Editing a SOP moves it to the front of the list, which can push a row you have not read yet onto a page you have already passed. If you need a stable window over tasks, pin it with `from` and `to`.
 - **The ascending endpoints (`/people`, `/kras`, `/kpis`) grow at the end.** Rows created during your run will be picked up before you finish, which is usually what you want for a sync.
 - **The descending endpoints (`/kpi-records`, `/kudos`) grow at the front.** Rows created after you started will be missed, because you are walking away from them. Record the timestamp when you start and re-poll from the top next time, or subscribe to [webhooks](/api-reference/webhooks) instead of polling.
 

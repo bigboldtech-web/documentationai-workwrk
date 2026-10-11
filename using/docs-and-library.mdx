@@ -1,9 +1,11 @@
 ---
-title: Docs and Library
-description: Writing in the block editor, sub-pages, version history and sharing; the Library's notes, whiteboards, files and tables; and the private Notepad.
+title: Docs, files and the Notepad
+description: Writing in the block editor, sub-docs, version history and sharing; the Docs hub with canvases, files and SOPs; and the private Notepad.
 ---
 
-Three related surfaces. **Docs** is the writing app. **Library** is the shelf where notes, whiteboards, files and tables all sit together, filterable by Space. **Notepad** is your own private scratch pad, and it deliberately appears in neither of the other two.
+The **Docs** hub on the rail holds the company's writing and knowledge: **Docs**, **Canvases**, **Files**, **SOPs**, **Policies**, **Contracts** and the **Notetaker**. **Notepad** is your own private scratch pad, and it deliberately appears in none of them.
+
+The old Library page is gone. Each of its tabs is now its own place: notes are Docs, whiteboards are Canvases, files are **Files**, and tables are the **Tables** hub. An old Library link takes you to the right one.
 
 ---
 
@@ -11,119 +13,97 @@ Three related surfaces. **Docs** is the writing app. **Library** is the shelf wh
 
 ### Finding and creating documents
 
-`/docs` is the All Docs home. It lists documents as a table with Name, Location, Date updated, Date viewed and Contributors.
+The Docs hub opens on **All docs**, a list with the location, the dates updated and viewed, and the owner. Its views are **All**, **Recent**, **Mine**, **Shared with me** and **Favorites**, and the filters narrow by location, owner and date.
 
-Four tabs sit on the page itself: **All**, **Recent**, **Favorites**, **Created by me**. The Docs sidebar adds four more views that the page renders but does not tab for: Shared with me, Private, Meeting Notes, Archived.
-
-Create a document from the Docs sidebar's `+`, from the `+ New` button on the list, or from a Space or Folder's `…` menu → **Create new** → **Doc**, which anchors the document to that container so it shows up in the Space's tree.
-
-Open documents stack into a browser-style tab strip across the top of the Docs area. The strip survives navigating between documents.
+Create a document from **New doc** (a **Blank doc**, **From template…** or **Import…**), or from a Space or Folder's `…` menu, **New**, **Doc**, which puts the document in that Space so it shows up in the Space's tree. A doc inside a Space opens in place in Work.
 
 ### The editor
 
-The page is a block editor. Each block is a paragraph, heading, list item, table, image, code block and so on, and the block menu is reachable from the handle on the left of each block or by typing `/`.
+The page is a block editor. Each block is a paragraph, heading, list item, table, image, code block and so on. Type `/` to insert a block and `@` to mention someone.
 
 Around the blocks, the page carries:
 
-- an **emoji icon** and a **cover** (gradient or image) above the title
-- an inline **title** that autosaves as you type
-- a **font** choice (default, serif, mono) plus **Small text** and **Full width** toggles
-- a **Lock page** toggle that puts the document into read-only mode
-- an **outline** panel for jumping between headings
-- **reading mode**
+- an icon and a cover above the title
+- a title that saves as you type
+- a font choice (**System**, **Serif**, **Mono**) plus **Small text** and **Full width**
+- **Lock page**, which makes the document read only
+- the **Document outline**, for jumping between headings
+- **Reading mode**
+- **Open another doc beside**, to read two docs side by side
 
-Everything autosaves. Saves use a keepalive request, so navigating away mid-edit still lands the change.
+Everything saves as you type, and a save that is still pending when you navigate away still lands.
 
-### Sub-pages
+### Sub-docs
 
-Documents nest. The **Pages** panel on the left of an open document shows the tree around the current page: its ancestors, its siblings, and its children. Create a child page from the panel's `+` and it opens straight away.
+Documents nest. The **Docs inside** panel on an open document shows its sub-docs; create one with **New doc inside**.
 
-Row actions in that panel are the same shared note menu used in the sidebar and the Docs list: Open, Open in new tab, Rename, Copy link, Add or remove favorite, Duplicate, Move to Trash.
-
-Pages cannot be dragged to reorder yet. That is deliberately absent rather than half-working.
+Row actions are the same doc menu used in the sidebar and the Docs list: **Open**, **Open in new tab**, **Open beside**, **Rename**, **Copy link**, **Duplicate**, **Move to…**, **Save as template** and **Move to Trash**.
 
 ### Version history
 
-The page menu (`…`) and the history icon in the top chrome both open **Version history**. It lists the saved versions of the document; picking one restores its content, meta and title into the editor and saves that as the current state. The editor remounts on restore, so you never end up with a stale copy in memory.
+**Page options** and the history icon both open **Version history**. It lists the saved versions of the document; picking one restores it as the current state.
 
-### The rest of the page menu
+### The rest of the page options
 
-- **Copy link**, **Copy page contents**, **Duplicate**, **Move to Trash**
-- **Use with AI** → **Summarize with AI** (or re-summarize) and **Extract table**
-- **Export as Markdown**
-- **Keyboard shortcuts**
+- **Copy page contents** and **Export as Markdown**
+- **Ask AI**, which can summarise the doc or extract a table from it
+- **Doc stats**
 
-Trashed documents keep their row and their versions. `/docs/trash` lists them, and opening a trashed page offers to restore it.
+A doc moved to Trash goes to the one Trash in the Work sidebar, where it can be restored.
 
 ### Comments and mentions
 
-Comments attach to a specific block, not the whole page. Use the comment action on a block and the thread opens in a side panel.
+Comments attach to a specific block. Use the comment action on a block and the thread opens in a side panel.
 
-`@`-mentioning someone inside a document records a reference. Those references are what feed the **Mentions inbox** at `/me/mentions`.
+Mentioning someone in a document is recorded, and it shows on their **Mentions** page.
 
 ### Sharing
 
-The **Share** button opens the sharing panel:
+Share a doc from its `…` menu with **Manage access**:
 
-- **Public link.** Turn it on and the document gets a public URL of the form `/share/doc/<id>.<secret>` that anyone with the link can read without signing in. Turning it off revokes the secret immediately.
-- **Private link** to copy for people who already have access.
-- **Share with**, a per-person role map of **edit** or **view** for people in your org.
-- **Make private**, which restricts the document to its creator plus whoever you have explicitly listed.
+- Add people at **Full access**, **Can edit**, **Can comment** or **Can view**. On a doc, Can edit also lets someone change who can open it, and Full access adds locking it, moving it to Trash and saving it as a template.
+- **General access**: a doc follows where it lives, so anyone who can open its Space or Folder can open it. Turn on **Restricted** and only the people listed can open it, plus the person who made it and Admins.
+- **Public link**: a read-only address anyone with the link can open without signing in, while your workspace allows public links in Workspace settings, **Access**. Turning it off stops the link working at once.
+- **Private link**: a link to copy for people who already have access.
 
-The creator cannot be demoted from their own document; the server strips that.
+The person who made a doc keeps Full access to it.
 
-Inviting someone by email from this panel is **not built**. The row is there and labelled as coming soon. Add people who are already in the org instead.
+---
+
+## Canvases
+
+A canvas is a freeform board and a system-design studio. See [Canvas and diagrams](/using/canvas).
+
+---
+
+## Files
+
+**Files** is the company's drive: folders, uploads, preview and a place to find what you starred.
+
+- Views: **All**, **Favorites**, **Recent** and **In Spaces**.
+- **Upload**, or drop files anywhere on the page. Its arrow has **New folder**.
+- Drag files onto a Space or Folder in the Work sidebar to upload them there, and move files anywhere you can add to.
+- Each file can be starred, renamed, moved, previewed or deleted.
+
+Files also attach directly to tasks, from the task's Related section. Files attached to a List's tasks show up in that List's File gallery view.
 
 ---
 
 ## Notepad
 
-**Notepad** is the sticky-note panel behind the notepad icon in the topbar tools. The palette's **New notepad** quick action opens the same panel, and the voice capture tool writes into it.
+**Notepad** is the sticky-note panel behind the notepad icon in the top bar. **Cmd/Ctrl + Shift + E** opens a new note, and the voice capture tool writes into it.
 
-It is a list of short notes plus the same block editor Docs uses, with debounced autosave. What matters about it is where the notes live and who can reach them:
+It is a list of short notes plus the same block editor Docs uses, with autosave. What matters about it is where the notes live and who can reach them:
 
-- A notepad note is stored as a document anchored to **you**. It is owner-only, and that gate has no read-around: a manager or an org admin cannot open one.
-- Notepad notes do not appear in `/docs`, in the **Library**, or in the "Link existing" note picker on a task, because the document list filters them out by anchor.
-- Search is the one place your own notes can surface, and only your own. Results are access-checked row by row against the same owner-only gate, so a colleague searching the same words never sees them.
+- A Notepad note is yours alone. Nobody else can open it, including your manager and your Admins.
+- Notepad notes do not appear in Docs, in a doc picker, or in anyone else's search.
 
-So Notepad is not "Docs, but quicker". It is the private half. Write a thought there and it stays with you; write something a colleague needs and it belongs in Docs, or in the Library, or on the task itself.
+So Notepad is not "Docs, but quicker". It is the private half. Write a thought there and it stays with you; write something a colleague needs and it belongs in Docs, or on the task itself.
 
-There is no way to promote a notepad note into a shared Doc today. Copy the text across if you need it published.
+There is no way to turn a Notepad note into a shared doc. Copy the text across if you need it published.
 
 ---
 
-## Library
+## Tables
 
-`/library` has four tabs: **Notes**, **Whiteboards**, **Files**, **Tables**. Each tab has a search box and a row of Space chips (All, Unscoped, then one per Space) so you can narrow to what belongs to a given Space.
-
-Notes created from a Space chip are tagged to that Space. Notepad notes are not here, by design.
-
-### Whiteboards
-
-A whiteboard is an Excalidraw canvas. The page gives you a back button, an inline-editable title, and an autosave status pill; everything else is Excalidraw's own toolbar.
-
-The `…` menu has **Rename**, **Copy link** and **Delete**, plus the star to favorite it. Whiteboards can also be embedded as a tab on a List using the Whiteboard view.
-
-Saving is debounced while you draw and flushed when you leave the page.
-
-### Files
-
-`/files` is the drive: a folder tree on the left (including a virtual **Starred** folder) and a file grid on the right with breadcrumbs and search.
-
-Drop files onto the grid, or use the picker. Each upload posts the file, then records it against the active folder. Per-file actions: star, rename, move, delete, and open in a new tab.
-
-Files also attach directly to tasks, from the task detail's linked attachments section. Files attached to a List's tasks show up in that List's File gallery view.
-
-### Tables
-
-A table is a spreadsheet-shaped data grid, separate from Lists. It is for reference data: a price book, a client list, an inventory.
-
-- Cells edit inline and save on blur. Click a column header to rename it, use the `+` header to add a column, the row-end `+` to add a row, and right-click a row or column to delete it.
-- Column types: short text, long text, number, currency, percent, rating, select, multi-select, date, checkbox, URL, email, **formula**, and the relational trio **link**, **lookup** and **rollup**, plus attachment and person.
-- **Link** points a column at another table; **lookup** pulls a column from the linked row; **rollup** aggregates it (SUM, COUNT, AVG, MIN, MAX, CONCAT).
-- **Saved views** are named and persist on the table: grid, kanban, calendar and gallery. A table always keeps at least one view.
-- **Import** takes a CSV and creates rows, adding columns it does not recognise. **Export** downloads the current table as CSV.
-
-There is a **Public** toggle in the header, and it does exactly what it says. Turning it on marks the table readable through an unauthenticated endpoint (`/api/public/tables/<id>`) and publishes a read-only web page at `/embed/tables/<id>` that anyone with the link can open without signing in. A second button then appears that copies an iframe snippet pointing at that page.
-
-Treat it as a real publish action, not a flag. Every row and column becomes visible to anyone who has or guesses the link. Turning the toggle back off makes the endpoint 404 again.
+Tables, the spreadsheet, has its own hub on the rail. See [Tables and Forms](/using/tables-and-forms).

@@ -1,165 +1,138 @@
 ---
-title: Module status
-description: What is finished, what is half built, and what is only a shell, so nobody discovers an empty box by clicking it.
+title: What's built
+description: What is finished, what is partly built, and what is still to come, hub by hub, so nobody opens a page expecting it to work and finds out the hard way.
 ---
 
 This page exists so you never open a WorkwrK surface expecting it to work and find out the hard way.
 
 Three labels are used, and they mean exactly this:
 
-- **Built**: you can use it end to end today. Verified in the code.
-- **In progress**: the surface exists and part of it works. The specific gap is named. Do not rely on the missing half.
-- **Coming soon**: the surface exists but there is no working backend behind it, or the backend exists with no way to reach it. Treat it as a placeholder.
+- **Built**: you can use it end to end today.
+- **Partly built**: it works, and the gap is named. Do not rely on the missing part.
+- **Coming soon**: it is not on for customers yet. Where the product shows it at all, it says so.
 
-Last verified against the codebase on 2026-08-18. Ordered by area.
+Ordered by hub, the way the rail is.
 
-## Work chassis
+## Work
 
-| Module | Where | Status | What you need to know |
-| --- | --- | --- | --- |
-| Spaces, Folders, Lists | rail Home, `/spaces` | Built | Full create, rename, move, delete through `/api/spaces`, `/api/folders`, `/api/boards`. |
-| Tasks (Items) | any List | Built | Create, edit, assign, subtasks, checklists, comments, priority, tags, custom fields, time tracking. Written to the `Item` table. |
-| View types | board view tabs | Built | 17 renderers exist: List/Table, Board/Kanban, Calendar, Gantt, Timeline, Workload, Cards, Hierarchy, Pivot, Chart, Dashboard, Form, Doc, Whiteboard, File gallery, Map, Activity. |
-| Board title row controls | any board header | Built | Filter and Reader mode were removed (no backend, so they are gone rather than faked). Automate links to `/automation/workflows`, Share opens the share dialog, Ask is a deliberately disabled "Soon" button. |
-| Task to SOP linking | task detail, SOP detail | Built | The task detail's linked-attachments panel has a **SOPs** section that links an existing SOP to the task (link only, no create-new, stored as a `REQUIRED_READING` edge). The SOP's own page mirrors it back under **Used by tasks**. |
-| Global search and command palette | search box, `Cmd/Ctrl + K` | Built | Rewritten over the real work graph. Indexes Items (tasks), Boards, Spaces, Folders, Docs, Whiteboards and people, plus SOPs, Goals, Meetings, Departments, Ideas, Policies and Announcements, all visibility-gated. The dead finance result types are gone. The empty-state palette shows real recents and wired quick actions; every Command and Navigate row is a real link. |
-| Planner | `/planner` | Built | The week grid renders your local tasks and work items for everyone, no connection required. Google Calendar is a dismissible connect banner, not a gate. Two-way Google sync still depends on connecting the integration and the calendar-sync cron. |
-| Docs | `/docs`, `/library` | Built | Create, edit, save and delete via `/api/docs`. |
-| Notepad | topbar Notepad tool | Built | Personal sticky notes, and deliberately not part of Docs. A notepad note is a Doc anchored to `NOTEPAD` plus your own user id, so it is owner-only: the plain `/api/docs` list filters `NOTEPAD` rows out, which is why your notes never appear in `/docs`, the Library or any doc picker. Opened from the topbar Notepad tool or the palette's "New notepad" quick action. Voice capture writes to the same place. |
-| Whiteboards | `/whiteboards`, `/library` | Built | Create, edit, save and delete via `/api/whiteboards`. |
-| Tables | `/tables`, `/library` | Built | Spreadsheet-shaped data grids, with formula columns and the relational link, lookup and rollup trio, saved named views, CSV import and export. The header **Public** toggle really does publish: it opens an unauthenticated read-only page at `/embed/tables/<id>`. |
-| Files | `/files`, `/library` | Built | Upload, folder, and link based external attachments. |
-| Dashboards | `/dashboards` | Built | Create and configure dashboards with widget cards. |
-| Forms | `/forms` | Built | Builder, AI generation from a prompt, a respond page, an embeddable version at `/embed/forms/<id>`, and submissions. |
-| Timesheets | `/timesheets` | Built | Weekly sheets, entries, submit and approve. Card timers on board items log automatically. |
-| Team workload | `/team/workload` | Built | Manager only, and only if you have reports. Reads live Items. |
-| Inbox | `/inbox` | Built | Reads real notification rows, mark read, preferences. See the caveat under Notifications below. |
-| Trash | `/trash` | Built | Org wide recycle bin, 60 day window. The rail only shows it to the HR admin tier, but the page has no server gate and `/api/trash` is manager tier, so any manager who types the URL can use it. Archived tasks do not land here. |
+| What | Status | What you need to know |
+| --- | --- | --- |
+| Spaces, Folders, Lists | Built | Create, rename, move, duplicate, archive and delete from each `…` menu. See [Spaces and tasks](/using/spaces-and-tasks). |
+| Tasks | Built | Several assignees, subtasks, checklists, comments, watchers, priority, tags, custom fields, estimates and time tracking. A task opens as a drawer at its own address. |
+| Tasks in more than one List | Built | Add a task to another List; its home stays where it was. |
+| Public link for one task | Built | View only, with an optional end date, while the workspace allows public links. |
+| Views | Built | List, Board, Calendar, Gantt, Timeline, Workload, Team, Cards, Hierarchy, Pivot, Chart, Dashboard, Map, Doc, Canvas, Form, File gallery and Activity. Board is every List's default, and any view can be pinned as the default. See [Views](/using/views). |
+| Embed views | Coming soon | The Embed tiles in **+ View** (websites, Google Sheets, Docs, Calendar, Maps, YouTube, Figma) say so and create nothing. |
+| Bird's eye | Built | A whole Space, or a Folder, as columns of cards, with Focus on one List. |
+| Home and My work | Built | Home is your day; My work is everything assigned to you, grouped by when it is due. |
+| Everything | Built | Every task you can open, across all Spaces. |
+| Dashboards and the Space Overview | Built | Widgets over your tasks. Scheduling a dashboard or view by email is not offered yet. |
+| Templates | Built | One Template Center for tasks, Lists and Spaces, with **Save as template** on each. |
+| Trash | Built | One Trash for everything, with **Deleted** and **Archived** tabs and type filters. Items stay until an Owner or Admin deletes them for good. Nothing is emptied automatically yet. |
+| Live updates | Built | A task someone else moves appears without a refresh. |
 
-## Alignment layer
+## Planner
 
-| Module | Where | Status | What you need to know |
-| --- | --- | --- | --- |
-| Roles (job titles) | `/people/roles` | Built | Role definition pages, KRA templates per role. |
-| KRAs and KPIs | `/kra-kpi` | Built | Create, edit, assign, weight. Each individual weight is bounded 1 to 100 on a person's assignment, and 0 to 100 on the role-level KRA. Neither total is a hard cap: a save that pushes a person, or a job title, past 100 goes through and hands back an advisory warning with the running total, so someone already above budget can still rebalance. Totals are not required to reach 100. |
-| KRA inheritance | automatic | Built | Hiring into a role seeds its KRAs and published SOPs. Adding a KRA to a role pushes it to existing holders. |
-| KPI recording | your profile | Built | Record numbers with direction aware scoring and no invented baselines. Qualitative KPIs are the exception: they record on a 1 to 5 rubric with labelled anchors (Well below, Below, Meets, Exceeds, Outstanding), scored as the rating over the scale ceiling, so they always yield a score instead of reading "no target". |
-| KPI approval loop | `/team/kpi-reviews` | Built | Submit, approve, request changes, notification back to the person. |
-| Goals and OKRs | `/okrs` | Built | One accountable owner plus contributors resolved at read time. Contributors are people, departments, roles **or person-tags**, so a goal can aim at "everyone tagged Onboarding" and follow the tag as people gain and lose it. One derived progress number shown everywhere. Each goal carries a check-in cadence, including **None**, which silences its reminders. A stale check-in nudges the owner through the notifications bell and escalates by email (email respects the owner's notification prefs) from `/api/cron/okr-reminders`, which is registered in production on weekdays at 09:00. |
-| Key result to KPI linking | goal detail | In progress | A linked key result reads the gauge's latest value, hand check-ins on it are refused, and your typed number is preserved rather than overwritten. The gap is the picker: nothing in the interface creates the link, so it can only be set through the API. |
-| KRA weight in scoring | anywhere a score appears | **Coming soon** | Weights are displayed but no scoring math uses them. A 5% KRA counts the same as a 50% KRA today. |
-| Team alignment board | `/team/alignment` | Built | Per report: active KRAs with weights, current period KPI compliance, SOP read rate, weekly review state. Unmeasured people show a dash, never a fake 100%. |
-| Director rollup | `/team/rollup` | Built | Director tier and above. Groups by sub manager. |
-| Performance score | behind the scenes | Built | Composite monthly score. See the caveat below about the weight editor. |
+| What | Status | What you need to know |
+| --- | --- | --- |
+| Calendar | Built | Your tasks and events on a week grid. **New event** makes an event, not a task. The Team calendar shows teammates' events as Busy. |
+| Meetings | Built | Meetings with attendees, notes and action items, and a guest link for outsiders to join the call. |
+| Reminders | Built | Fire while the app is open and, from the server, while it is closed, with Snooze, Dismiss and Open. |
+| Timesheets | Built | Stopped timers log to your week; **Log time** adds an entry by hand; **My timesheets**, **Approvals** and **Team**. |
+| Google Calendar sync | Partly built | My settings, **Calendar & connections** offers it only when your workspace's server has Google set up; otherwise the card says so. **Your calendar feed** works everywhere. Outlook, iCloud and Fastmail are listed as coming soon. |
 
-## Performance and people
+## AI
 
-| Module | Where | Status | What you need to know |
-| --- | --- | --- | --- |
-| Review cycles | `/reviews` | Built | Create, launch, self assessment, manager review, calibration, finalize. |
-| Appraisal letter | `/reviews` | Built | `/api/reviews/[id]/appraisal-letter` has a button. A **Generate appraisal letter** control appears on every COMPLETED review, both on the person's own My Review card and on each row of the manager's Team Reviews list. The route is org-scoped and authz-gated: only the subject, the reviewer, or someone with manage rights over the subject can read it. |
-| Talent 9-box | `/talent` | In progress | **New assessment** opens a placement modal that writes a real `TalentAssessment` (it is no longer a dead toast), and you can also auto place everyone from their performance scores. Review calibration still does **not** feed it, so the calibration step and the 9-box remain disconnected. |
-| Weekly reviews | `/team/reviews` | Built | Manager queue, submit and approve. |
-| People directory | `/people` | Built | Manager tier for the full directory, scoped to your report tree below the org wide door. Carries a **Tags** filter row: tag chips render on each card, and clicking one or more tags narrows the directory to people carrying any of them. |
-| Person tags | person profile, `/people` | Built | Tags attach to a person from the tag control under their name on their profile (a manager edits, you can read your own). They are the same org tag taxonomy created at Settings → Tags, and they are resolved live: `/api/users?tagIds=` filters the directory, and goals, pulse surveys and announcements can all target a tag rather than a fixed list of names. |
-| Person profile | `/people/[id]`, `/people/me` | Built | Three render modes: self, manage, peer. Peer mode never shows tags, readings, reviews or scores. |
-| Departments (Functions) | `/people/departments` | Built | Full CRUD from the interface: create, rename, edit description and colour, assign a department head, re-parent into a nested tree, and delete (the server refuses to delete a department that still has members). Tree and Grid views with rolled-up headcount. No merge/archive yet. |
-| Org chart | `/organization` | Built | Reads the manager chain. |
-| Invite a person | invite modal | Built | The modal collects department, role and reporting manager (all optional) alongside the required KRAs and SOPs, so a hire can land placed. Accept-invite seeds each KRA's role-level weight when set and only even-splits the rest, instead of flat even weights across the board. |
-| Candor | `/candor` | Built | The anonymous-feedback loop is closed. Create a round, `/candor/[id]` is a real respond page, and the owner sees an aggregated results view. Responses are structurally anonymous: `CandorResponse` stores no userId, IP or device, ever, so there is no attribution to remove. Results are scoped to the round's owner and no longer leak metadata across departments. |
-| Surveys | `/surveys` | Built | Create a survey with poll-style questions (rating, NPS, single- and multi-choice, yes/no, text), `/surveys/[id]` is a real respond page, and managers get an aggregated results view with per-question distributions. The audience is Everyone, or specific offices, departments, people, or **By tag**. Anonymity is enforced two ways: an anonymous survey never attributes an answer to a person, and office/department segment filters are ignored on anonymous surveys so a one-person segment cannot be used to de-anonymize responses. Non-anonymous surveys show attribution and honor segment filters. |
-| Announcements | `/announcements` | Built | Read, compose, edit and acknowledge. The composer's **Who sees this** control is real targeting, not a broadcast: Everyone, Departments, Offices, People or Tags. Non-Everyone audiences are resolved to their current members at read time, so both the feed and the notification fan-out reach only that audience, and someone added to the department or tag afterwards is picked up on the next read. An acknowledgement-status view shows who has read each one. One thing to ignore: further down the same composer there is a leftover strip labelled **Audience** that reads "Everyone in the organization" plus a disabled "Specific teams / roles · Coming soon" chip. It is dead markup from before targeting shipped and controls nothing. The live control is **Who sees this**. |
-| Kudos | `/kudos` | In progress | Giving and reacting work and feed the performance score. The leaderboard API at `/api/kudos/leaderboard` still has no interface. |
-| Assets | `/assets` | Built | The list reads real data, and Add asset, Edit, Assign, status change and delete are all wired to real endpoints. The assign endpoint's IDOR is closed: you can only assign an asset to someone inside your own organization. |
-| Tools and subscriptions | `/tools` | Built | Reads and writes real data. |
+| What | Status | What you need to know |
+| --- | --- | --- |
+| Ask AI | Built | Chat that does real work, and asks first before anything other people would see. |
+| AI teammates | Built | Teammates with one job each, approvals, routines, memory, group chats, teammates in Talk and in automations. See [AI teammates](/using/ai-teammates/overview). |
+| AI teammates with Gmail and Google Calendar | Coming soon | Not offered to customers yet. Nothing about it shows in the product until it is. |
+| An AI teammate's own browser | Coming soon | Not built. A teammate has no tool to browse the web. |
+| Workflows (automations) | Partly built | The builder, runs, retries, logs and health are real. Triggers that fire today: a task is created, a task's status, assignee or field changes, a task's date arrives, on a schedule, a KPI reading is recorded through the API or an integration, and kudos is given. **Review completed**, **SOP published** and the lead triggers are listed as not yet emitting, and the builder says so. The **Ask an AI teammate** action works. |
+| AI fields in Lists | Built, off until turned on | Summary, Sentiment, Categorize and Translation fields, filled when someone chooses **Fill with AI**. An Owner or Admin turns them on in Workspace settings, **Data**, **Retention & privacy**. |
+| Scheduled AI updates in Talk | Partly built | A channel's Details panel can set up a daily standup or weekly project update, and **Post now** posts one. Posting on the schedule itself is not on yet, and the panel says updates post only with Post now. |
+| Marketplace | Built | The modules a workspace can turn on, Talk and Tables, with links to the AI rows. |
+| Integrations | Partly built | A catalogue of other tools. Each card says what is true: **Set up**, **Ask an admin to connect this**, **Connected**, or **Request this** for one not built yet. |
+| Build apps | Partly built | Describe an app and get a simple data app with typed fields and rows. It builds data apps, not interfaces or logic. |
 
-## Knowledge
+## Talk
 
-| Module | Where | Status | What you need to know |
-| --- | --- | --- | --- |
-| SOPs | `/sops` | Built | **New SOP** opens one picker with four kinds: **Written SOP** (block editor, long-form prose), **Step-by-step SOP** (an ordered step list with per-step notes and screenshots), **Checklist SOP** (discrete tickable steps, runnable as a process run) and **Click-capture SOP** (the recorder extension writes a screenshot and a step per click). At the database layer Step-by-step is a Written SOP with a step-list body, which is why the detail page labels the four kinds Written, Step-by-step, Checklist and Recording. Written SOPs carry their own **description** field alongside the body. Versioning with rollback, publish, archive, assign, progress and compliance all work. Folder based visibility with inheritance. AI generation is not a create option: it is an in-editor action on a checklist SOP that drafts steps from the title and description. A published SOP can also be shared read-only outside the org: **Copy public link** mints a `shareToken` and copies a `/share/sop/<token>` URL that only ever resolves while the SOP stays PUBLISHED, and **Turn off public link** revokes it. |
-| SOP acknowledgement | `/sops/[id]` | Built | Anyone who has been assigned the SOP sees a **Mark as read** button in the header, whether or not they can manage SOPs. Pressing it posts to `/api/me/sops/<assignmentId>/ack`, completes the assignment and swaps the button for an "Acknowledged" stamp with the date. That is the completion signal the SOP read rate and the compliance page count. |
-| SOP to KRA linking | `/sops/[id]` | Built | The details rail carries a **Linked KRA** picker, so a procedure can be attached to the result area it serves. A **Used by tasks** section lists the board tasks that link this SOP, and hides itself when there are none. |
-| SOP folders and tags admin | `/sops/manage` | Built | The **Organize** action on the SOP library (shown to anyone who can manage SOPs) opens the taxonomy admin: the folder and tag manager plus the category and subcategory manager, both mounted. The underlying writes enforce their own gate: folder and tag edits require org admin, category edits require manager, so a manager who is not an admin still lands on the page and gets honest 403 toasts on the admin-only actions. Deleting a folder never deletes its SOPs: they are re-parented to the folder's parent (or the unfoldered bucket), and a folder with sub-folders refuses deletion until those are moved or removed. |
-| SOP review and approval flow | `/sops/[id]` | Built | Five statuses exist (Draft, In review, Approved, Published, Archived). The detail page drives a real transition flow off the status field: **Submit for review** (Draft to In review), **Approve** (In review to Approved) and **Request changes** (In review back to Draft), alongside Publish and Archive. Two honest limits: the transitions are gated on the SOP edit permission (there is no separate reviewer role or governance capability, and publishing keeps its own separate publish capability), and no notification is sent on any status change. |
-| SOP walk-through | `/sops/[id]` | Built | Plays the steps one at a time. It is deliberately hidden on written (prose) SOPs, which have no discrete steps to play. |
-| Process runs | `/process-runs` | Built | Run history, plus a public share link at `/run/<token>`. |
-| Policies | `/policies` | Built | Create, assign, acknowledge, compliance view, ledger export. |
-| Contracts and agreements | `/agreements` | Built | Create, templates, parties, send, signing at `/sign/<token>`. |
+Talk is a premium module, included from the Growth plan. See [Talk](/using/talk).
 
-## Build and extend
+| What | Status | What you need to know |
+| --- | --- | --- |
+| Channels, groups and direct messages | Built | Threads, reactions, mentions, files, search, starring, notification levels, restricted and findable channels, archive and restore. |
+| Calls | Partly built | Audio and video calls, the call dock, the incoming ring and the guest link are built. They need a video service your workspace's server has set up; until then **Call** says **Calls aren't set up for this workspace**. |
+| Announcements | Built | Audience targeting (everyone, departments, offices, people or tags), scheduled posts and acknowledgements. |
 
-| Module | Where | Status | What you need to know |
-| --- | --- | --- | --- |
-| Automation | `/automation/workflows` | In progress | The engine, workflow CRUD, runs, retries, logs and health pages are real, and the retry sweep runs every 10 minutes in production. Only 5 of the 16 declared triggers ever fire, and 3 of those only from the API and integration paths, not from in-app actions. Rules on "task created", "KPI recorded" and "kudos created" will not fire from the app. |
-| Build (app builder) | `/build` | In progress | Describe an app in a prompt, it generates typed fields, and `/build/<slug>` renders a table where you add, edit and delete rows. Real backend. It builds simple data apps, not interfaces or logic. |
-| Marketplace | `/store` | **Coming soon** | Entirely hardcoded. The install state is local component state and nothing is installed. |
-| AI agents | `/agents` | **Coming soon** | The page is still entirely hardcoded, including the usage metrics and the "installed" flags on each agent card. Nothing on it is connected, even though `/api/agents` and the `run-due-agents` cron exist behind it. |
-| Autopilot | `/autopilot` | **Coming soon** | A stub. The rules, triggers and counters on it are sample data. Real automation lives at `/automation/workflows`. |
-| AI Sidekick | `/sidekick` | Built | Real chat against `/api/ai`. |
-| Clips | `/notetaker` | In progress | The rail calls it Clips with a video icon and the sidebar says "All Clips". Nothing records. The page is an AI notetaker: paste a meeting transcript and it extracts decisions, action items and attendees. That part works. |
-| Integrations | `/integrations` | **Coming soon** | Honest catalog preview: connectors are browsable by category and every one reads "Coming soon". No fabricated "installed" flags and no connect action. (The Planner's own Google hook is a separate surface.) |
+## Teams
+
+| What | Status | What you need to know |
+| --- | --- | --- |
+| Directory, Org chart, Departments, Job titles, Skills | Built | Open to everyone. Owners, Admins and the People team edit placement and reporting lines. |
+| My profile | Built | Overview, KRAs & KPIs, Goals, Reviews, Skills, Kudos, Assets and Reports, shown by who is looking. See [Your profile](/using/my-profile). |
+| KRAs and KPIs | Built | Per job title, with weights, direction, frequency and type. Each weight is checked; the total is shown and turns red past 100 but is not enforced. KRA weight is shown but does not yet weigh any score. |
+| KPI recording and reviews | Built | Record your numbers, manager approval, KPI reviews. |
+| A goal target measured by a KPI | Partly built | A linked target reads the gauge and refuses hand check-ins. There is no control in the interface that makes the link. |
+| Goals | Built | One owner, contributors by person, department, job title or tag, targets with start values, check-ins, Effort and On track. See [Goals](/using/goals). |
+| Alignment and KPI reviews | Built | A manager's board of their team's KRAs, KPI compliance, SOP read rate and weekly reviews. |
+| Weekly reviews | Built | A person's weekly check-in with a manager approval state. |
+| Review cycles | Built | Created for everyone, a department or chosen people; a manager runs one for their own chain. My review, Team, Peer feedback and Calibration; **Finalize outcomes** can place people on the talent grid. See [Review cycles and cadences](/admin/reviews-and-cadences). |
+| Talent (9-box) | Built | Place people by hand, from performance scores, or from a finalized review cycle. |
+| Analytics | Partly built | Headcount, departments and performance charts, with a CSV export. Its task figures are not available yet. |
+| Kudos, Candor, Surveys | Built | Kudos tagged with company values; anonymous Candor rounds; pulse surveys with audiences by department, office, people or tag. |
+| Tools and Assets | Built | What the company uses and who holds what. |
+
+## Docs
+
+| What | Status | What you need to know |
+| --- | --- | --- |
+| Docs | Built | Block editor, sub-pages, version history, comments, mentions, sharing and public links. Docs open in place in Work. |
+| Canvases | Built | A freeform board and a system-design studio with **Design with AI**. See [Canvas and diagrams](/using/canvas). |
+| Files | Built | Upload into any folder or Space, drag and drop onto Spaces and Folders, move files anywhere, preview and star. |
+| SOPs | Built | Four kinds, one taxonomy of categories, subcategories and tags, publishing, assignment, acknowledgement, runs and compliance. A status change (draft, in review, approved) does not notify anyone; assignment does. |
+| Policies and Contracts | Built | Assignment and acknowledgement with a ledger; contract templates, parties, sending and signing by link. |
+| Notetaker | Built | Paste a meeting transcript and get decisions, action items and attendees, saved as a meeting, with a task per action item if you want. It does not record audio. |
+| Mentions | Built | Every place a doc or SOP mentioned you. |
+
+## Tables
+
+Tables is a premium module, included from the Growth plan. Forms are part of every plan. See [Tables and Forms](/using/tables-and-forms).
+
+| What | Status | What you need to know |
+| --- | --- | --- |
+| Tables | Built | A spreadsheet with formulas, a fill handle, freeze panes, find and replace, data validation, conditional formatting, pivot tables and charts, named ranges, protected columns, a row trash, CSV import and export, and **Ask your data**. |
+| Forms | Built | A builder with autosave, answers that go to a List or a table, settings, notifications and a public link. |
 
 ## Settings
 
-Settings is a two-door nav. The **Admin** door (org configuration) is hidden entirely for anyone below Company Admin or Super Admin, and its most sensitive pages (`/settings/identity`, `/settings/tags`, `/settings/structure`, `/settings/audit`, `/settings/data`, `/settings/defaults`) also enforce a server-side redirect so a manager cannot reach them by URL. The **Personal** door (`/account/*` plus Notifications) is available to everyone.
+See [Settings](/admin/settings) for every page.
 
-| Page | Status | What you need to know |
+| What | Status | What you need to know |
 | --- | --- | --- |
-| `/settings` | Built | Admin-door overview: an org summary card grid that deep-links to the editors. |
-| `/settings/identity` | Built | Saves org name, primary domain, logo upload, and the company profile (industry, mission, vision, about, values). The profile feeds AI KRA/KPI generation. This replaced a save that used to 400. |
-| `/settings/locale` | Built | Saves to org settings. |
-| `/settings/modules` | Built | Saves to org settings, but nothing in the app reads the list; app visibility is by access tier. |
-| `/settings/tags` | In progress | Create only, and it matters more than it used to: tags are now the segmentation primitive behind person-tags, tag-targeted goals, tag-targeted surveys and tag-targeted announcements, and this is the only place to mint one. The page never calls the tag update or delete endpoints; the delete control only drops the row from the current screen. It also falls back to a sample list when `/api/tags` returns nothing, so an empty org sees placeholder rows rather than an empty state. Get the tag name right when you create it. |
-| `/settings/task-types` | In progress | Create, delete and set default all work. There is no edit control: the only field the page patches is the default flag, so a type's name and icon are fixed at creation. |
-| `/settings/members` | Built | Members and invitations. Inline access-level and manager edits for admins. |
-| `/settings/structure` | Built | Org-structure hub: live counts for Functions (Departments), Roles and Offices, plus a read-only Levels explainer with per-rung head counts. Offices viewer is Coming soon; Levels are a fixed enum, explained not edited. |
-| `/settings/hierarchy` | In progress | Read only. It renders the reporting structure from the user list. You cannot change a reporting line here. |
-| `/settings/permissions` | In progress | The matrix saves, but only 11 of 439 API route files consult it, covering five of the sixteen modules (`kras`, `sops`, `assets`, `policies`, `announcements`). Everything else uses hardcoded Level ladders. |
-| `/settings/audit` | Built | Reads the real activity engine at `/api/audit`: persisted rows, cursor-paginated, filterable by type/actor/date. The header Export button downloads the signed log through `/api/audit-log/export`. No sample data. |
-| `/settings/data` | Built | Admin-only export hub over endpoints that existed with no UI: full-org ZIP (`/api/export/all`), people CSV (`/api/export/people`), and timesheets/purchase-orders/invoices/audit CSVs (`/api/export/[type]`), plus links to import and Trash. |
-| `/settings/defaults` | Built | Writes the org-wide preference system (`/api/org/preferences`): default appearance/accent/density that seed members, and locks (theme, density, sidebar, Home cards) that re-stamp on every load so members can't override them. |
-| `/settings/api` | Built | Thin client over the real `/api/keys` engine: mint (secret shown once), list with scopes/last-used/request-count, and real soft-delete revoke. Admins only. No browser-side fabrication. |
-| `/settings/calendar` | **Coming soon** | Honest placeholder. External calendar sync (Google, Outlook, iCloud, Fastmail, ICS) is shown as planned providers; the page makes no network calls and fabricates no connections. |
-| `/settings/integrations` | Built | A static navigation hub, which is all it claims to be. |
-| `/settings/import-export` | Built | A static navigation hub. Its audit-log export link leads to a working export. |
-| `/settings/billing` | Built | Opens a real Stripe customer portal, and returns a clear "Stripe not configured" error when billing keys are absent. Org admin only. |
-| `/settings/scoring` | In progress | Cadences, bands and anchors save correctly. The weight sliders edit KPI, SOP compliance, Behavioral and Peer, but the scoring engine reads KPI, Manager, Peer, Self and SOP compliance. Behavioral is ignored, and Manager and Self always use defaults. |
-| `/settings/notifications` | Built | The single merged personal notifications page (Inbox + Email). It reconciles both historical stores (`/api/preferences` JSON store and `/api/email-preferences`) behind one surface. Unproduced types render as disabled "Soon" rows. |
-| `/account/profile` | Built | |
-| `/account/appearance` | Built | Anything an admin locked in Defaults & locks is greyed out here. |
-| `/account/notifications` | Built | Retired: redirects to `/settings/notifications`. |
-| `/account/security` | Built | Reads real MFA + email-verified status and the org policy. Resend verification, Enable/Turn-off two factor (real TOTP enrol + backup codes via `/api/auth/mfa/enroll`) all work. The old hardcoded "2 active sessions" line is gone. |
+| My settings | Built | Profile, Preferences, Notifications, Security, Calendar & connections, Keyboard shortcuts. |
+| Workspace settings | Built | Overview, Identity & culture, Locale & work week, Apps & modules, Members, Structure, Access, Task system, Scoring & reviews, Security, Data, Audit log, API & webhooks, Plan & billing. |
+| Owner and Admin split | Partly built | The product names an Owner, but today every Admin can open the Owner's pages too: Plan & billing, Security and workspace deletion. Only an Owner can transfer ownership. |
+| Two step verification and sign-in policy | Built | For each person in My settings, and required by role from Workspace settings, **Security**. |
+| Single sign-on | Coming soon | Workspace settings, **Security** shows it only under **Show upcoming features**. |
+| Provisioning (SCIM) | Built | Tokens and the endpoint on the **Provisioning** tab. |
+| Plan & billing | Built | Seats, AI questions and the plan. Card checkout and the billing portal depend on card payment being set up for your workspace; otherwise the page says **Billing is handled by our team**. |
+| Export | Built | The full workspace, including every task, Docs, SOPs and Tables. |
+| Trash and audit log retention | Coming soon | Both pages say entries stay until the nightly job is installed. |
+| Webhooks | Partly built | Deliveries, signing and retries work; there is no screen for them yet. See [Webhooks](/api-reference/webhooks). |
+| Custom domains | Coming soon | Not offered. |
 
 ## Notifications and reminders
 
-| Thing | Status | What you need to know |
+| What | Status | What you need to know |
 | --- | --- | --- |
-| Notifications bell | Built | Top right, a bell of its own separate from reminders. Unread-count badge, popover of recent notifications with Mark all read, each row deep-links. Polls `/api/inbox/count` every 25 seconds and on tab focus. |
-| Task notifications | Built | The Item pipeline emits through `src/lib/notify-item.ts`: assign and reassign notify the new owner, a status change notifies the owner plus everyone who commented, comment mentions notify the mentioned. All gated by `/settings/notifications` prefs; the actor is never notified about their own action. |
-| Due-date notifications on board tasks | In progress | `notifyItemsDueToday` (the due-today + overdue sweep over the `Item` table) is written and idempotent, but still nothing calls it on a schedule, so it does not fire automatically. The registered "tasks due today" job sweeps the **legacy** `Task` table, not your board work. Assign and status notifications are unaffected. |
-| Desktop notifications | Built | When the unread count climbs while the tab is backgrounded, the bell raises a browser notification + chime for the newest item. Permission is requested only from the popover's "Enable desktop alerts" button, never on load. Muting silences the popup, not the badge. |
-| Other notification rows | Built | Many modules also write real `Notification` rows: KPI approvals, KRA assignment, SOP assignment, announcements (to the resolved audience only), policies, kudos, meetings, goals, timesheets. |
-| Reminders bell | Built | Top right. Groups Fired, Overdue, Today and Upcoming, plus a read-only "Recently done" history (last 14 days). Snooze (+1h) and dismiss work. Polls every 60 seconds. |
-| Reminder firing, app open | Built | A fired reminder is a persistent bottom-right popup (Snooze 10m / 1h / tomorrow, Dismiss, Open), not a 3-second toast. It survives reloads: the fired-but-unacted set is reloaded on mount, so nothing is lost by looking away. |
-| Reminder firing, app closed | Built | `/api/cron/reminders` is registered in production and runs every 5 minutes, so reminders now fire for people who have the app closed. The in-app ticker and the cron claim each due reminder atomically, so a reminder is never fired twice. |
-
-### Scheduled jobs
-
-The time-driven jobs run from the production server's crontab, documented in `scripts/CRON-SETUP.md`. The ones whose absence used to be a caveat on other pages are registered: personal reminders every 5 minutes, recurring-task spawning hourly, goal check-in reminders on weekdays at 09:00, review-cycle auto-open daily at 08:00, KPI reminders on weekdays at 09:00, and the survey key rotation nightly.
-
-Two things this does not cover, and they are the real gaps:
-
-- The board-item due-date sweep has no job at all (see the row above).
-- If you run WorkwrK somewhere other than the production box, none of these schedules come with it. `vercel.json` in the repository is reference-only.
-
-## The legacy task table
-
-Worth stating plainly because it explains several oddities above.
-
-There are two task tables. Everything you create on a List is an `Item`. A separate legacy `Task` table still exists and is written only by `/api/tasks`.
-
-Three places still read the legacy table and therefore cannot see your board work: `/analytics`, the performance score's task completion component, and `/api/tasks/workload`. The scheduled "tasks due today" digest is a fourth. Global search was another until it was rewritten over the `Item` graph. Migrating the rest is a tracked debt.
+| Inbox and the bell | Built | Tabs for Primary, Other, Mentions, Snoozed and Cleared; desktop alerts from this browser. |
+| Task notifications | Built | Assigned, status changes, comments and mentions, on your tasks and on tasks you follow, each with its own switch in My settings, **Notifications**. |
+| Due soon | Built | Once a day in the morning, a notification for each task assigned to you that is due today, by the **Due soon** switch. |
+| Overdue | Partly built | The **Overdue** switch is there, but the daily overdue notification is not sent yet. Managers get a Monday email digest of their team's overdue tasks. |
+| Email | Partly built | Tasks assigned to me, Kudos, KRA and KPI updates, Review reminders and SOP updates send. The rest of the email rows are listed under **Coming soon**, including the daily digest. |
+| Quiet hours | Coming soon | The avatar menu has **Do not disturb** and **Mute notifications**; quiet hours for email and desktop are listed as coming soon in My settings, **Notifications**. |
 
 ## Reporting an inaccuracy
 

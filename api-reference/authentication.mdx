@@ -1,36 +1,36 @@
 ---
 title: Authentication
-description: Create an API key in Settings, send it as a bearer token, and understand what the READ, WRITE and ADMIN scopes actually unlock.
+description: Create an API key in Workspace settings, send it as a bearer token, and understand what the READ, WRITE and ADMIN scopes actually unlock.
 ---
 
-Every call to `https://workwrk.com/api/v1` is authenticated with an organization API key sent as a bearer token. Keys are minted in the app by an administrator, shown exactly once, and stored only as a hash.
+Every call to `https://workwrk.com/api/v1` is authenticated with a workspace API key sent as a bearer token. Keys are made in the app by an Owner or Admin, shown exactly once, and stored only as a hash.
 
 ## Create a key
 
 <Steps>
-  <Step title="Open Settings, then API keys" icon="settings">
-    In the app, go to **Settings**. Under the **Platform** group in the settings sidebar, choose **API keys**. The direct path is `/settings/api`.
+  <Step title="Open API & webhooks" icon="settings">
+    In the app, open Workspace settings from your avatar menu. Under **Security & data**, choose **API & webhooks**. The direct path is `/settings/api`.
 
-    Only **Company admin** and **Super admin** can manage keys. Anyone else lands on the same screen and sees "Admins only. API keys are managed by organization administrators."
+    Owners and Admins manage keys.
   </Step>
 
-  <Step title="Generate key" icon="key">
-    Click **Generate key** in the top right. The **Generate API key** dialog asks for two things:
+  <Step title="Generate a key" icon="key">
+    Choose **Generate key**. The **Generate an API key** dialog asks for two things:
 
-    - **Name** so you can recognize it later. The placeholder suggests the shape: `Production · Backend`.
-    - **Scopes**, presented as three toggles: **Read** ("Read organization data through the API"), **Write** ("Create and update records"), and **Admin** ("Full administrative access — grant sparingly"). **Read** is pre-selected.
+    - **Name**: where the key is used, so you know what breaks if it is revoked.
+    - **Scopes**, as three choices: **Read** ("Read workspace data through the API."), **Write** ("Create and update records.") and **Admin** ("Everything, key management included. Give it sparingly."). **Read** is chosen to start.
 
-    Pick the narrowest set that does the job. You can select more than one.
+    Pick the narrowest set that does the job. You can choose more than one. **Scopes cannot be changed after a key is made. Make a new key instead.**
   </Step>
 
   <Step title="Copy the secret now" icon="clipboard-copy">
-    The **Copy your API key now** dialog shows the full key with a **Copy** button and this warning: "You won't be able to see this key again. Store it in a secret manager. If you lose it, revoke this key and generate a new one."
+    **Copy your new key** shows the full key once: "This is the only time the key is shown. Store it somewhere safe now." Choose **Done, I have saved it** when you have.
 
-    That is literal. Close the dialog without copying and the key is unrecoverable; your only option is to revoke it and mint another.
+    That is literal. Close the dialog without copying and the key is unrecoverable; your only option is to revoke it and make another.
   </Step>
 </Steps>
 
-Back on the list you will see the key as a row with its **Name**, **Key prefix**, **Scopes**, **Last used** and **Created** date. The four tiles above the table count **Active** keys, keys **In use** (used in the last 7 days), **Stale** keys (unused for more than 30 days) and **Revoked** ones.
+Back on the list you see the key as a row with its **Name**, **Prefix**, **Scopes**, **Rate limit**, **Last used** and **Created by**. Open a row to see its details and change its rate limits. **Show revoked keys** brings revoked ones back into the list.
 
 ## Key format
 
@@ -46,11 +46,9 @@ What the server keeps:
 
 | Stored | Value |
 | --- | --- |
-| `hashedKey` | The SHA-256 hex digest of the full key. This is what a request is matched against. |
-| `prefix` | The first 12 characters, that is `wk_live_` plus the first four characters of the token. Used for display and to help you identify a key in the list. |
+| A hash | The SHA-256 digest of the full key. This is what a request is matched against. |
+| The prefix | The first 12 characters, that is `wk_live_` plus the first four characters of the token. Used for display and to help you identify a key in the list. |
 | Plaintext | Nothing. It is never written to the database. |
-
-The **Key prefix** column in the app is clickable and copies that 12-character prefix, which is safe to paste into a ticket or a runbook.
 
 ## Sending the key
 
@@ -69,7 +67,7 @@ curl -X POST https://workwrk.com/api/v1/kpi-records \
   -d '{
     "kpiId": "clx8f2n0k0011s601t4v8y2qw",
     "userId": "clx8f2n0k0001s6019vq3h7bd",
-    "period": "2026-Q1",
+    "period": "2026-09",
     "actualValue": 47
   }'
 ```
@@ -89,16 +87,20 @@ Three scopes exist: `READ`, `WRITE` and `ADMIN`. A key carries one or more of th
 | `WRITE` | `WRITE` or `ADMIN` |
 | `ADMIN` | `ADMIN` |
 
+Which scope each endpoint needs:
+
+| Endpoint | Scope |
+| --- | --- |
+| Every `GET` | `READ` |
+| `POST /kras`, `/kpis`, `/kpi-records`, `/kudos`, `/tasks` | `WRITE` |
+| `POST /people` (invite a person) | `ADMIN` |
+
 Two consequences worth internalizing:
 
-- A **WRITE**-only key can also read. `WRITE` satisfies a `READ` requirement, so you do not need to tick both boxes for a read-and-write integration.
-- A **READ**-only key cannot write. Every `POST` on the v1 API requires `WRITE`.
+- A **WRITE**-only key can also read. `WRITE` satisfies a `READ` requirement, so you do not need both for a read-and-write integration.
+- **Inviting people needs ADMIN.** A key without it gets `403` with `Inviting people needs a key with the "ADMIN" scope.` Treat an ADMIN key as the most sensitive thing you hold: it satisfies every check.
 
-Which scope each endpoint needs is simple: `GET` requires `READ`, `POST` requires `WRITE`. That mapping is also emitted into the OpenAPI spec on every operation, so your client will show it.
-
-<Callout kind="alert">
-  **ADMIN grants nothing extra on `/api/v1` today.** No v1 endpoint requires it, and it does not unlock key management or webhook management either: those screens and their endpoints are gated on an administrator's signed-in dashboard session, not on a key scope. Ticking **Admin** currently just makes a key satisfy every check, which is a broader blast radius for no additional capability. Prefer **Read**, **Write**, or both.
-</Callout>
+The scope each operation needs is also written into the OpenAPI spec, so your client will show it.
 
 ## When authentication fails
 
@@ -117,14 +119,14 @@ curl -i https://workwrk.com/api/v1/people \
 ```
 </CodeGroup>
 
-The four `401` messages you can get, and what each one means:
+The `401` messages you can get, and what each one means:
 
 | Message | Cause |
 | --- | --- |
 | `Invalid API key format` | The bearer token does not start with `wk_live_`. Usually a truncated copy or the wrong secret entirely. |
-| `Invalid API key` | Correctly formatted, but no key in any organization hashes to it. A single wrong character produces this. |
-| `API key has been revoked` | The key existed and was revoked. Mint a new one. |
-| `Missing or invalid credentials. Send Authorization: Bearer <key>.` | No `Authorization: Bearer` header at all, and no valid dashboard session either. |
+| `Invalid API key` | Correctly formatted, but no key hashes to it. A single wrong character produces this. |
+| `API key has been revoked` | The key existed and was revoked. Make a new one. |
+| `Missing or invalid credentials. Send Authorization: Bearer <key>.` | No `Authorization: Bearer` header at all, and no signed-in session either. |
 
 A key that is valid but too narrow returns `403` instead, with the scopes it does have spelled out:
 
@@ -134,25 +136,27 @@ A key that is valid but too narrow returns `403` instead, with the scopes it doe
 }
 ```
 
+A key for a suspended or cancelled workspace also returns `403`: `This workspace is suspended. Please contact WorkwrK support.`
+
 Full status-code reference is in [Errors](/api-reference/errors).
 
 ## Revoking a key
 
-On `/settings/api`, click the trash icon on a key's row. A **Revoke key** confirmation appears: "Revoke [name]? Any service using it will immediately stop working. This cannot be undone."
+Choose **Revoke key** on the key. **Revoke this key?** asks first.
 
-Revocation takes effect on the very next request. The row stays in the list marked `revoked` so you keep the audit trail, and both minting and revoking are written to the audit log at `/settings/audit`.
+Revocation takes effect on the very next request. The row stays, marked revoked, under **Show revoked keys**, so you keep the record, and both making and revoking a key are written to the audit log.
 
 There is no rotation flow. To rotate, generate the replacement key first, deploy it, then revoke the old one.
 
 ## Knowing whether a key is still in use
 
-Each key records when it was last used, the IP it was last used from, and a lifetime request count. Hover the **Last used** cell to see all three. That is how you check a key is genuinely dead before revoking it, and how you find the stale keys the **Stale** tile is counting.
+Each key records when it was last used, the address it was last used from, and how many requests it has made. The **Last used** column shows when; open the row for the rest. That is how you check a key is genuinely dead before revoking it.
 
-## The browser-session fallback
+## Signing in instead of a key
 
-If you call a `/api/v1` endpoint from a browser tab where you are already signed in to WorkwrK, and you send no `Authorization` header, the request authenticates against your dashboard session instead. Admins get `READ`, `WRITE` and `ADMIN`; everyone else gets `READ` and `WRITE`.
+If you call a `/api/v1` endpoint from a browser tab where you are signed in to WorkwrK, and you send no `Authorization` header, the request uses your session instead. **This works only for the workspace's Owner and Admins.** Anyone else gets `403`: `The API takes an API key (Authorization: Bearer <key>). A signed-in session works only for the workspace's Owner and Admins.` Your role is read fresh on every request, so taking someone's Admin role away takes the API away at once.
 
-This exists so you can poke at an endpoint from the address bar while exploring. Do not build on it: the rate limiter does not apply to that path, session cookies expire, and nothing about it is a stable integration contract. Real integrations use a key.
+A session works as all three scopes. It exists so an Owner or Admin can try an endpoint from the address bar while exploring. Do not build on it: the rate limiter does not apply to that path, sessions expire, and nothing about it is a stable integration contract. Real integrations use a key.
 
 <Callout kind="tip">
   Store the key in your secret manager or environment, never in source control. If a key leaks, revoking it in the app is instant and total.

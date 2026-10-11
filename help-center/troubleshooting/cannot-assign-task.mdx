@@ -7,51 +7,44 @@ There are two different failures hiding behind "I can't assign this task": the p
 
 ## 1. The person is not in the picker
 
-This is the most common cause, and it is not a bug. The people picker only offers people you are entitled to see.
+The assignee picker on a List offers the people who can already reach that List: its members, the members of its Folder and Space, everyone when the List is open to the whole company, and Admins. Someone who cannot open the List is not offered, because assigning them would hand them a task they could not find.
 
-- If you are an **Employee**, **Agent**, **Team Lead** or **Manager**, the picker offers you and everyone in your reporting tree, however deep. It does not offer the rest of the organisation.
-- If you are a **Director**, **VP**, **C-Level**, **HR**, **Company Admin** or **Super Admin**, the picker offers everyone in the organisation.
-
-**How to fix it.** Ask an organisation admin to set the person's reporting manager so they sit in your tree, under `Settings`, then `Reporting hierarchy`, or on the person's own record. If they genuinely should not report to you, hand the task to whoever manages them, or ask someone with organisation-wide access to make the assignment.
+**How to fix it.** Ask someone with Full access on the List or its Space to add the person in **Manage access**, then assign them. Assigning a task to someone also lets them open that task, even if the rest of the List stays closed to them.
 
 <Callout kind="tip">
-  Typing in the picker searches the same scoped set, so searching harder will not surface someone outside your tree. If a name never appears no matter what you type, this is your answer.
+  Typing in the picker searches the same set, so searching harder will not surface someone who cannot reach the List. If a name never appears no matter what you type, this is your answer.
 </Callout>
 
 ## 2. You can only read the List, not edit it
 
-Seeing a List is a lower bar than changing what is in it. Editing a task, including its assignee, requires edit rights on the List it lives in. You have them if you are:
+Seeing a List is a lower bar than changing what is in it. Changing a task, including its assignees, needs:
 
-- an organisation admin, or
-- the owner of the List, or
-- an `Owner` or `Admin` member of the parent Space, or
-- for a `Private` List, an `Owner` or `Admin` member of that List.
+- **Can edit** or **Full access** on the List, from the List itself or from its Folder or Space, or
+- the task to be assigned to you, or made by you, when you hold **Can view** or **Can edit assigned tasks**.
 
-Everyone else can open the List and read it, but a change is refused with a permission error.
+**Can comment** held as your only access to the List lets you discuss every task and change none.
 
-**How to fix it.** Ask a Space owner or admin to open the Space's `…` menu, choose `Sharing & Permissions`, and raise your role to `Admin`. For a private List, the same applies from the List's own `Share` dialog.
+**How to fix it.** Ask someone with Full access to open the List's `…` menu, choose **Manage access**, and raise your level to **Can edit**.
 
 ## 3. You cannot see the List at all
 
-If the task is not where a colleague says it is, you may not have access to its container:
+If the task is not where a colleague says it is, you may not be able to open its container:
 
-- A `Private` Space shows only to invited members.
-- A `Workspace` Space shows only to its members, plus organisation admins.
-- A `Private` List inside a Space you can see is limited to that List's members, though the Space **owner** can still see it.
-- Any List inside a **private Folder** is hidden from everyone except the folder's owner.
+- A Space that is **Invite only** or for **Space members** shows only to the people listed, plus Admins.
+- A **Restricted** Folder or List inside a Space you can see is limited to the people listed, plus Admins.
 
-**How to fix it.** Ask to be added to the Space, or to the List. See [Why can't I see this?](/help-center/faq/permissions-and-visibility) for the full rules.
+**How to fix it.** Ask to be added to the Space, Folder or List. See [Why can't I see this?](/help-center/faq/permissions-and-visibility) for the full rules.
 
-## 4. The task is archived
+## 4. The task is archived or deleted
 
-Archived tasks are excluded from a List's rows by default, so a task that "disappeared" has often been archived rather than deleted. You cannot assign what you cannot reach.
+Archived tasks are left out of a List's rows, so a task that "disappeared" has often been archived rather than deleted. You cannot assign what you cannot reach.
 
-**How to fix it.** If you know the task's link, open it directly. Otherwise check `Trash`, where deleted items stay recoverable. Trash needs manager tier or above, and the left rail only surfaces it for HR and organisation admins, so a manager who cannot see the entry can still open it directly at `/trash`.
+**How to fix it.** Open **Trash** in the Work sidebar. Deleted tasks are on the **Deleted** tab and archived ones on the **Archived** tab; both can be restored by the people who can edit them.
 
 ## Still stuck?
 
 Collect these three facts before you ask your admin, because they are exactly what the admin needs:
 
-1. Your access level. It is shown as a read-only chip on your own `Profile`, under `Settings` in the `Personal` section.
-2. The Space and List the task lives in, and whether that List is `Private`.
-3. Whether the person you are trying to assign reports to you, directly or indirectly.
+1. The Space and List the task lives in, and whether the List or its Folder is **Restricted**.
+2. What **Manage access** on the List says your level is.
+3. Whether the person you are trying to assign can open the List.

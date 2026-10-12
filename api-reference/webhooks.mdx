@@ -9,7 +9,7 @@ A webhook subscription is an HTTPS endpoint of yours plus a list of events. When
 Subscriptions are per organization, and every delivery is signed so you can prove it came from us.
 
 <Callout kind="alert" collapsed="false">
-  **There is no webhook screen in the app yet.** Subscriptions are created, listed and deleted through `/api/webhooks`, and that endpoint authenticates against a signed-in administrator's dashboard session, not an API key. Until a UI ships, registering a webhook means calling it with an admin session cookie. Everything on this page about payloads, signing and retries is live and working; only the management surface is rough.
+  **There is no webhook screen in the app yet.** Subscriptions are created, listed, given a new secret and deleted through `/api/webhooks`, and that endpoint authenticates against a signed-in administrator's dashboard session, not an API key. Until a UI ships, registering a webhook means calling it with an admin session cookie. Everything on this page about payloads, signing and retries is live and working; only the management surface is rough.
 </Callout>
 
 ## Registering a subscription
@@ -36,65 +36,62 @@ Subscriptions are per organization, and every delivery is signed so you can prov
     "secretPrefix": "whsec_9fK3",
     "createdAt": "2026-08-18T14:22:51.008Z",
     "secret": "whsec_9fK3xQ7mZp2LvN8hJc4bY6dS1gA0eR5tW3uX9yB7cD1",
-    "message": "This is the only time we'll show the webhook signing secret. Store it now — you'll use it to verify the X-Workwrk-Signature header on every delivery."
+    "signing": "secret",
+    "message": "This is the only time we'll show the webhook signing secret. Store it now. Each delivery carries X-Workwrk-Signature: t=<timestamp>,v1=<signature>. To check one, compute HMAC-SHA256 with this secret as the key over the timestamp, a full stop and the raw request body (<timestamp>.<body>), as lowercase hex, and compare it with v1 in constant time. Refuse a timestamp more than five minutes old."
   }
   ```
 </CodeGroup>
 
 Notes on the request:
 
-- **The secret is returned once.** Like an API key, only its hash and a short prefix are stored. Lose it and you must delete the subscription and register again.
+- **The secret is returned once.** It is the key every delivery is signed with. WorkwrK keeps it encrypted to sign with and never shows it again. Lose it and rotate the secret (below) to get a new one.
 - **`events`****&#x20;is optional.** Omit it and the subscription is created with `["*"]`, which receives everything.
-- **Unrecognized event names are dropped silently.** They are filtered against the accepted list below, and if nothing survives you get `Pick at least one valid event`. A typo therefore produces a subscription that is quietly narrower than you intended, so read the `events` array back from the response.
+- **An event name nothing sends is refused.** Every name is checked against the list below, and a name that is not on it gets a `400` naming it, with nothing saved. A typo therefore fails out loud instead of making a subscription narrower than you intended.
 - **The URL check accepts&#x20;****`http://`****&#x20;as well as&#x20;****`https://`****.** Use https regardless; the payload contains real people data.
 
-The other two operations:
+The other operations:
 
 ```bash
 # List subscriptions, their health, and the accepted event names
 curl https://workwrk.com/api/webhooks \
   -H "Cookie: __Secure-next-auth.session-token=YOUR_ADMIN_SESSION_COOKIE"
 
+# Give a subscription a new secret, shown once; the old one stops signing at once
+curl -X PATCH https://workwrk.com/api/webhooks \
+  -H "Content-Type: application/json" \
+  -H "Cookie: __Secure-next-auth.session-token=YOUR_ADMIN_SESSION_COOKIE" \
+  -d '{ "id": "clx9m4p2r0001t7028kd5w1qz", "rotateSecret": true }'
+
 # Delete a subscription and its delivery history
 curl -X DELETE "https://workwrk.com/api/webhooks?id=clx9m4p2r0001t7028kd5w1qz" \
   -H "Cookie: __Secure-next-auth.session-token=YOUR_ADMIN_SESSION_COOKIE"
 ```
 
-`GET` returns each subscription with `status`, `failureCount`, `lastSuccessAt`, `lastFailureAt` and a delivery count, plus a `validEvents` array. That listing is your only observability today: there is no delivery-log screen.
+`GET` returns each subscription with `status`, `failureCount`, `lastSuccessAt`, `lastFailureAt` and a delivery count, plus a `validEvents` array. Each subscription also carries `signing`, which says which key signs its deliveries (see [Verifying the signature](#verifying-the-signature)), and `unsentEvents`, any names it holds from before that nothing sends. That listing is your only observability today: there is no delivery-log screen.
 
-There is no update operation. To change a URL or an event list, delete the subscription and create a new one, which mints a new secret.
+`PATCH` with `rotateSecret: true` is the only update: it returns a new secret, once, and the old one stops signing at once, so update your receiver straight away. To change a URL or an event list, delete the subscription and create a new one, which mints a new secret.
 
 ## Events
 
-| Event                   | Accepted at registration     | Emitted today                                 |
-| ----------------------- | ---------------------------- | --------------------------------------------- |
-| `*`                     | Yes, wildcard for everything | Receives every event below that is emitted    |
-| `kudos.created`         | Yes                          | **Yes**, when kudos are given                 |
-| `kpi.recorded`          | Yes                          | **Yes**, when a KPI reading is logged         |
-| `task.created`          | Yes                          | **Yes**, when a task is created               |
-| `task.status_changed`   | No                           | **Yes**, when a board item's status changes   |
-| `task.assignee_changed` | No                           | **Yes**, when a board item's assignee changes |
-| `task.escalated`        | Yes                          | Not yet                                       |
-| `task.completed`        | Yes                          | Not yet                                       |
-| `review.created`        | Yes                          | Not yet                                       |
-| `review.completed`      | Yes                          | Not yet                                       |
-| `sop.published`         | Yes                          | Not yet                                       |
-| `sop.updated`           | Yes                          | Not yet                                       |
-| `okr.created`           | Yes                          | Not yet                                       |
-| `okr.updated`           | Yes                          | Not yet                                       |
+There are six events. Name any of them when you register, or `*` for all of them.
 
-Two things to take from that table:
+| Event | Fires when |
+| --- | --- |
+| `*` | Every event below. |
+| `kudos.created` | Every new kudos. |
+| `kpi.recorded` | A KPI reading is logged through the API (`POST /kpi-records`) or an integration. Not for a number recorded on a person's record in the app. |
+| `task.created` | A task is added to a List in the app, made through the API (`POST /tasks`) or an integration, made by an automation's **Create a task** step, or made by Ask AI or an AI teammate. Not for copies (a task, List or Space duplicated), tasks from a template, the next task of a repeating task, tasks an SOP adds, form responses, meeting action items, quick add from My work, workflows or imports. |
+| `task.status_changed` | A task's status changes: one task edited in the app or by an AI teammate, a bulk edit, or an automation step. Carries `previousStatus`. |
+| `task.assignee_changed` | A task's main assignee changes, from the same places. Carries `previousAssigneeId`. |
+| `task.field_changed` | Once for each field a change touches (title, priority, dates and the List's own fields): one task edited in the app or by an AI teammate, a bulk edit, an AI field fill, or an automation's **Set a field** step. One edit of one task fires it for at most 20 fields. |
 
-1. **`task.status_changed`****&#x20;and&#x20;****`task.assignee_changed`****&#x20;fire but cannot be named.** They are not in the accepted list, so the only way to receive them is a wildcard subscription. If you care about task lifecycle, subscribe to `*` and filter on `X-Workwrk-Event` in your handler.
-2. **Eight event names are accepted but never fire.** Subscribing to `review.completed` today creates a subscription that will simply never be called. Do not build a flow that waits on one.
-
-The three emitted events also fire when the same records are created through the generic integration ingest path, not only through the v1 API, so a subscription sees writes from every source.
+The older names (`task.escalated`, `task.completed`, `review.created`, `review.completed`, `sop.published`, `sop.updated`, `okr.created` and `okr.updated`) are no longer accepted, because nothing sends them. A subscription made before keeps the names it holds, and `GET` lists them under `unsentEvents`, so you can see why that part of it stays quiet.
 
 ## The payload
 
 ```json
 {
-  "id": "9f2c41ab77e04d5c8b3a1f62",
+  "id": "clx9m4p2r0009t702f1h6k8ab",
   "event": "kudos.created",
   "createdAt": "2026-08-18T14:23:07.412Z",
   "data": {
@@ -121,7 +118,7 @@ Every request carries these headers:
 | `User-Agent`          | `workwrk-webhooks/1.0`      | Identifies the sender.                                             |
 
 <Callout kind="alert" collapsed="false">
-  **De-duplicate on the&#x20;****`X-Workwrk-Delivery`****&#x20;header, not on&#x20;****`id`****&#x20;in the body.** On the first attempt those two values are different: the body carries a freshly generated random id while the header carries the stored delivery id. On every retry they match. The header is the value that stays constant across all attempts of the same delivery, so it is the only safe idempotency key.
+  **De-duplicate on the delivery id.** The body's `id` is the delivery's id, the same value as the `X-Workwrk-Delivery` header, and every try of one delivery carries the same `id`. Deliveries are sent at least once, so one you already have can arrive again: keep the ids you have processed and drop a repeat.
 </Callout>
 
 ## Verifying the signature
@@ -129,17 +126,22 @@ Every request carries these headers:
 `X-Workwrk-Signature` has the form `t=<timestamp>,v1=<hex>`. The `v1` value is an HMAC-SHA256 over the string `<timestamp>.<raw request body>`.
 
 <Callout kind="alert" collapsed="false">
-  **The HMAC key is the SHA-256 hex digest of your secret, not the secret itself.** WorkwrK stores only that digest and signs with it, so your verifier has to hash the secret once before using it as the key. Signing with the raw `whsec_...` value will never match.
+  **The HMAC key is your secret itself**, the `whsec_...` value shown once when the subscription was made or its secret rotated. An older subscription may still sign with the SHA-256 of its secret, as lowercase hex, as the key. `GET /api/webhooks` says which in `signing`: `secret` or `legacy_hash`. Rotating its secret moves it to the secret itself.
 </Callout>
 
 ```js
 const crypto = require("crypto");
 
-// The whsec_... value shown once at registration.
+// The whsec_... value shown once when the subscription was made or its secret rotated.
 const SECRET = process.env.WORKWRK_WEBHOOK_SECRET;
 
-// WorkwrK signs with the SHA-256 hex digest of that secret.
-const SIGNING_KEY = crypto.createHash("sha256").update(SECRET).digest("hex");
+// WorkwrK signs with that secret. Only a subscription whose `signing` is
+// legacy_hash signs with its SHA-256 instead:
+// crypto.createHash("sha256").update(SECRET).digest("hex")
+const SIGNING_KEY = SECRET;
+
+// Refuse a timestamp more than five minutes old.
+const TOLERANCE_SECONDS = 5 * 60;
 
 function verify(rawBody, signatureHeader) {
   const parts = Object.fromEntries(
@@ -148,6 +150,9 @@ function verify(rawBody, signatureHeader) {
       return [p.slice(0, i), p.slice(i + 1)];
     }),
   );
+
+  const age = Math.floor(Date.now() / 1000) - Number(parts.t);
+  if (Number.isNaN(age) || age > TOLERANCE_SECONDS) return false;
 
   const expected = crypto
     .createHmac("sha256", SIGNING_KEY)
@@ -181,7 +186,7 @@ app.post(
 );
 ```
 
-The timestamp is signed, so you can also reject stale deliveries by comparing `parts.t` against your own clock. Choose the tolerance yourself: a retried delivery can legitimately arrive hours after the event, so a strict window will drop replays of genuine failures.
+The timestamp is signed, and every try is signed afresh with the time it is sent, so a retry that arrives hours after the event still carries a current timestamp. Refuse one more than five minutes old, as the code above does.
 
 ## Delivery, retries and auto-pause
 
@@ -204,14 +209,15 @@ The timestamp is signed, so you can also reject stale deliveries by comparing `p
 </Steps>
 
 <Callout kind="alert" collapsed="false">
-  **A paused subscription cannot be resumed.** There is no update endpoint and no UI control, so the only route back is to delete the subscription and register a new one, which issues a new signing secret. If your endpoint is going down for maintenance, keep in mind that ten failed deliveries is enough to pause it.
+  **A paused subscription cannot be resumed.** The only update, rotating the secret, does not resume it, and there is no UI control, so the only route back is to delete the subscription and register a new one, which issues a new signing secret. If your endpoint is going down for maintenance, keep in mind that ten failed deliveries is enough to pause it.
 </Callout>
 
 Guarantees, stated plainly:
 
-- **At least once, not exactly once.** If your endpoint processes a delivery but responds slowly enough to time out, you will get it again. Idempotency on `X-Workwrk-Delivery` is not optional.
+- **At least once, not exactly once.** If your endpoint processes a delivery but responds slowly enough to time out, you will get it again, and a delivery whose answer was never recorded is sent again. Every try carries the same `id` in its body, the same as `X-Workwrk-Delivery`, so de-duplicating on it is not optional.
 - **No ordering.** Deliveries to different subscriptions fan out in parallel, and retries interleave with fresh events. Do not assume a `task.created` arrives before a later `task.status_changed` for the same task.
 - **No delivery on paused or deleted subscriptions.** Only subscriptions in the active state are selected when an event fires.
+- **Held, not lost, when a secret can't be opened.** A subscription whose `signing` is `unreadable` has a secret the server can't open right now, so nothing is sent to it. Its deliveries are held and tried again every 15 minutes until the secret can be opened or is rotated.
 - **Deleting a subscription deletes its delivery history** along with it.
 
 ## Building a good receiver
@@ -225,12 +231,12 @@ Guarantees, stated plainly:
     Return `2xx` as soon as you have the payload safely queued. Do the real work off the request path.
   </Card>
 
-  <Card title="Key on the delivery header" icon="fingerprint" horizontal="false">
-    Record `X-Workwrk-Delivery` and drop repeats. Retries are normal, not exceptional.
+  <Card title="Key on the delivery id" icon="fingerprint" horizontal="false">
+    Record the body's `id`, the same as `X-Workwrk-Delivery`, and drop repeats. Retries are normal, not exceptional.
   </Card>
 
   <Card title="Filter on the event header" icon="filter" horizontal="false">
-    A wildcard subscription is the only way to get some events, so branch on `X-Workwrk-Event` and ignore what you do not handle.
+    Name only the events you handle. On a wildcard subscription, branch on `X-Workwrk-Event` and ignore the rest.
   </Card>
 </Columns>
 

@@ -146,9 +146,9 @@ These are the gaps that matter most, because each one looks like it should exist
 
 **No SOP status change notifies anyone.** The draft, in review, approved and published flow is real, but nothing is sent on a change of status. Assignment does notify; the review flow does not.
 
-**Some automation triggers do not fire yet.** **Review completed**, **SOP published** and the lead triggers are listed in the builder as not yet emitting. A **KPI reading recorded** trigger fires for readings that arrive through the API or an integration, not for numbers recorded on a person's record.
+**Some automation triggers do not fire yet.** **Review completed**, **SOP published** and the lead triggers are listed in the builder as not yet emitting. A **KPI reading recorded** trigger fires for readings that arrive through the API or an integration, not for numbers recorded on a person's record. A **Task created** trigger fires for a task added to a List in the app, made through the API or an integration, made by an automation's **Create a task** step, or made by Ask AI or an AI teammate. It does not fire for copies, tasks from a template, the next task of a repeating task, tasks an SOP adds, form responses, meeting action items, quick add from My work, workflows or imports.
 
-**Overdue task notifications are not sent yet.** The **Overdue** switch exists in My settings, **Notifications**; the daily notification behind it is not sent. Due today notifications are.
+**Overdue task notifications are not sent yet.** Nothing is sent when a task passes its due date, so My settings, **Notifications** has no Overdue switch; with **Show upcoming features** on, it is listed as coming soon. Due today notifications are sent. Each person's manager gets a Monday email digest of that person's overdue tasks, naming only the tasks the manager can open.
 
 **Analytics does not yet count tasks.** Its people and performance charts are real; its task figures are not.
 
@@ -163,5 +163,5 @@ Several of the wires above only move because a scheduled job pushes them. The on
 | Repeating tasks | hourly | creates the next copy of an "on schedule" repeating task |
 | Review cycles | each morning | creates the draft cycle for a cadence that opens automatically, and tells the People team and Admins; it never launches one |
 | Scheduled announcements | every few minutes | sends a scheduled announcement's notifications once its time comes, once only |
-| Tasks due today | each morning | a notification for each task due that day |
+| Tasks due today | each morning | a notification for each open task due that day, once a day, to each of its assignees, unless they turned off **Due soon** or muted the task's List, Folder or Space |
 | AI teammates | every few minutes | runs the routines that are due, and expires approval requests nobody answered within 7 days |

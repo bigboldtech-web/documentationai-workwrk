@@ -9,6 +9,21 @@ WorkwrK ships continuously. There are no numbered releases to install or upgrade
   Not everything named here is finished. [What's built](/reference/status) is the honest per-area record of what is built, what is partial, and what is not there yet.
 </Callout>
 
+<Update label="2026-10" description="Webhooks and the API reference" tags={["api", "webhooks"]}>
+
+## Added
+
+- **Name the task events you want.** A webhook subscription can now name `task.status_changed` and `task.assignee_changed`, which used to reach only a subscription to every event. See [Webhooks](/api-reference/webhooks).
+- **A stable delivery id.** Every try of one delivery carries the same `id` in its body, the same as the `X-Workwrk-Delivery` header, so a receiver can drop a delivery it already has.
+- **Secrets that sign deliveries.** The secret shown when a subscription is made, or when its secret is rotated, is the key its deliveries are signed with. An older subscription keeps its old signing until its secret is rotated.
+
+## Fixed
+
+- The API reference shows a task's status as its List's own status, not a fixed list, and marks the fields that can be null.
+- The API answers `400` for input it can't use, such as a value that is not one of the listed ones or a date that is not a date and time.
+
+</Update>
+
 <Update label="2026-10" description="AI teammates: helpers you chat with that do real work, ask before anything other people will see, and now work in group chats, Talk and Automations" tags={["ai teammates", "ai", "work", "plans", "security", "privacy"]}>
 
 ## Added

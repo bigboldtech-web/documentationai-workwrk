@@ -49,7 +49,7 @@ Ordered by hub, the way the rail is.
 | AI teammates | Built | Teammates with one job each, approvals, routines, memory, group chats, teammates in Talk and in automations. See [AI teammates](/using/ai-teammates/overview). |
 | AI teammates with Gmail and Google Calendar | Coming soon | Not offered to customers yet. Nothing about it shows in the product until it is. |
 | An AI teammate's own browser | Coming soon | Not built. A teammate has no tool to browse the web. |
-| Workflows (automations) | Partly built | The builder, runs, retries, logs and health are real. Triggers that fire today: a task is created, a task's status, assignee or field changes, a task's date arrives, on a schedule, a KPI reading is recorded through the API or an integration, and kudos is given. **Review completed**, **SOP published** and the lead triggers are listed as not yet emitting, and the builder says so. The **Ask an AI teammate** action works. |
+| Workflows (automations) | Partly built | The builder, runs, retries, logs and health are real. Triggers that fire today: a task is created (added to a List in the app, through the API or an integration, by an automation's **Create a task** step, or by Ask AI or an AI teammate; not for copies, templates, repeats, tasks an SOP adds, form responses, meeting action items, quick add, workflows or imports), a task's status, assignee or field changes, a task's date arrives, on a schedule, a KPI reading is recorded through the API or an integration, and kudos is given. **Review completed**, **SOP published** and the lead triggers are listed as not yet emitting, and the builder says so. The **Ask an AI teammate** action works. |
 | AI fields in Lists | Built, off until turned on | Summary, Sentiment, Categorize and Translation fields, filled when someone chooses **Fill with AI**. An Owner or Admin turns them on in Workspace settings, **Data**, **Retention & privacy**. |
 | Scheduled AI updates in Talk | Partly built | A channel's Details panel can set up a daily standup or weekly project update, and **Post now** posts one. Posting on the schedule itself is not on yet, and the panel says updates post only with Post now. |
 | Marketplace | Built | The modules a workspace can turn on, Talk and Tables, with links to the AI rows. |
@@ -129,8 +129,8 @@ See [Settings](/admin/settings) for every page.
 | --- | --- | --- |
 | Inbox and the bell | Built | Tabs for Primary, Other, Mentions, Snoozed and Cleared; desktop alerts from this browser. |
 | Task notifications | Built | Assigned, status changes, comments and mentions, on your tasks and on tasks you follow, each with its own switch in My settings, **Notifications**. |
-| Due soon | Built | Once a day in the morning, a notification for each task assigned to you that is due today, by the **Due soon** switch. |
-| Overdue | Partly built | The **Overdue** switch is there, but the daily overdue notification is not sent yet. Managers get a Monday email digest of their team's overdue tasks. |
+| Due soon | Built | Once a day in the morning, a notification for each task assigned to you that is due today, by the **Due soon** switch, unless you muted the task's List, Folder or Space. |
+| Overdue | Partly built | Overdue notifications are not sent yet, so there is no **Overdue** switch; with **Show upcoming features** on, it is listed as coming soon. Each person's manager gets a Monday email digest of that person's overdue tasks, naming only the tasks the manager can open. |
 | Email | Partly built | Tasks assigned to me, Kudos, KRA and KPI updates, Review reminders and SOP updates send. The rest of the email rows are listed under **Coming soon**, including the daily digest. |
 | Quiet hours | Coming soon | The avatar menu has **Do not disturb** and **Mute notifications**; quiet hours for email and desktop are listed as coming soon in My settings, **Notifications**. |
 

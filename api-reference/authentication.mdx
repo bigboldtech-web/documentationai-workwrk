@@ -18,13 +18,13 @@ Every call to `https://workwrk.com/api/v1` is authenticated with a workspace API
     Choose **Generate key**. The **Generate an API key** dialog asks for two things:
 
     - **Name**: where the key is used, so you know what breaks if it is revoked.
-    - **Scopes**, as three choices: **Read** ("Read workspace data through the API."), **Write** ("Create and update records.") and **Admin** ("Everything, key management included. Give it sparingly."). **Read** is chosen to start.
+    - **Scopes**, as three choices: **Read** ("Read workspace data through the API."), **Write** ("Create and update records.") and **Admin** ("Everything Write does, and inviting people. Keys and webhooks are managed only here, never with a key. Give it sparingly."). **Read** is chosen to start.
 
     Pick the narrowest set that does the job. You can choose more than one. **Scopes cannot be changed after a key is made. Make a new key instead.**
   </Step>
 
   <Step title="Copy the secret now" icon="clipboard-copy">
-    **Copy your new key** shows the full key once: "This is the only time the key is shown. Store it somewhere safe now." Choose **Done, I have saved it** when you have.
+    **Copy your new key** shows the full key once, with the warning "This is the only time", the key's name, then "is shown. Store it somewhere safe now." Choose **Done, I have saved it** when you have.
 
     That is literal. Close the dialog without copying and the key is unrecoverable; your only option is to revoke it and make another.
   </Step>
@@ -95,10 +95,12 @@ Which scope each endpoint needs:
 | `POST /kras`, `/kpis`, `/kpi-records`, `/kudos`, `/tasks` | `WRITE` |
 | `POST /people` (invite a person) | `ADMIN` |
 
-Two consequences worth internalizing:
+Three consequences worth internalizing:
 
 - A **WRITE**-only key can also read. `WRITE` satisfies a `READ` requirement, so you do not need both for a read-and-write integration.
-- **Inviting people needs ADMIN.** A key without it gets `403` with `Inviting people needs a key with the "ADMIN" scope.` Treat an ADMIN key as the most sensitive thing you hold: it satisfies every check.
+- **Inviting people needs ADMIN.** The `WRITE` check runs first, so a READ-only key gets `403` with `This key needs "WRITE" scope. It has: READ.`, and a key with `WRITE` but not `ADMIN` gets `403` with `Inviting people needs a key with the "ADMIN" scope.` Treat an ADMIN key as the most sensitive thing you hold: it satisfies every check.
+- **No key manages keys or webhooks.** `/api/keys` and `/api/webhooks` take a signed-in Owner's or Admin's session, never an API key, as the **Admin** description in the dialog says.
+- **A key is not tied to the person who made it.** It reads and changes what its scopes allow across the whole workspace, whoever made it, and it keeps working if that person leaves. Revoke it when its job ends.
 
 The scope each operation needs is also written into the OpenAPI spec, so your client will show it.
 
@@ -142,7 +144,7 @@ Full status-code reference is in [Errors](/api-reference/errors).
 
 ## Revoking a key
 
-Choose **Revoke key** on the key. **Revoke this key?** asks first.
+Open the key and choose **Revoke**. **Revoke this key?** asks first, and **Revoke key** confirms.
 
 Revocation takes effect on the very next request. The row stays, marked revoked, under **Show revoked keys**, so you keep the record, and both making and revoking a key are written to the audit log.
 
@@ -150,7 +152,7 @@ There is no rotation flow. To rotate, generate the replacement key first, deploy
 
 ## Knowing whether a key is still in use
 
-Each key records when it was last used, the address it was last used from, and how many requests it has made. The **Last used** column shows when; open the row for the rest. That is how you check a key is genuinely dead before revoking it.
+Each key records when it was last used, the address it was last used from, and how many requests it has made. The **Last used** column shows when, and opening the row shows the request count under **Requests**. The address is recorded, but the page does not show it. That is how you check a key is genuinely dead before revoking it.
 
 ## Signing in instead of a key
 

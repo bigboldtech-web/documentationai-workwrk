@@ -75,7 +75,7 @@ for await (const person of paginate("/people", { status: "ACTIVE" })) {
 
 ## Per-endpoint sort order and filters
 
-The pagination parameters are identical everywhere, but the sort order and the filters are not. Filters combine with AND, and every one is an exact match. There is no free-text search and no sort parameter.
+The pagination parameters are identical everywhere, but the sort order and the filters are not. Filters combine with AND, and every one is an exact match, though a filter that takes a value from a list accepts it in any case. There is no free-text search and no sort parameter.
 
 | Endpoint | Sorted by | Filters |
 | --- | --- | --- |
@@ -89,13 +89,13 @@ The pagination parameters are identical everywhere, but the sort order and the f
 
 Accepted filter values:
 
-- `/people` `status`: `ACTIVE`, `INACTIVE`, `ON_LEAVE`, `PROBATION`, `PIP`, `NOTICE_PERIOD`
+- `/people` `status`: `ACTIVE`, `INACTIVE`, `ON_LEAVE`, `PROBATION`, `PIP`, `NOTICE_PERIOD`, in any case. Any other value answers `400`.
 - `/tasks` `status`: the name of a status on the task's List, matched exactly but ignoring case, for example `In Progress`. Each List has its own statuses.
 - `/tasks` `assigneeId`: matches the task's owner or any of its assignees.
-- `/tasks` `from` and `to`: date or date-time strings, applied to the task's `date` (its due date) as a closed range. Either can be used alone. Archived tasks are left out.
-- `/kpi-records` `period`: the exact period string the reading was logged with, for example `2026-Q1`
-- `/sops` `status`: `DRAFT`, `IN_REVIEW`, `APPROVED`, `PUBLISHED`, `ARCHIVED`
-- `/sops` `sopType`: `WRITTEN`, `RECORDED`, `CHECKLIST`. Note that Step-by-step SOPs are stored as `WRITTEN` (the kind is carried inside the content), so `sopType=WRITTEN` returns both written and step-by-step SOPs and this filter cannot separate them.
+- `/tasks` `from` and `to`: date or date-time strings, applied to the task's `date` (its due date) as a closed range. Either can be used alone. A value that is not a date answers `400`. Archived tasks are left out.
+- `/kpi-records` `period`: a month written `YYYY-MM`, for example `2026-10`, matched exactly. Readings stored before under other keys, such as `2026-Q3`, keep those keys, so pass such a key exactly as it was stored to list them.
+- `/sops` `status`: `DRAFT`, `IN_REVIEW`, `APPROVED`, `PUBLISHED`, `ARCHIVED`, in any case. Any other value answers `400`.
+- `/sops` `sopType`: `WRITTEN`, `RECORDED`, `CHECKLIST`, in any case. Any other value answers `400`. Note that Step-by-step SOPs are stored as `WRITTEN` (the kind is carried inside the content), so `sopType=WRITTEN` returns both written and step-by-step SOPs and this filter cannot separate them.
 
 <Callout kind="alert">
   **`/sops` is filtered by default.** Omit `status` and you get published SOPs only, not everything. Pass `status=DRAFT` (or any other value) to see the rest. Every other endpoint returns all rows when you omit its filters.

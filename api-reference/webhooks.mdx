@@ -47,7 +47,7 @@ Notes on the request:
 - **The secret is returned once.** It is the key every delivery is signed with. WorkwrK keeps it encrypted to sign with and never shows it again. Lose it and rotate the secret (below) to get a new one.
 - **`events`****&#x20;is optional.** Omit it and the subscription is created with `["*"]`, which receives everything.
 - **An event name nothing sends is refused.** Every name is checked against the list below, and a name that is not on it gets a `400` naming it, with nothing saved. A typo therefore fails out loud instead of making a subscription narrower than you intended.
-- **The URL check accepts&#x20;****`http://`****&#x20;as well as&#x20;****`https://`****.** Use https regardless; the payload contains real people data.
+- **The URL must start with `https://`.** Anything else gets a `400` with `A valid https URL is required`, and nothing is saved, since the payload contains real people data.
 
 The other operations:
 

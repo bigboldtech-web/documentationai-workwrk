@@ -11,22 +11,29 @@ Every failure on `https://workwrk.com/api/v1` returns the same JSON envelope: an
 }
 ```
 
-There is no field-level detail object and no request id. The string is written to be read by a person debugging, not parsed by a program. Branch on the **status code**, and log the string.
+There is no field-level detail object and no request id. The string is written to be read by a person debugging, not parsed by a program. Branch on the **status code**, and on `code` where a response carries one, and log the string.
 
-Two responses add keys on top of `error`: a rate-limit rejection adds `window` and `retryAfter` (see [Rate limits](/api-reference/rate-limits)), and a `POST /people` refused for want of a seat adds `"code": "seat_limit"`.
+A few responses add keys beside `error`:
+
+| Response | Extra keys |
+| --- | --- |
+| `429`, from any endpoint | `window` and `retryAfter`. See [Rate limits](/api-reference/rate-limits). |
+| `403` from `POST /people` when the workspace has no free seat | `"code": "seat_limit"` |
+| `409` from `POST /kpi-records` when the month is closed | `"code": "kpi_month_closed"`, and `id`: the id of the reading already there |
+| `403` to a signed-in session, in the cases listed under 403 below | `code`: `stale_session`, `mfa_required` or `password_expired` |
 
 ## Status codes
 
 | Code | Meaning | Where it comes from |
 | --- | --- | --- |
-| `400` | The request body is missing a required field, or breaks a rule. | The endpoint handler, after auth passed. |
+| `400` | A required field is missing, or a value breaks its rule: a value outside its list, a date that is not a date, a number that is not a number, or a KPI period that is not a month. | The endpoint handler, after auth passed. |
 | `401` | Not authenticated. The key is missing, malformed, unknown or revoked. | The auth layer, before the handler runs. |
-| `403` | Authenticated, but the key lacks the scope this endpoint needs, the signed-in person is not the workspace's Owner or an Admin, the workspace is suspended, or the workspace has no free seat for an invitation. | The auth layer, or the handler for the seat check. |
-| `404` | A referenced record does not exist in your workspace. | The endpoint handler. |
-| `409` | The person is already in the workspace, or already has a pending invitation. Only `POST /people` returns this. | The endpoint handler. |
+| `403` | Authenticated, but the key lacks the scope this endpoint needs, the signed-in person is not the workspace's Owner or an Admin, the workspace is suspended or cancelled, or the workspace has no free seat for an invitation. | The auth layer, or the `POST /people` handler. A signed-in session can also be held at the edge, before the API runs. |
+| `404` | A referenced record does not exist in your workspace, or the path is not an API route. | The endpoint handler, or the catch-all for unknown `/api` paths. |
+| `409` | `POST /people`: the person is already in the workspace, or already has a pending invitation. `POST /kpi-records`: the month is closed and its reading holds a different number. | The endpoint handler. |
 | `429` | Per-minute or per-day rate limit for this key exceeded. | The auth layer. |
 
-None of the v1 handlers return a `5xx` on purpose. If you see one, it came from the framework or the proxy in front of it, and the body is not guaranteed to be the JSON envelope. Treat it as transient and retry.
+No v1 handler answers a `5xx` as a refusal. Values that used to fail deeper in the request with a bare `500`, such as an unknown task priority or a date that is not a date, now answer `400`, and a second reading for the same KPI, person and month answers `200` or `409`. A `5xx` means something failed unexpectedly on the server or in the proxy in front of it, and its body is not guaranteed to be the JSON envelope. Treat it as transient and retry, with one care: `POST /kras`, `/kpis`, `/kudos` and `/tasks` do not recognize a repeat, so if the first try was written before the failure, a retry makes a second record. List first to check. A repeated `POST /kpi-records` with the same number changes nothing, and a repeated `POST /people` answers `409`.
 
 ## 401 Unauthorized
 
@@ -37,14 +44,14 @@ Authentication is checked before anything else, so a `401` tells you nothing abo
 | `Invalid API key format` | The bearer token does not begin with `wk_live_`. | You have pasted the wrong secret, or truncated it. A real key is 40 characters. |
 | `Invalid API key` | Well-formed, but no key hashes to it. | Check for a stray space, newline, or a shell that ate part of the value. Compare the first 12 characters against the **Prefix** column in Workspace settings, **API & webhooks**. |
 | `API key has been revoked` | The key was valid and someone revoked it. | In Workspace settings, **API & webhooks**, tick **Show revoked keys** to see it. Generate a replacement. |
-| `Missing or invalid credentials. Send Authorization: Bearer <key>.` | No `Authorization: Bearer` header on the request. | Confirm your HTTP client is actually sending the header. Redirects and some proxies strip it. |
+| `Missing or invalid credentials. Send Authorization: Bearer <key>.` | No `Authorization: Bearer` header on the request, and no signed-in session either. | Confirm your HTTP client is actually sending the header. Redirects and some proxies strip it. |
 | `Session missing organization` | You reached the endpoint on a browser session that has no workspace attached. | Only possible when signed in, never with a key. |
 
 Debugging tip: run the request with `curl -i` and no other changes. If a `401` becomes a `200`, the difference is in your client's header handling, not the key.
 
 ## 403 Forbidden
 
-The key is real and live, but too narrow. The message names both what was needed and what you have:
+The key is real and live, but too narrow. The message names both what was needed and what the key has:
 
 ```json
 {
@@ -52,37 +59,90 @@ The key is real and live, but too narrow. The message names both what was needed
 }
 ```
 
-Every `GET` requires `READ`, and every `POST` requires `WRITE`, except `POST /people`, which requires `ADMIN` and answers `Inviting people needs a key with the "ADMIN" scope.` Scopes cannot be changed after a key is made, so the fix is to generate a new key with the right scopes and revoke the old one. Note that `WRITE` already satisfies `READ`, so a single **Write** key covers both directions. Details in [Authentication](/api-reference/authentication).
+Every `GET` requires `READ`, and every `POST` requires `WRITE`. `POST /people` needs `ADMIN` as well, checked in two steps. The `WRITE` check comes first, so a READ-only key gets the message above. The handler then checks for `ADMIN`, so a key with `WRITE` and not `ADMIN` gets `Inviting people needs a key with the "ADMIN" scope.` That second check runs after the body is read, so a body with no email answers `400` `email required` before it.
+
+Scopes cannot be changed after a key is made, so the fix is to generate a new key with the right scopes and revoke the old one. `WRITE` already satisfies `READ`, so a single **Write** key covers both directions. Details in [Authentication](/api-reference/authentication).
 
 Other `403` messages:
 
 | Message | What went wrong |
 | --- | --- |
-| `The API takes an API key (Authorization: Bearer <key>). A signed-in session works only for the workspace's Owner and Admins.` | You called the API signed in, without a key, and you are not an Owner or Admin. |
+| `The API takes an API key (Authorization: Bearer <key>). A signed-in session works only for the workspace's Owner and Admins.` | You called the API signed in, without a key, and you are not the workspace's Owner or an Admin. A session that is out of date (signed out elsewhere, deactivated, or no longer an Admin) gets this too. |
 | `This workspace is suspended. Please contact WorkwrK support.` | The key's workspace is suspended or cancelled. |
-| The seat message, with `"code": "seat_limit"` | `POST /people`: the workspace has no free seat. |
+| The seat message, with `"code": "seat_limit"` | `POST /people`: the workspace has no free seat. People and open invitations both take one. |
+
+The seat message reads `This workspace has used all 10 seats (people and open invitations) on the Starter plan.`, with your workspace's own number and plan, followed by `An Owner or Admin can change the plan in Settings, Plan & billing.` Where the workspace bought seats per person, the second sentence is `An Owner or Admin can add seats by emailing billing@workwrk.com.` instead.
+
+A signed-in session can also get these:
+
+| Message | What went wrong |
+| --- | --- |
+| `Insufficient permissions` | `POST /people`: your access does not include adding people. |
+| `That access level cannot be given by invitation` | `POST /people`: `accessLevel` was `SUPER_ADMIN`. |
+| `Your access changed a moment ago. Reload the page and sign in again if asked.`, with `"code": "stale_session"` | `POST /people`: your access changed between the auth check and the invitation. |
+| `Your workspace requires two step verification. Set it up in My settings, Security.`, with `"code": "mfa_required"` | Any endpoint: your session is held until you set up two step verification. |
+| `Your password has expired. Choose a new one in My settings, Security.`, with `"code": "password_expired"` | Any endpoint: your session is held until you choose a new password. |
+
+The last two come from the edge, before the API runs, and only for a request that carries a signed-in session cookie. A request that sends no session cookie never gets them.
 
 ## 400 Bad Request
 
-Validation is deliberately shallow: each endpoint checks its required fields and rejects with a message naming them.
+Each endpoint checks its required fields first, then each value it can check, in the order listed below, and answers with the first problem it finds. Three rules hold everywhere:
 
-| Endpoint | Message |
-| --- | --- |
-| `POST /people` | `email required` |
-| `POST /people` | `Only @acme.com addresses can join this workspace`, naming the workspace's invite domains |
-| `POST /people` | `roleId is not a role of this workspace`, or `departmentId is not a department of this workspace` |
-| `POST /kras` | `name required` |
-| `POST /kpis` | `kraId, name, and targetValue are required` |
-| `POST /kpi-records` | `kpiId, userId, period, and actualValue are required` |
-| `POST /kudos` | `giverId, receiverId, and message are required` |
-| `POST /kudos` | `Cannot give kudos to yourself` |
-| `POST /tasks` | `title and assigneeId are required` |
+- **A value from a list** is accepted in any case and read in capitals, so `high` is taken as `HIGH`.
+- **A number** may be sent as a number or as a string of one, such as `"47"`.
+- **A date** is best sent as ISO 8601, such as `2026-10-12` or `2026-10-12T09:00:00Z`. A value that does not read as a date is refused. In a JSON body, `date` on `POST /tasks` also takes epoch milliseconds as a number.
+
+| Endpoint | Message | When |
+| --- | --- | --- |
+| `GET /people` | `status must be one of ACTIVE, INACTIVE, ON_LEAVE, PROBATION, PIP, NOTICE_PERIOD` | `status` is not one of those. |
+| `GET /tasks` | `from must be a date and time, such as 2026-10-12T09:00:00Z` | `from` is not a date. |
+| `GET /tasks` | `to must be a date and time, such as 2026-10-12T09:00:00Z` | `to` is not a date. |
+| `GET /sops` | `status must be one of DRAFT, IN_REVIEW, APPROVED, PUBLISHED, ARCHIVED` | `status` is not one of those. |
+| `GET /sops` | `sopType must be one of WRITTEN, RECORDED, CHECKLIST` | `sopType` is not one of those. |
+| `POST /people` | `email required` | `email` is missing or has no `@`. |
+| `POST /people` | `Unknown access level: OWNER`, naming the value sent | A signed-in session sent an `accessLevel` that is not a level. With a key, `accessLevel` is ignored. |
+| `POST /people` | `Only @acme.com addresses can join this workspace` | The email's domain is not one of the workspace's invite domains. The message names them all, as in `Only @acme.com, @acme.co.uk addresses can join this workspace`. |
+| `POST /people` | `roleId is not a role of this workspace` | `roleId` is not a role in your workspace. |
+| `POST /people` | `departmentId is not a department of this workspace` | `departmentId` is not a department in your workspace. |
+| `POST /kras` | `name required` | `name` is missing or blank. |
+| `POST /kras` | `roleId is not a role of this workspace` | `roleId` is not a role in your workspace. |
+| `POST /kpis` | `kraId, name, and targetValue are required` | One of the three is missing. |
+| `POST /kpis` | `targetValue must be a number` | `targetValue` is not a number. |
+| `POST /kpis` | `frequency must be one of DAILY, WEEKLY, MONTHLY, QUARTERLY, ANNUALLY` | Left out, it is `MONTHLY`. |
+| `POST /kpi-records` | `kpiId, userId, period, and actualValue are required` | One of the four is missing or empty. |
+| `POST /kpi-records` | `actualValue must be a number` | `actualValue` is not a number. |
+| `POST /kpi-records` | `period must be a month written YYYY-MM, such as 2026-10, and not a month that has not started yet. Goals read only month keys.` | `period` is not written `YYYY-MM`, or is a month that has not started anywhere in the world yet. |
+| `POST /kpi-records` | `targetValue must be a number` | `targetValue` was sent and is not a number. |
+| `POST /kudos` | `giverId, receiverId, and message are required` | One is missing. A blank `message` counts as missing. |
+| `POST /kudos` | `Cannot give kudos to yourself` | `giverId` and `receiverId` are the same. |
+| `POST /tasks` | `title and assigneeId are required` | One is missing. A blank `title` counts as missing. |
+| `POST /tasks` | `priority must be one of URGENT, HIGH, NORMAL, LOW` | Left out, it is `NORMAL`. |
+| `POST /tasks` | `source must be one of MANUAL, SOP, REVIEW, OKR, AI` | Left out, it is `MANUAL`. |
+| `POST /tasks` | `date must be a date and time, such as 2026-10-12T09:00:00Z` | `date` is not a date. Left out or empty, the due date is the time of the call. |
+| `POST /tasks` | `slaHours must be a number of hours` | `slaHours` is not a number. Zero or less is kept as no SLA. |
 
 <Callout kind="alert">
-  **A malformed JSON body surfaces as a missing-field error, not a parse error.** If the body cannot be parsed it is treated as an empty object, so the handler then complains that the required fields are absent. If you get `title and assigneeId are required` while staring at a body that clearly contains both, check the JSON is valid and that you sent `Content-Type: application/json`.
+  **A malformed JSON body surfaces as a missing-field error, not a parse error.** If the body cannot be parsed it is treated as an empty object, and so is a body of `null`, so the handler then complains that the required fields are absent. If you get `title and assigneeId are required` while staring at a body that clearly contains both, check that the body is valid JSON.
 </Callout>
 
-Fields the API does not recognize are ignored rather than rejected, so a typo in an optional field name fails silently. Text fields are truncated to their column limits rather than rejected: a 900-character kudos message is stored as its first 500 characters.
+Fields the API does not recognize are ignored rather than rejected, so a typo in an optional field name fails silently.
+
+Text fields are cut to a length rather than rejected: a 900-character kudos message is stored as its first 500 characters. The limits:
+
+| Endpoint | Field | Kept |
+| --- | --- | --- |
+| `POST /people` | `firstName`, `lastName` | 60 characters, with angle brackets removed and runs of spaces made one |
+| `POST /kras` | `name` | 150 characters, after trimming spaces |
+| `POST /kras` | `description` | 500 characters |
+| `POST /kras` | `category` | 80 characters |
+| `POST /kpis` | `name` | 120 characters |
+| `POST /kpis` | `description` | 500 characters |
+| `POST /kudos` | `message` | 500 characters, after trimming spaces |
+| `POST /kudos` | `companyValue` | 40 characters, after trimming spaces |
+| `POST /tasks` | `title` | 200 characters, after trimming spaces |
+| `POST /tasks` | `description` | 2,000 characters |
+| `POST /tasks` | `category` | 80 characters |
 
 ## 404 Not Found
 
@@ -98,11 +158,21 @@ Returned when your request references a record that does not exist **in your wor
 
 Debugging tip: resolve ids by listing rather than guessing. `GET /people?limit=200` gives you the real user ids, `GET /kras` the KRA ids, `GET /kpis?kraId=...` the KPIs under a KRA. Ids are opaque strings; do not construct or transform them.
 
-An unknown **path** also returns `404`, but from the framework rather than the API, so its body is not the `{ "error": ... }` envelope. If a `404` body is not JSON, you have the URL wrong.
+An unknown **path** under `/api` also returns `404`, in the same envelope, with the bare message `not_found`:
+
+```json
+{
+  "error": "not_found"
+}
+```
+
+If you get `not_found`, the URL is wrong, not an id.
 
 ## 409 Conflict
 
-Only `POST /people` returns this, in two forms:
+Two endpoints return this.
+
+### POST /people
 
 ```json
 {
@@ -110,7 +180,21 @@ Only `POST /people` returns this, in two forms:
 }
 ```
 
-The email already belongs to a person in your workspace. Or `An invitation to this email is already pending`: someone already invited it and the invitation has not expired. The address you send is lower-cased before the check, so `Priya@acme.com` and `priya@acme.com` are looked up as the same address. Treat `409` as success-equivalent when you are running an idempotent sync: the person you wanted is already there, or on the way.
+The email already belongs to a person in your workspace. Or `An invitation to this email is already pending`: someone already invited it and the invitation has not expired. The address you send is lower-cased before the check, so `Priya@acme.com` and `priya@acme.com` are looked up as the same address. Treat this `409` as success-equivalent when you are running an idempotent sync: the person you wanted is already there, or on the way.
+
+### POST /kpi-records
+
+```json
+{
+  "error": "That month is closed, so its reading stays as it is. A reading can change only in this month or last month.",
+  "code": "kpi_month_closed",
+  "id": "clx8f2n0k0021s601m3q7r9tv"
+}
+```
+
+There is one reading per KPI, person and month. A month is open while it is this month or last month in any timezone. For a closed month, a reading that holds a different number (or a different target from the `targetValue` you sent) stays as it is, and `id` is that reading's id. This `409` is not success-equivalent: nothing you sent was stored.
+
+The same number again is not a conflict: it answers `200` and changes nothing, so a retried call is safe. In an open month a different number answers `200` and replaces the reading.
 
 ## 429 Too Many Requests
 
@@ -122,15 +206,16 @@ The email already belongs to a person in your workspace. Or `An invitation to th
 }
 ```
 
-The only response with extra keys and the only one that sets headers you should act on. Read [Rate limits](/api-reference/rate-limits) for the window semantics and a retry loop.
+The only response that sets headers you should act on. Read [Rate limits](/api-reference/rate-limits) for the window semantics and a retry loop.
 
 ## A checklist for a request that will not work
 
 <Expandable title="Walk it from the outside in">
 1. **Is the status a `401`?** Nothing else matters yet. Fix the key first, using the message table above.
-2. **Is it a `403`?** The key works but is too narrow, or you are signed in without a key. Make one with the scope the endpoint needs and retry.
+2. **Is it a `403`?** The key works but is too narrow, you are signed in without a key, or `POST /people` found no free seat. The message says which. For a scope, make a key with the scope the endpoint needs and retry.
 3. **Is it a `429`?** Honour `Retry-After` and stop retrying in a loop, since rejected requests still count against the window.
-4. **Is it a `400`?** Validate your JSON, confirm `Content-Type: application/json`, then re-read the required fields for that endpoint.
-5. **Is it a `404` with a JSON body?** An id in your payload is not in your org. List the parent resource and copy the real id.
-6. **Is it a `404` without a JSON body?** The path is wrong. Compare it against the live spec at `https://workwrk.com/api/v1/openapi.json`.
+4. **Is it a `400`?** Read the message: it names the field and what to send. If it names required fields your body has, check that the body is valid JSON.
+5. **Is it a `409` with `kpi_month_closed`?** The month is closed, and the reading already there stays as it is.
+6. **Is it a `404` saying `not_found`?** The path is wrong. Compare it against the live spec at `https://workwrk.com/api/v1/openapi.json`.
+7. **Is it any other `404`?** An id in your payload is not in your workspace. List the parent resource and copy the real id.
 </Expandable>

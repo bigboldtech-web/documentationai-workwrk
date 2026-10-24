@@ -134,6 +134,10 @@
                 "title": "Limits and plans",
                 "path": "using/ai-teammates/limits",
                 "icon": "gauge"
+              },
+              {
+                "title": "Connect an AI app (MCP)",
+                "path": "using/ai-apps"
               }
             ]
           },

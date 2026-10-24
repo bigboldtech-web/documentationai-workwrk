@@ -1,0 +1,114 @@
+---
+title: Connect an AI app (MCP)
+description: Let Claude, ChatGPT, Cursor, VS Code or another AI app read and change your work in WorkwrK, as you.
+---
+
+WorkwrK has its own MCP server. MCP (Model Context Protocol) is the way AI apps such as Claude, ChatGPT, Cursor and VS Code connect to other tools. Once you connect one, you can ask it things like "What is on my plate this week?" or "Create a task Try MCP on my list with two subtasks, due Friday", and it works in WorkwrK as you.
+
+The server address is:
+
+```
+https://app.workwrk.com/api/mcp
+```
+
+## Before you start
+
+An Owner or Admin turns AI apps on for the workspace in Workspace settings, **Apps & modules**, **AI apps (MCP)**. It is off until they do. See [For Owners and Admins](#for-owners-and-admins).
+
+## Connect an app
+
+<Steps>
+<Step title="Add WorkwrK to the app" icon="plug">
+In the AI app, add WorkwrK as a connector or MCP server with the address above. Each app's own steps are below.
+</Step>
+<Step title="Log in to WorkwrK" icon="log-in">
+The app opens a WorkwrK page in your browser. Log in if you aren't already.
+</Step>
+<Step title="Choose what it can do" icon="shield-check">
+Pick the workspace, then **Read** or **Read and change**. Read lets it see what you can see: Spaces, Lists, tasks, docs, people and goals. Read and change also lets it create and change tasks, comment, write docs, set reminders and give kudos, as you.
+</Step>
+<Step title="Allow" icon="check">
+Choose **Allow**. Allow turns on a moment after the page appears, which protects you from a site tricking you into clicking it. WorkwrK sends you back to the app, and it is connected.
+</Step>
+</Steps>
+
+<Callout kind="alert">
+WorkwrK has not checked the app. Allow it only if you started connecting it yourself just now. If the page says an app is connecting that you didn't start, choose **Deny**.
+</Callout>
+
+### Claude Code
+
+In a terminal, run:
+
+```
+claude mcp add --transport http workwrk https://app.workwrk.com/api/mcp
+```
+
+Add `--scope user` to have it in every project. Then, in Claude Code, run `/mcp`, choose **workwrk** and log in. The WorkwrK page names it "an app on this computer".
+
+### Claude
+
+In Claude's settings, open **Connectors**, add a custom connector, and give it the address above.
+
+### ChatGPT
+
+Add a custom connector, or an MCP server, with the address above. Your ChatGPT plan decides where this is offered.
+
+### Cursor
+
+Add WorkwrK to your `mcp.json` (in `~/.cursor/` for every project, or `.cursor/` in one project):
+
+```json
+{
+  "mcpServers": {
+    "workwrk": { "url": "https://app.workwrk.com/api/mcp" }
+  }
+}
+```
+
+### VS Code
+
+Add WorkwrK to `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "workwrk": { "type": "http", "url": "https://app.workwrk.com/api/mcp" }
+  }
+}
+```
+
+## What it can do
+
+It works as you: it sees only what you can see, and changes only what you can change. It can never delete anything, change anyone's access, or see anything you can't. Like you, it can move a task to another List or assign someone to it, which changes who can see that task.
+
+| Read | Read and change also |
+| --- | --- |
+| Who am I | Create a task, with subtasks |
+| List Spaces, List Lists | Update a task: title, description, status, priority, dates, assignees and tags |
+| Search tasks, Get a task, List my tasks | Move a task to another List |
+| Search people | Add a comment |
+| Search docs, Read a doc | Create a doc, Add to a doc |
+| List my goals | Set a reminder, Give kudos |
+
+A doc it creates with no place goes in your Notepad, where only you can see it. Every change it makes is recorded with its name in the audit log, and named in the task's activity, for example "via Claude (MCP)".
+
+## What goes to the app
+
+What the app reads goes to the company that makes it, and to the AI model it uses, which another company may run, under their own terms. WorkwrK sends nothing until you choose Allow. See the [Privacy policy](https://workwrk.com/privacy).
+
+## See and disconnect your apps
+
+Open My settings, **Calendar & connections**, **AI apps**. Each app shows its workspace, what it can do, when it was connected and last used, and how many times it made changes. **Show changes** lists them. **Disconnect** ends its access at once.
+
+Logging out of one browser keeps your AI apps connected. **Log out everywhere** and changing your password disconnect them all. An app also stops when you leave the workspace, or when an Owner or Admin turns AI apps off.
+
+## For Owners and Admins
+
+In Workspace settings, **Apps & modules**, **AI apps (MCP)**:
+
+- **Let people connect AI apps (MCP)** turns it on or off for the workspace. Turning it off disconnects every AI app in the workspace at once.
+- **Allowed apps** limits which apps can connect. Leave it empty to allow any app. Add the site an app sends people back to: `claude.ai` and `claude.com` for Claude, `*.cursor.com` for Cursor on the web, and `localhost` for apps on a person's own computer, such as Claude Code, VS Code and Cursor's desktop app. A connected app the list leaves out is disconnected at once.
+- **Connections** shows how many apps are connected and by how many people, and today's requests and changes. **See each change in the Audit log** opens the Audit log.
+
+AI apps need AI features on in Workspace settings, **Data**. With AI features off, connected apps pause until they are back on.
